@@ -1056,28 +1056,27 @@
   }
   .modal-caixa .btn{ width: 100%; border: none; margin-top: 4px; }
 
-  /* ============ CURSOR PERSONALIZADO (desktop com mouse) ============ */
-  @media (hover: hover) and (pointer: fine){
-    body.cursor-emoji-ativo,
-    body.cursor-emoji-ativo a,
-    body.cursor-emoji-ativo button,
-    body.cursor-emoji-ativo .filtro-btn{
-      cursor: none;
-    }
-    body.cursor-emoji-ativo input,
-    body.cursor-emoji-ativo textarea{
-      cursor: text;
-    }
+  /* ============ CURSOR PERSONALIZADO (ativado via JS só quando detecta mouse de verdade) ============ */
+  body.cursor-emoji-ativo,
+  body.cursor-emoji-ativo a,
+  body.cursor-emoji-ativo button,
+  body.cursor-emoji-ativo .filtro-btn{
+    cursor: none;
+  }
+  body.cursor-emoji-ativo input,
+  body.cursor-emoji-ativo textarea{
+    cursor: text;
   }
   .cursor-emoji{
     position: fixed;
     top: 0;
     left: 0;
-    font-size: 24px;
-    z-index: 600;
+    font-size: 30px;
+    z-index: 900;
     pointer-events: none;
     user-select: none;
     will-change: transform;
+    line-height: 1;
   }
   .cursor-emoji[hidden]{ display: none; }
 
@@ -1948,56 +1947,74 @@
   })();
 
   /* =========================================================
-     CURSOR PERSONALIZADO (apenas em telas com mouse)
+     CURSOR PERSONALIZADO (ativa só quando detecta um mouse de verdade,
+     usando o pointerType do evento, que é mais confiável do que checar
+     media features como hover/pointer)
   ========================================================= */
   (function cursorPersonalizado(){
-    var suportaMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-    if(!suportaMouse) return; // no celular/tablet não existe cursor, então não ativa
-
     var EMOJI_CURSOR = "🖌️"; // troque aqui pelo emoji que você quiser usar
 
-    var reduzMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var elemento = document.createElement("span");
-    elemento.className = "cursor-emoji";
-    elemento.setAttribute("aria-hidden", "true");
-    elemento.hidden = true;
-    elemento.textContent = EMOJI_CURSOR;
-    document.body.appendChild(elemento);
-    document.body.classList.add("cursor-emoji-ativo");
+    if(!("PointerEvent" in window)) return;
 
-    var alvoX = 0, alvoY = 0, atualX = 0, atualY = 0, iniciado = false;
+    var reduzMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var elemento = null;
+    var ativo = false;
+    var alvoX = 0, alvoY = 0, atualX = 0, atualY = 0;
 
     function posicionar(x, y){
       elemento.style.transform = "translate(" + x + "px, " + y + "px) translate(-50%, -50%)";
     }
 
-    document.addEventListener("mousemove", function(evento){
+    function ativar(x, y){
+      ativo = true;
+      elemento = document.createElement("span");
+      elemento.className = "cursor-emoji";
+      elemento.setAttribute("aria-hidden", "true");
+      elemento.textContent = EMOJI_CURSOR;
+      document.body.appendChild(elemento);
+      document.body.classList.add("cursor-emoji-ativo");
+
+      alvoX = atualX = x;
+      alvoY = atualY = y;
+      posicionar(atualX, atualY);
+
+      if(!reduzMovimento){
+        (function seguir(){
+          if(!ativo) return;
+          atualX += (alvoX - atualX) * 0.2;
+          atualY += (alvoY - atualY) * 0.2;
+          posicionar(atualX, atualY);
+          window.requestAnimationFrame(seguir);
+        })();
+      }
+    }
+
+    function desativar(){
+      ativo = false;
+      document.body.classList.remove("cursor-emoji-ativo");
+      if(elemento){ elemento.remove(); elemento = null; }
+    }
+
+    document.addEventListener("pointermove", function(evento){
+      if(evento.pointerType !== "mouse") return;
       alvoX = evento.clientX;
       alvoY = evento.clientY;
-      if(!iniciado){
-        iniciado = true;
-        atualX = alvoX;
-        atualY = alvoY;
-        elemento.hidden = false;
-      }
-      if(reduzMovimento){
+      if(!ativo){
+        ativar(alvoX, alvoY);
+      } else if(reduzMovimento){
         atualX = alvoX;
         atualY = alvoY;
         posicionar(atualX, atualY);
       }
     });
 
-    document.addEventListener("mouseleave", function(){ elemento.hidden = true; });
-    document.addEventListener("mouseenter", function(){ if(iniciado) elemento.hidden = false; });
+    // toque na tela cancela o cursor de mouse (aparelho híbrido com tela sensível ao toque)
+    document.addEventListener("pointerdown", function(evento){
+      if(evento.pointerType === "touch") desativar();
+    });
 
-    if(!reduzMovimento){
-      (function seguir(){
-        atualX += (alvoX - atualX) * 0.2;
-        atualY += (alvoY - atualY) * 0.2;
-        posicionar(atualX, atualY);
-        window.requestAnimationFrame(seguir);
-      })();
-    }
+    document.addEventListener("mouseleave", function(){ if(elemento) elemento.style.opacity = "0"; });
+    document.addEventListener("mouseenter", function(){ if(elemento) elemento.style.opacity = "1"; });
   })();
 
   /* =========================================================
