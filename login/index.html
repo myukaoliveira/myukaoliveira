@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Entrar | Painel de Myuka Oliveira</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --plastico: #1b1b1f;
+    --plastico-2: #26262c;
+    --rotulo: #f3ead6;
+    --laranja: #e8763a;
+    --azul: #3b6ea5;
+    --vermelho: #c8402c;
+    --texto-suave: #cfc7b3;
+    --linha: rgba(243,234,214,.16);
+    --raio: 18px;
+  }
+  *,*::before,*::after{ box-sizing: border-box; }
+  body{
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: var(--plastico);
+    color: var(--rotulo);
+    font-family: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  :focus-visible{ outline: 3px solid var(--laranja); outline-offset: 2px; border-radius: 6px; }
+  .cartao{
+    width: 100%;
+    max-width: 380px;
+    background: var(--plastico-2);
+    border: 1px solid var(--linha);
+    border-radius: var(--raio);
+    padding: 32px 28px;
+  }
+  .marca{
+    font-weight: 800;
+    font-size: 1.05rem;
+    letter-spacing: .01em;
+    margin-bottom: 6px;
+  }
+  .marca span{ color: var(--laranja); }
+  h1{
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 22px;
+    color: var(--texto-suave);
+  }
+  label{
+    display: block;
+    font-size: .82rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--texto-suave);
+  }
+  .campo{ margin-bottom: 16px; }
+  input{
+    width: 100%;
+    background: var(--plastico);
+    border: 1px solid var(--linha);
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: var(--rotulo);
+    font: inherit;
+    font-size: .92rem;
+  }
+  input:focus{ border-color: var(--laranja); }
+  .btn{
+    width: 100%;
+    background: var(--laranja);
+    color: var(--plastico);
+    border: none;
+    border-radius: 999px;
+    padding: 13px 18px;
+    font-weight: 700;
+    font-size: .92rem;
+    cursor: pointer;
+    margin-top: 6px;
+  }
+  .btn:disabled{ opacity: .6; cursor: default; }
+  .btn:hover:not(:disabled){ filter: brightness(1.08); }
+  .link-esqueci{
+    display: block;
+    text-align: center;
+    margin-top: 16px;
+    color: var(--azul);
+    font-size: .82rem;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+  }
+  .link-esqueci:hover{ text-decoration: underline; }
+  .faixa{
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: .84rem;
+    margin-bottom: 16px;
+    display: none;
+  }
+  .faixa.mostrar{ display: block; }
+  .faixa-erro{ background: rgba(200,64,44,.15); border: 1px solid var(--vermelho); color: #ffb4a3; }
+  .faixa-ok{ background: rgba(59,110,165,.15); border: 1px solid var(--azul); color: #bcd6ee; }
+  .voltar{
+    display: block;
+    text-align: center;
+    margin-top: 22px;
+    font-size: .8rem;
+    color: var(--texto-suave);
+    text-decoration: none;
+  }
+  .voltar:hover{ color: var(--rotulo); }
+</style>
+</head>
+<body>
+  <main class="cartao">
+    <p class="marca">myuka<span>.</span>admin</p>
+    <h1>Entrar no painel</h1>
+
+    <div class="faixa faixa-erro" id="faixa-erro" role="alert"></div>
+    <div class="faixa faixa-ok" id="faixa-ok" role="status"></div>
+
+    <form id="form-login">
+      <div class="campo">
+        <label for="campo-email">E-mail</label>
+        <input type="email" id="campo-email" name="email" autocomplete="username" required>
+      </div>
+      <div class="campo">
+        <label for="campo-senha">Senha</label>
+        <input type="password" id="campo-senha" name="senha" autocomplete="current-password" required>
+      </div>
+      <button class="btn" type="submit" id="botao-entrar">Entrar</button>
+    </form>
+    <button type="button" class="link-esqueci" id="botao-esqueci">Esqueci minha senha</button>
+    <a class="voltar" href="../index.html">Voltar para o portfólio</a>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/banco.js"></script>
+  <script>
+  (function () {
+    "use strict";
+
+    if (!window.banco) return; // js/banco.js já avisa no console se algo faltou
+
+    var form = document.getElementById("form-login");
+    var botaoEntrar = document.getElementById("botao-entrar");
+    var botaoEsqueci = document.getElementById("botao-esqueci");
+    var faixaErro = document.getElementById("faixa-erro");
+    var faixaOk = document.getElementById("faixa-ok");
+
+    function mostrarErro(mensagem){
+      faixaOk.classList.remove("mostrar");
+      faixaErro.textContent = mensagem;
+      faixaErro.classList.add("mostrar");
+    }
+    function mostrarOk(mensagem){
+      faixaErro.classList.remove("mostrar");
+      faixaOk.textContent = mensagem;
+      faixaOk.classList.add("mostrar");
+    }
+
+    // Se já tiver sessão aberta, manda direto pro admin.
+    window.banco.auth.getSession().then(function (resultado) {
+      if (resultado.data && resultado.data.session) {
+        window.location.href = "../admin/";
+      }
+    });
+
+    form.addEventListener("submit", function (evento) {
+      evento.preventDefault();
+      var email = document.getElementById("campo-email").value.trim();
+      var senha = document.getElementById("campo-senha").value;
+
+      botaoEntrar.disabled = true;
+      botaoEntrar.textContent = "Entrando...";
+
+      window.banco.auth.signInWithPassword({ email: email, password: senha }).then(function (resultado) {
+        botaoEntrar.disabled = false;
+        botaoEntrar.textContent = "Entrar";
+        if (resultado.error) {
+          mostrarErro("E-mail ou senha incorretos.");
+          return;
+        }
+        window.location.href = "../admin/";
+      }).catch(function () {
+        botaoEntrar.disabled = false;
+        botaoEntrar.textContent = "Entrar";
+        mostrarErro("Não consegui falar com o servidor. Tente de novo em instantes.");
+      });
+    });
+
+    botaoEsqueci.addEventListener("click", function () {
+      var email = document.getElementById("campo-email").value.trim();
+      if (!email) {
+        mostrarErro("Escreva o seu e-mail no campo acima primeiro, aí clique em \"Esqueci minha senha\" de novo.");
+        return;
+      }
+      window.banco.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + window.location.pathname.replace(/login\/?$/, "login/")
+      }).then(function (resultado) {
+        if (resultado.error) {
+          mostrarErro("Não consegui enviar o e-mail de recuperação. Confira o e-mail digitado.");
+          return;
+        }
+        mostrarOk("Se esse e-mail estiver cadastrado, mandei um link de recuperação para ele.");
+      });
+    });
+  })();
+  </script>
+</body>
+</html>

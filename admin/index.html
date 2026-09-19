@@ -1,0 +1,2348 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Painel | Myuka Oliveira</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --plastico: #1b1b1f;
+    --plastico-2: #232329;
+    --plastico-3: #2c2c33;
+    --rotulo: #f3ead6;
+    --laranja: #e8763a;
+    --azul: #3b6ea5;
+    --vermelho: #c8402c;
+    --texto-suave: #a9a290;
+    --linha: rgba(243,234,214,.13);
+    --raio: 14px;
+    --raio-p: 999px;
+    --sombra: 0 18px 44px rgba(0,0,0,.4);
+    --barra: 248px;
+  }
+  *,*::before,*::after{ box-sizing: border-box; }
+  html{ -webkit-text-size-adjust: 100%; }
+  body{
+    margin: 0;
+    background: var(--plastico);
+    color: var(--rotulo);
+    font-family: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  button, input, select, textarea{ font: inherit; color: inherit; }
+  :focus-visible{ outline: 3px solid var(--laranja); outline-offset: 2px; border-radius: 6px; }
+  a{ color: inherit; }
+  h1,h2,h3{ margin: 0; font-weight: 800; }
+  p{ margin: 0; }
+  ul{ margin: 0; padding: 0; list-style: none; }
+  .oculto{ display: none !important; }
+
+  /* ===== tela de carregamento (antes de confirmar sessão) ===== */
+  #tela-carregando{
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--texto-suave);
+    font-size: .85rem;
+  }
+  #tela-carregando[hidden]{ display: none; }
+
+  /* ===== estrutura geral ===== */
+  .shell{ display: flex; min-height: 100vh; }
+
+  .barra-lateral{
+    width: var(--barra);
+    background: var(--plastico-2);
+    border-right: 1px solid var(--linha);
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    z-index: 150;
+    transition: transform .2s ease;
+  }
+  .marca-lateral{
+    padding: 22px 20px 14px;
+    font-weight: 800;
+    font-size: 1rem;
+  }
+  .marca-lateral span{ color: var(--laranja); }
+  .grupo-nav{ padding: 10px 12px; }
+  .grupo-nav-titulo{
+    font-size: .66rem;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--texto-suave);
+    padding: 10px 10px 6px;
+    font-weight: 700;
+  }
+  .item-nav{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    border-left: 3px solid transparent;
+    color: var(--texto-suave);
+    padding: 9px 10px;
+    border-radius: 10px;
+    font-size: .84rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 2px;
+  }
+  .item-nav:hover{ background: rgba(243,234,214,.05); color: var(--rotulo); }
+  .item-nav.ativo{ background: rgba(232,118,58,.15); color: var(--laranja); border-left-color: var(--laranja); }
+  .item-nav svg{ width: 17px; height: 17px; flex-shrink: 0; }
+
+  .rodape-lateral{
+    margin-top: auto;
+    padding: 14px 16px 18px;
+    border-top: 1px solid var(--linha);
+    font-size: .74rem;
+    color: var(--texto-suave);
+  }
+  .rodape-lateral .email-dona{ display: block; margin-bottom: 10px; word-break: break-all; }
+  .botao-sair{
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--linha);
+    color: var(--rotulo);
+    border-radius: 8px;
+    padding: 9px;
+    font-size: .78rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .botao-sair:hover{ border-color: var(--vermelho); color: var(--vermelho); }
+
+  .fundo-gaveta{
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.55);
+    z-index: 140;
+  }
+  .fundo-gaveta.mostrar{ display: block; }
+
+  .conteudo{
+    flex: 1;
+    margin-left: var(--barra);
+    padding: 24px 28px 60px;
+    min-width: 0;
+    max-width: 1180px;
+  }
+  .topo-conteudo{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .topo-conteudo h1{ font-size: 1.2rem; }
+  .botao-hamburguer-admin{
+    display: none;
+    background: var(--plastico-2);
+    border: 1px solid var(--linha);
+    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    align-items: center;
+    justify-content: center;
+    color: var(--rotulo);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 900px){
+    .barra-lateral{ transform: translateX(-100%); }
+    .barra-lateral.aberta{ transform: translateX(0); box-shadow: var(--sombra); }
+    .conteudo{ margin-left: 0; padding: 18px 16px 50px; }
+    .botao-hamburguer-admin{ display: flex; }
+  }
+
+  /* ===== painéis / abas ===== */
+  .painel{ display: none; }
+  .painel.ativo{ display: block; }
+
+  /* ===== elementos genéricos ===== */
+  .cartao{
+    background: var(--plastico-2);
+    border: 1px solid var(--linha);
+    border-radius: var(--raio);
+    padding: 18px;
+  }
+  .aviso{
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: .82rem;
+    margin-bottom: 14px;
+  }
+  .aviso-erro{ background: rgba(200,64,44,.13); border: 1px solid var(--vermelho); color: #f3b7ab; }
+  .aviso-info{ background: rgba(59,110,165,.13); border: 1px solid var(--azul); color: #bcd6ee; }
+
+  .btn{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: var(--raio-p);
+    border: 1px solid transparent;
+    padding: 9px 16px;
+    font-size: .82rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .btn svg{ width: 15px; height: 15px; }
+  .btn-laranja{ background: var(--laranja); color: var(--plastico); }
+  .btn-laranja:hover{ filter: brightness(1.08); }
+  .btn-contorno{ background: transparent; color: var(--rotulo); border-color: var(--linha); }
+  .btn-contorno:hover{ border-color: var(--laranja); color: var(--laranja); }
+  .btn-pequeno{ padding: 6px 12px; font-size: .76rem; }
+  .btn-icone{
+    background: transparent;
+    border: 1px solid var(--linha);
+    color: var(--texto-suave);
+    border-radius: 8px;
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .btn-icone svg{ width: 15px; height: 15px; }
+  .btn-icone:hover{ border-color: var(--laranja); color: var(--laranja); }
+
+  .campo-topo{ display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 16px; }
+  .campo-busca{
+    background: var(--plastico-2);
+    border: 1px solid var(--linha);
+    border-radius: var(--raio-p);
+    padding: 8px 14px;
+    font-size: .82rem;
+    color: var(--rotulo);
+    min-width: 200px;
+    flex: 1;
+  }
+  .chip{
+    background: transparent;
+    border: 1px solid var(--linha);
+    color: var(--texto-suave);
+    border-radius: var(--raio-p);
+    padding: 7px 13px;
+    font-size: .78rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .chip:hover{ border-color: var(--laranja); color: var(--rotulo); }
+  .chip.ativo{ background: var(--laranja); border-color: var(--laranja); color: var(--plastico); }
+
+  /* ===== tabela ===== */
+  .tabela-wrap{ overflow-x: auto; border-radius: var(--raio); border: 1px solid var(--linha); }
+  table{ width: 100%; border-collapse: collapse; font-size: .82rem; }
+  thead{ background: var(--plastico-3); }
+  th{
+    text-align: left;
+    padding: 10px 12px;
+    color: var(--texto-suave);
+    font-size: .68rem;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    font-weight: 700;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--linha);
+  }
+  th.ordenavel{ cursor: pointer; user-select: none; }
+  th.ordenavel .seta-ordem{ margin-left: 4px; opacity: .35; font-size: .7rem; }
+  th.ordenavel.ativa .seta-ordem{ opacity: 1; color: var(--laranja); }
+  td{
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--linha);
+    color: var(--rotulo);
+    vertical-align: middle;
+  }
+  tbody tr{ cursor: pointer; }
+  tbody tr:hover td{ background: rgba(243,234,214,.03); }
+  tbody tr:last-child td{ border-bottom: none; }
+  .linha-favorita{ box-shadow: inset 3px 0 0 var(--laranja); }
+  .celula-acoes{ display: flex; gap: 6px; }
+  .texto-fraco{ color: var(--texto-suave); font-size: .78rem; }
+  .sem-registros{ padding: 26px 12px; text-align: center; color: var(--texto-suave); font-size: .84rem; }
+
+  /* ===== pílulas ===== */
+  .pilula{
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: var(--raio-p);
+    font-size: .72rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .pilula-contorno-azul{ background: rgba(59,110,165,.15); color: #8fb8de; border: 1px solid var(--azul); }
+  .pilula-contorno-laranja{ background: rgba(232,118,58,.15); color: var(--laranja); border: 1px solid var(--laranja); }
+  .pilula-contorno-vermelho{ background: rgba(200,64,44,.15); color: #f3a696; border: 1px solid var(--vermelho); }
+  .pilula-cheia-laranja{ background: var(--laranja); color: var(--plastico); }
+  .pilula-cheia-azul{ background: var(--azul); color: #fff; }
+  .etiqueta-atrasado{ background: var(--vermelho); color: #fff; }
+  .etiqueta-vence{ background: var(--laranja); color: var(--plastico); }
+
+  /* ===== métricas ===== */
+  .grade-metricas-admin{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .metrica-mini{
+    background: var(--plastico-2);
+    border: 1px solid var(--linha);
+    border-radius: var(--raio);
+    padding: 14px 16px;
+  }
+  .metrica-mini strong{ display: block; font-size: 1.35rem; font-weight: 800; color: var(--laranja); }
+  .metrica-mini span{ font-size: .74rem; color: var(--texto-suave); }
+
+  .duas-colunas{ display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; margin-bottom: 18px; align-items: stretch; }
+  @media (max-width: 800px){ .duas-colunas{ grid-template-columns: 1fr; } }
+
+  .grafico-barras{ display: flex; align-items: flex-end; gap: 6px; height: 140px; padding-top: 10px; }
+  .grafico-barras .barra-col{ flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 4px; }
+  .grafico-barras .barra{ width: 100%; background: var(--laranja); border-radius: 5px 5px 0 0; min-height: 2px; }
+  .grafico-barras .barra-rotulo{ font-size: .62rem; color: var(--texto-suave); white-space: nowrap; }
+  .mensagem-vazia{ color: var(--texto-suave); font-size: .82rem; padding: 20px 4px; }
+
+  .lista-origem{ display: flex; flex-direction: column; gap: 8px; }
+  .lista-origem li{ display: flex; align-items: center; justify-content: space-between; font-size: .82rem; }
+  .lista-origem .barra-origem{ flex: 1; height: 6px; background: var(--plastico-3); border-radius: 4px; margin: 0 10px; overflow: hidden; }
+  .lista-origem .barra-origem span{ display: block; height: 100%; background: var(--azul); }
+
+  /* ===== drag handle ===== */
+  .alca-arrastar{ cursor: grab; color: var(--texto-suave); display: inline-flex; }
+  .alca-arrastar svg{ width: 14px; height: 14px; }
+  tr.arrastando{ opacity: .4; }
+
+  /* ===== modal genérico de formulário ===== */
+  .modal-fundo{ position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 300; }
+  .modal-caixa{
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: calc(100% - 32px);
+    max-width: 480px;
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+    background: var(--plastico-2);
+    border: 1px solid var(--linha);
+    border-radius: var(--raio);
+    padding: 22px;
+    z-index: 310;
+    box-shadow: var(--sombra);
+  }
+  .modal-caixa h2{ font-size: 1rem; margin-bottom: 16px; }
+  .campo-form{ margin-bottom: 13px; }
+  .campo-form label{ display: block; font-size: .78rem; font-weight: 700; color: var(--texto-suave); margin-bottom: 5px; }
+  .campo-form input[type="text"], .campo-form input[type="email"], .campo-form input[type="url"], .campo-form input[type="date"], .campo-form input[type="number"], .campo-form select, .campo-form textarea{
+    width: 100%;
+    background: var(--plastico);
+    border: 1px solid var(--linha);
+    border-radius: 8px;
+    padding: 9px 11px;
+    font-size: .84rem;
+  }
+  .campo-form textarea{ resize: vertical; min-height: 90px; }
+  .campo-form input:focus, .campo-form select:focus, .campo-form textarea:focus{ border-color: var(--laranja); }
+  .campo-checkbox{ display: flex; align-items: center; gap: 8px; }
+  .campo-checkbox input{ width: 16px; height: 16px; }
+  .modal-botoes{ display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+  .modal-fechar-x{
+    position: absolute;
+    top: 14px; right: 14px;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--linha);
+    background: transparent;
+    color: var(--rotulo);
+    cursor: pointer;
+  }
+
+  /* ===== aviso/toast ===== */
+  #caixa-toast{
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--plastico-2);
+    border: 1px solid var(--laranja);
+    color: var(--rotulo);
+    padding: 12px 20px;
+    border-radius: var(--raio-p);
+    font-size: .82rem;
+    font-weight: 600;
+    z-index: 500;
+    box-shadow: var(--sombra);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+  }
+  #caixa-toast.mostrar{ opacity: 1; transform: translateX(-50%) translateY(-6px); }
+
+  /* ===== calendário ===== */
+  .calendario-topo{ display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+  .calendario-nav{ display: flex; align-items: center; gap: 8px; }
+  .calendario-nav strong{ min-width: 150px; text-align: center; font-size: .95rem; }
+  .grade-calendario{ display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--linha); border: 1px solid var(--linha); border-radius: var(--raio); overflow: hidden; }
+  .grade-calendario .cabecalho-dia{ background: var(--plastico-3); padding: 8px; text-align: center; font-size: .68rem; text-transform: uppercase; color: var(--texto-suave); font-weight: 700; }
+  .dia-calendario{ background: var(--plastico-2); min-height: 96px; padding: 6px; position: relative; display: flex; flex-direction: column; gap: 3px; }
+  .dia-calendario.fora-do-mes{ background: var(--plastico); color: var(--texto-suave); opacity: .5; }
+  .dia-calendario.hoje{ background: rgba(232,118,58,.1); }
+  .dia-calendario .numero-dia{ font-size: .74rem; font-weight: 700; color: var(--texto-suave); }
+  .dia-calendario.hoje .numero-dia{ color: var(--laranja); }
+  .item-dia{ font-size: .66rem; padding: 3px 5px; border-radius: 5px; background: var(--plastico-3); color: var(--rotulo); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+  .item-dia.tipo-prazo{ background: rgba(59,110,165,.25); color: #bcd6ee; }
+  .item-dia.feito{ text-decoration: line-through; opacity: .6; }
+  .mais-itens-dia{ font-size: .64rem; color: var(--laranja); font-weight: 700; cursor: pointer; background: none; border: none; text-align: left; padding: 2px 5px; }
+  .botao-add-dia{
+    position: absolute; top: 4px; right: 4px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--laranja); color: var(--plastico);
+    border: none; font-size: .8rem; line-height: 1;
+    display: none; align-items: center; justify-content: center; cursor: pointer;
+  }
+  .dia-calendario:hover .botao-add-dia{ display: flex; }
+  @media (max-width: 800px){
+    .grade-calendario{ grid-template-columns: repeat(7, minmax(38px,1fr)); }
+    .dia-calendario{ min-height: 64px; padding: 4px; }
+    .item-dia{ font-size: 0; padding: 0; width: 6px; height: 6px; border-radius: 50%; }
+    .cabecalho-dia{ font-size: .58rem; padding: 6px 2px; }
+  }
+  .bloco-atrasados{ margin-top: 20px; }
+  .bloco-atrasados h2{ font-size: .95rem; margin-bottom: 10px; }
+  .linha-atrasada{ display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; background: var(--plastico-2); border: 1px solid var(--linha); border-radius: 10px; margin-bottom: 6px; font-size: .82rem; }
+
+  /* ===== checklist ===== */
+  .sub-abas{ display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .secao-checklist{ border: 1px solid var(--linha); border-radius: var(--raio); margin-bottom: 12px; overflow: hidden; }
+  .secao-checklist-cabecalho{ display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; cursor: pointer; background: var(--plastico-2); gap: 12px; }
+  .secao-checklist-cabecalho h3{ font-size: .88rem; }
+  .barra-progresso{ height: 6px; background: var(--plastico-3); border-radius: 4px; overflow: hidden; width: 90px; flex-shrink: 0; }
+  .barra-progresso span{ display: block; height: 100%; background: var(--laranja); }
+  .secao-checklist-corpo{ padding: 4px 16px 14px; display: none; }
+  .secao-checklist.aberta .secao-checklist-corpo{ display: block; }
+  .item-checklist{ display: flex; gap: 10px; padding: 9px 0; border-top: 1px solid var(--linha); }
+  .item-checklist:first-child{ border-top: none; }
+  .item-checklist input{ width: 16px; height: 16px; margin-top: 2px; flex-shrink: 0; }
+  .item-checklist .texto-item strong{ display: block; font-size: .84rem; }
+  .item-checklist .texto-item p{ font-size: .78rem; color: var(--texto-suave); margin-top: 2px; }
+
+  .grade-referencias{ display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 14px; }
+  .cartao-referencia{ background: var(--plastico-2); border: 1px solid var(--linha); border-radius: var(--raio); overflow: hidden; cursor: pointer; text-align: left; }
+  .capa-referencia{ aspect-ratio: 9/16; background: linear-gradient(135deg, var(--laranja), var(--azul)); display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+  .info-referencia{ padding: 10px 12px; }
+  .info-referencia strong{ display: block; font-size: .82rem; margin-bottom: 4px; }
+  .info-referencia span{ font-size: .7rem; color: var(--texto-suave); display: block; }
+
+  .acordeao-item{ border: 1px solid var(--linha); border-radius: var(--raio); margin-bottom: 10px; overflow: hidden; }
+  .acordeao-cabecalho{ padding: 12px 16px; background: var(--plastico-2); cursor: pointer; font-weight: 700; font-size: .86rem; }
+  .acordeao-corpo{ padding: 0 16px 14px; display: none; font-size: .84rem; color: var(--texto-suave); }
+  .acordeao-item.aberta .acordeao-corpo{ display: block; }
+  .bloco-tempo{ display: flex; gap: 10px; padding: 6px 0; border-top: 1px solid var(--linha); }
+  .bloco-tempo:first-child{ border-top: none; }
+  .bloco-tempo .tempo{ color: var(--laranja); font-weight: 700; font-size: .78rem; flex-shrink: 0; min-width: 64px; }
+
+  #modal-referencia .modal-caixa{ max-width: 560px; }
+  .revisao-textarea{ width: 100%; min-height: 160px; background: var(--plastico-2); border: 1px solid var(--linha); border-radius: var(--raio); padding: 14px; color: var(--rotulo); font-size: .86rem; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<div id="tela-carregando">Carregando...</div>
+
+<div id="app" hidden>
+  <div class="shell">
+    <div class="fundo-gaveta" id="fundo-gaveta"></div>
+
+    <aside class="barra-lateral" id="barra-lateral">
+      <p class="marca-lateral">myuka<span>.</span>admin</p>
+
+      <nav class="grupo-nav">
+        <p class="grupo-nav-titulo">meu site</p>
+        <button class="item-nav" data-aba="portfolio" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="13" rx="2"></rect><path d="M9 9l6 3.5L9 16V9z" fill="currentColor" stroke="none"></path><path d="M7 21h10"></path></svg>
+          Portfólio
+        </button>
+        <button class="item-nav" data-aba="marcas" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          Marcas
+        </button>
+        <button class="item-nav" data-aba="marcas-trabalhadas" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M8 12.5l2.5 2.5L16 9"></path></svg>
+          Marcas trabalhadas
+        </button>
+      </nav>
+
+      <nav class="grupo-nav">
+        <p class="grupo-nav-titulo">minha rotina</p>
+        <button class="item-nav" data-aba="calendario" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18"></path><path d="M8 3v4"></path><path d="M16 3v4"></path></svg>
+          Calendário
+        </button>
+        <button class="item-nav" data-aba="campanhas" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"></circle></svg>
+          Campanhas
+        </button>
+        <button class="item-nav" data-aba="roteiro" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h9l4 4v14H6z"></path><path d="M15 3v4h4"></path><path d="M9 13h6"></path><path d="M9 17h6"></path></svg>
+          Roteiro
+        </button>
+        <button class="item-nav" data-aba="checklist" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"></rect><path d="M8 12l2.5 2.5L16 9"></path></svg>
+          Checklist
+        </button>
+      </nav>
+
+      <div class="rodape-lateral">
+        <span class="email-dona" id="rodape-email"></span>
+        <button class="botao-sair" id="botao-sair" type="button">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg>
+          Sair
+        </button>
+      </div>
+    </aside>
+
+    <main class="conteudo">
+      <div class="topo-conteudo">
+        <button class="botao-hamburguer-admin" id="botao-hamburguer-admin" type="button" aria-label="Abrir menu">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"></path><path d="M3 12h18"></path><path d="M3 18h18"></path></svg>
+        </button>
+        <h1 id="titulo-pagina">Portfólio</h1>
+        <span></span>
+      </div>
+
+      <div id="aviso-geral"></div>
+
+      <!-- 1. PORTFÓLIO -->
+      <section class="painel ativo" id="painel-portfolio">
+        <div class="grade-metricas-admin" id="metricas-portfolio"></div>
+        <div class="duas-colunas">
+          <div class="cartao">
+            <h2 style="font-size:.88rem;margin-bottom:10px;">Visitas nos últimos 14 dias</h2>
+            <div id="grafico-visitas"></div>
+          </div>
+          <div class="cartao">
+            <h2 style="font-size:.88rem;margin-bottom:10px;">De onde vêm as visitas</h2>
+            <ul class="lista-origem" id="lista-origens"></ul>
+          </div>
+        </div>
+        <div class="campo-topo">
+          <h2 style="font-size:.95rem;">Vídeos do portfólio</h2>
+          <span style="flex:1"></span>
+          <button class="btn btn-laranja" id="botao-add-video" type="button">+ Adicionar vídeo</button>
+        </div>
+        <div class="tabela-wrap">
+          <table>
+            <thead><tr>
+              <th></th>
+              <th>Título</th>
+              <th>Nicho</th>
+              <th>Marca</th>
+              <th>Destaque</th>
+              <th>No site</th>
+              <th></th>
+            </tr></thead>
+            <tbody id="corpo-tabela-videos"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 2. MARCAS -->
+      <section class="painel" id="painel-marcas">
+        <div class="campo-topo">
+          <input class="campo-busca" id="busca-marcas" type="text" placeholder="Buscar por nome, @ ou e-mail">
+          <div id="filtros-situacao"></div>
+          <button class="btn btn-contorno btn-pequeno" id="botao-csv-marcas" type="button">Baixar CSV</button>
+          <button class="btn btn-laranja" id="botao-add-marca" type="button">+ Adicionar marca</button>
+        </div>
+        <div class="tabela-wrap">
+          <table>
+            <thead><tr>
+              <th>Marca</th><th>Instagram</th><th>E-mail</th><th>Telefone</th><th>Situação</th><th>Último contato</th><th></th>
+            </tr></thead>
+            <tbody id="corpo-tabela-marcas"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 3. MARCAS TRABALHADAS -->
+      <section class="painel" id="painel-marcas-trabalhadas">
+        <div class="campo-topo">
+          <h2 style="font-size:.95rem;">Marcas com quem já trabalhei</h2>
+          <span style="flex:1"></span>
+          <button class="btn btn-laranja" id="botao-add-trabalhada" type="button">+ Adicionar</button>
+        </div>
+        <div class="tabela-wrap">
+          <table>
+            <thead><tr><th>Marca</th><th>Telefone</th><th>E-mail</th><th>Data</th><th>Observação</th><th></th></tr></thead>
+            <tbody id="corpo-tabela-trabalhadas"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 4. CALENDÁRIO -->
+      <section class="painel" id="painel-calendario">
+        <div class="calendario-topo">
+          <div class="calendario-nav">
+            <button class="btn-icone" id="calendario-anterior" type="button" aria-label="Mês anterior">‹</button>
+            <strong id="calendario-mes-atual"></strong>
+            <button class="btn-icone" id="calendario-proximo" type="button" aria-label="Próximo mês">›</button>
+            <button class="chip" id="calendario-hoje" type="button">Este mês</button>
+          </div>
+          <div id="filtros-tipo-calendario" class="campo-topo" style="margin:0;"></div>
+          <button class="btn btn-laranja btn-pequeno" id="botao-add-calendario" type="button">+ Adicionar</button>
+        </div>
+        <div class="grade-calendario" id="grade-calendario"></div>
+        <div class="bloco-atrasados">
+          <h2>Ficou pra trás</h2>
+          <div id="lista-atrasados"></div>
+        </div>
+      </section>
+
+      <!-- 5. CAMPANHAS -->
+      <section class="painel" id="painel-campanhas">
+        <div class="grade-metricas-admin" id="metricas-campanhas"></div>
+        <div class="campo-topo">
+          <div id="filtros-campanhas"></div>
+          <input class="campo-busca" id="busca-campanhas" type="text" placeholder="Buscar campanha ou cliente">
+          <button class="btn btn-contorno btn-pequeno" id="botao-csv-campanhas" type="button">Baixar CSV</button>
+          <button class="btn btn-laranja" id="botao-add-campanha" type="button">+ Adicionar campanha</button>
+        </div>
+        <div class="tabela-wrap">
+          <table>
+            <thead><tr>
+              <th style="width:30px;"></th>
+              <th class="ordenavel" data-campo="campanha">Campanha <span class="seta-ordem">–</span></th>
+              <th class="ordenavel" data-campo="cliente">Cliente <span class="seta-ordem">–</span></th>
+              <th class="ordenavel" data-campo="tipo">Tipo <span class="seta-ordem">–</span></th>
+              <th class="ordenavel" data-campo="status">Status <span class="seta-ordem">–</span></th>
+              <th class="ordenavel" data-campo="qtd">Qtd <span class="seta-ordem">–</span></th>
+              <th class="ordenavel" data-campo="valor">Valor <span class="seta-ordem">–</span></th>
+              <th class="ordenavel" data-campo="prazo">Prazo <span class="seta-ordem">–</span></th>
+              <th class="ordenavel" data-campo="pagamento">Pagamento <span class="seta-ordem">–</span></th>
+            </tr></thead>
+            <tbody id="corpo-tabela-campanhas"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 6. ROTEIRO -->
+      <section class="painel" id="painel-roteiro">
+        <div class="campo-topo">
+          <h2 style="font-size:.95rem;">Meus roteiros</h2>
+          <span style="flex:1"></span>
+          <button class="btn btn-laranja" id="botao-add-roteiro" type="button">+ Novo roteiro</button>
+        </div>
+        <div class="tabela-wrap">
+          <table>
+            <thead><tr><th>Título</th><th>Nicho</th><th>Status</th><th>Atualizado</th><th></th></tr></thead>
+            <tbody id="corpo-tabela-roteiros"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 7. CHECKLIST -->
+      <section class="painel" id="painel-checklist">
+        <div class="sub-abas" id="sub-abas-checklist">
+          <button class="chip ativo" data-sub="checklist" type="button">Checklist do portfólio</button>
+          <button class="chip" data-sub="referencias" type="button">Referências de vídeo</button>
+          <button class="chip" data-sub="roteiros" type="button">Roteiros</button>
+          <button class="chip" data-sub="nichos" type="button">Ideias por nicho</button>
+          <button class="chip" data-sub="revisao" type="button">Revisar meu roteiro</button>
+        </div>
+        <div id="aviso-biblioteca"></div>
+        <div class="sub-painel-checklist" data-sub="checklist" id="sub-checklist"></div>
+        <div class="sub-painel-checklist oculto" data-sub="referencias" id="sub-referencias"></div>
+        <div class="sub-painel-checklist oculto" data-sub="roteiros" id="sub-roteiros"></div>
+        <div class="sub-painel-checklist oculto" data-sub="nichos" id="sub-nichos"></div>
+        <div class="sub-painel-checklist oculto" data-sub="revisao" id="sub-revisao"></div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- modal genérico de formulário (usado por videos, marcas, marcas trabalhadas, calendário, campanhas, roteiros) -->
+<div class="modal-fundo oculto" id="modal-fundo"></div>
+<div class="modal-caixa oculto" id="modal-caixa" role="dialog" aria-modal="true">
+  <button class="modal-fechar-x" id="modal-fechar-x" type="button" aria-label="Fechar">✕</button>
+  <h2 id="modal-titulo"></h2>
+  <form id="modal-form"></form>
+  <div class="modal-botoes">
+    <button class="btn btn-contorno" id="modal-cancelar" type="button">Cancelar</button>
+    <button class="btn btn-laranja" id="modal-salvar" type="submit" form="modal-form">Salvar</button>
+  </div>
+</div>
+
+<!-- modal de ficha de referência de vídeo (checklist) -->
+<div class="modal-fundo oculto" id="modal-referencia-fundo"></div>
+<div class="modal-caixa oculto" id="modal-referencia">
+  <button class="modal-fechar-x" id="modal-referencia-fechar" type="button" aria-label="Fechar">✕</button>
+  <div id="modal-referencia-corpo"></div>
+</div>
+
+<!-- modal do dia do calendário (quando tem mais de 3 itens) -->
+<div class="modal-fundo oculto" id="modal-dia-fundo"></div>
+<div class="modal-caixa oculto" id="modal-dia">
+  <button class="modal-fechar-x" id="modal-dia-fechar" type="button" aria-label="Fechar">✕</button>
+  <h2 id="modal-dia-titulo"></h2>
+  <div id="modal-dia-corpo"></div>
+</div>
+
+<div id="caixa-toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/banco.js"></script>
+<script src="../js/biblioteca.js" onerror="window.Biblioteca = window.Biblioteca || null;"></script>
+<script>
+(function () {
+  "use strict";
+
+  if (!window.banco) {
+    document.getElementById("tela-carregando").textContent =
+      "Não consegui carregar a conexão com o banco de dados. Confira sua internet e recarregue a página.";
+    return;
+  }
+
+  /* =========================================================
+     LISTAS FIXAS USADAS NOS FORMULÁRIOS (mesmos nichos do site)
+  ========================================================= */
+  var NICHOS = [
+    { id: "beleza", label: "Beleza" },
+    { id: "skincare", label: "Skincare" },
+    { id: "moda", label: "Moda" },
+    { id: "casa", label: "Casa e decoração" },
+    { id: "fitness", label: "Fitness" },
+    { id: "viagem", label: "Viagem" },
+    { id: "tech", label: "Tech" },
+    { id: "hobby", label: "Hobby" },
+    { id: "casal", label: "Casal" }
+  ];
+  var SITUACOES = [
+    { id: "lead", label: "Lead" },
+    { id: "conversando", label: "Conversando" },
+    { id: "cliente", label: "Cliente" },
+    { id: "parada", label: "Parada" }
+  ];
+  var TIPOS_CALENDARIO = [
+    { id: "gravar", label: "Gravar" },
+    { id: "editar", label: "Editar" },
+    { id: "postar", label: "Postar" }
+  ];
+  var FUNIL_STATUS = ["Briefing", "Roteiro", "Aprovação Roteiro", "Gravação", "Edição", "Aprovado", "Entregue"];
+  var DIAS_SEMANA = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
+  var MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+
+  /* =========================================================
+     ESTADO GERAL
+  ========================================================= */
+  var Estado = {
+    videos: [],
+    marcas: [],
+    trabalhadas: [],
+    calendario: [],
+    campanhas: [],
+    roteiros: [],
+    visitas: [],
+    marcados: {},
+    mesCalendario: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    filtroTipoCalendario: null,
+    filtroSituacaoMarcas: "todas",
+    buscaMarcas: "",
+    filtroCampanhas: "todas",
+    buscaCampanhas: "",
+    ordemCampanhas: { campo: "prazo", direcao: "asc" }
+  };
+
+  /* =========================================================
+     UTILITÁRIOS
+  ========================================================= */
+  function escaparHtml(texto) {
+    if (texto === null || texto === undefined) return "";
+    return String(texto)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function formatarData(iso) {
+    if (!iso) return "";
+    var partes = String(iso).slice(0, 10).split("-");
+    if (partes.length !== 3) return iso;
+    return partes[2] + "/" + partes[1] + "/" + partes[0];
+  }
+
+  function formatarDataHoraCurta(iso) {
+    if (!iso) return "";
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return "";
+    return formatarData(d.toISOString()) ;
+  }
+
+  function formatarDinheiro(valor) {
+    var n = Number(valor);
+    if (!isFinite(n)) n = 0;
+    return n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  }
+
+  function paraDataISO(d) {
+    var ano = d.getFullYear();
+    var mes = String(d.getMonth() + 1).padStart(2, "0");
+    var dia = String(d.getDate()).padStart(2, "0");
+    return ano + "-" + mes + "-" + dia;
+  }
+
+  function hojeISO() {
+    return paraDataISO(new Date());
+  }
+
+  var idToastTimeout = null;
+  function mostrarToast(mensagem) {
+    var caixa = document.getElementById("caixa-toast");
+    caixa.textContent = mensagem;
+    caixa.classList.add("mostrar");
+    if (idToastTimeout) window.clearTimeout(idToastTimeout);
+    idToastTimeout = window.setTimeout(function () {
+      caixa.classList.remove("mostrar");
+    }, 3200);
+  }
+
+  function mostrarAvisoSecao(idContainer, mensagem, tipo) {
+    var container = document.getElementById(idContainer);
+    if (!container) return;
+    var classe = tipo === "erro" ? "aviso-erro" : "aviso-info";
+    var divAviso = document.createElement("div");
+    divAviso.className = "aviso " + classe;
+    divAviso.textContent = mensagem;
+    container.prepend(divAviso);
+  }
+
+  function baixarCSV(nomeArquivo, cabecalhos, linhas) {
+    function escaparCampo(valor) {
+      var texto = valor === null || valor === undefined ? "" : String(valor);
+      if (/[";\n]/.test(texto)) {
+        texto = '"' + texto.replace(/"/g, '""') + '"';
+      }
+      return texto;
+    }
+    var conteudo = cabecalhos.map(escaparCampo).join(";") + "\n";
+    linhas.forEach(function (linha) {
+      conteudo += linha.map(escaparCampo).join(";") + "\n";
+    });
+    var blob = new Blob(["﻿" + conteudo], { type: "text/csv;charset=utf-8;" });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement("a");
+    link.href = url;
+    link.download = nomeArquivo;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
+  function somenteDigitos(texto) {
+    return String(texto || "").replace(/\D/g, "");
+  }
+
+  /* =========================================================
+     AUTENTICAÇÃO (primeira coisa a rodar)
+  ========================================================= */
+  function irParaLogin() {
+    window.location.href = "../login/";
+  }
+
+  window.banco.auth.getSession().then(function (resultado) {
+    var sessao = resultado && resultado.data ? resultado.data.session : null;
+    if (!sessao) {
+      irParaLogin();
+      return;
+    }
+    document.getElementById("rodape-email").textContent = sessao.user.email || "";
+    document.getElementById("tela-carregando").hidden = true;
+    document.getElementById("app").hidden = false;
+    iniciarPainel();
+  }).catch(function () {
+    irParaLogin();
+  });
+
+  window.banco.auth.onAuthStateChange(function (evento) {
+    if (evento === "SIGNED_OUT") {
+      irParaLogin();
+    }
+  });
+
+  document.getElementById("botao-sair").addEventListener("click", function () {
+    window.banco.auth.signOut().then(function () {
+      irParaLogin();
+    });
+  });
+
+  /* =========================================================
+     NAVEGAÇÃO ENTRE ABAS
+  ========================================================= */
+  var TITULOS_ABA = {
+    portfolio: "Portfólio",
+    marcas: "Marcas",
+    "marcas-trabalhadas": "Marcas trabalhadas",
+    calendario: "Calendário",
+    campanhas: "Campanhas",
+    roteiro: "Roteiro",
+    checklist: "Checklist do portfólio"
+  };
+
+  function trocarAba(nome) {
+    document.querySelectorAll(".item-nav").forEach(function (botao) {
+      botao.classList.toggle("ativo", botao.getAttribute("data-aba") === nome);
+    });
+    document.querySelectorAll(".painel").forEach(function (painel) {
+      painel.classList.toggle("ativo", painel.id === "painel-" + nome);
+    });
+    document.getElementById("titulo-pagina").textContent = TITULOS_ABA[nome] || "";
+    fecharGaveta();
+  }
+
+  function abrirGaveta() {
+    document.getElementById("barra-lateral").classList.add("aberta");
+    document.getElementById("fundo-gaveta").classList.add("mostrar");
+  }
+  function fecharGaveta() {
+    document.getElementById("barra-lateral").classList.remove("aberta");
+    document.getElementById("fundo-gaveta").classList.remove("mostrar");
+  }
+
+  document.querySelectorAll(".item-nav").forEach(function (botao) {
+    botao.addEventListener("click", function () {
+      trocarAba(botao.getAttribute("data-aba"));
+    });
+  });
+  document.getElementById("botao-hamburguer-admin").addEventListener("click", abrirGaveta);
+  document.getElementById("fundo-gaveta").addEventListener("click", fecharGaveta);
+
+  /* =========================================================
+     MODAL GENÉRICO DE FORMULÁRIO
+     abrirFormulario({ titulo, campos, valores, aoSalvar })
+     campos: [{ nome, rotulo, tipo: 'text'|'textarea'|'select'|'date'|'number'|'email'|'url'|'checkbox', opcoes, obrigatorio, placeholder }]
+  ========================================================= */
+  var modalFundo = document.getElementById("modal-fundo");
+  var modalCaixa = document.getElementById("modal-caixa");
+  var modalForm = document.getElementById("modal-form");
+  var modalTitulo = document.getElementById("modal-titulo");
+  var configModalAtual = null;
+
+  function abrirFormulario(config) {
+    configModalAtual = config;
+    modalTitulo.textContent = config.titulo;
+    modalForm.innerHTML = "";
+    var valores = config.valores || {};
+
+    config.campos.forEach(function (campo) {
+      var div = document.createElement("div");
+      div.className = "campo-form";
+
+      if (campo.tipo === "checkbox") {
+        div.className = "campo-form campo-checkbox";
+        var input = document.createElement("input");
+        input.type = "checkbox";
+        input.id = "campo-modal-" + campo.nome;
+        input.name = campo.nome;
+        input.checked = valores[campo.nome] === true || valores[campo.nome] === "true";
+        var label = document.createElement("label");
+        label.setAttribute("for", input.id);
+        label.textContent = campo.rotulo;
+        div.appendChild(input);
+        div.appendChild(label);
+        modalForm.appendChild(div);
+        return;
+      }
+
+      var label2 = document.createElement("label");
+      label2.setAttribute("for", "campo-modal-" + campo.nome);
+      label2.textContent = campo.rotulo + (campo.obrigatorio ? " *" : "");
+      div.appendChild(label2);
+
+      var elementoCampo;
+      if (campo.tipo === "textarea") {
+        elementoCampo = document.createElement("textarea");
+      } else if (campo.tipo === "select") {
+        elementoCampo = document.createElement("select");
+        (campo.opcoes || []).forEach(function (opcao) {
+          var optEl = document.createElement("option");
+          optEl.value = opcao.id;
+          optEl.textContent = opcao.label;
+          elementoCampo.appendChild(optEl);
+        });
+      } else {
+        elementoCampo = document.createElement("input");
+        elementoCampo.type = campo.tipo || "text";
+        if (campo.step) elementoCampo.step = campo.step;
+      }
+      elementoCampo.id = "campo-modal-" + campo.nome;
+      elementoCampo.name = campo.nome;
+      if (campo.placeholder) elementoCampo.placeholder = campo.placeholder;
+      if (campo.obrigatorio) elementoCampo.required = true;
+
+      var valorAtual = valores[campo.nome];
+      if (valorAtual !== undefined && valorAtual !== null) {
+        elementoCampo.value = valorAtual;
+      } else if (campo.tipo === "select" && campo.opcoes && campo.opcoes.length) {
+        elementoCampo.value = campo.opcoes[0].id;
+      } else if (campo.tipo === "number") {
+        elementoCampo.value = campo.padrao !== undefined ? campo.padrao : 0;
+      }
+
+      div.appendChild(elementoCampo);
+      modalForm.appendChild(div);
+    });
+
+    var botaoApagarAntigo = document.getElementById("modal-apagar-dinamico");
+    if (botaoApagarAntigo) botaoApagarAntigo.remove();
+    if (config.aoApagar) {
+      var botaoApagar = document.createElement("button");
+      botaoApagar.type = "button";
+      botaoApagar.id = "modal-apagar-dinamico";
+      botaoApagar.className = "btn btn-contorno";
+      botaoApagar.style.marginRight = "auto";
+      botaoApagar.style.color = "#f3a696";
+      botaoApagar.style.borderColor = "var(--vermelho)";
+      botaoApagar.textContent = "Apagar";
+      botaoApagar.addEventListener("click", function () {
+        if (!confirm("Apagar este registro? Isso não pode ser desfeito.")) return;
+        Promise.resolve(config.aoApagar()).then(function () {
+          fecharFormulario();
+        }).catch(function (erro) {
+          mostrarToast("Não consegui apagar: " + (erro && erro.message ? erro.message : ""));
+        });
+      });
+      document.querySelector(".modal-botoes").prepend(botaoApagar);
+    }
+
+    modalFundo.classList.remove("oculto");
+    modalCaixa.classList.remove("oculto");
+  }
+
+  function fecharFormulario() {
+    modalFundo.classList.add("oculto");
+    modalCaixa.classList.add("oculto");
+    configModalAtual = null;
+  }
+
+  document.getElementById("modal-fechar-x").addEventListener("click", fecharFormulario);
+  document.getElementById("modal-cancelar").addEventListener("click", fecharFormulario);
+  modalFundo.addEventListener("click", fecharFormulario);
+
+  modalForm.addEventListener("submit", function (evento) {
+    evento.preventDefault();
+    if (!configModalAtual) return;
+    var dados = {};
+    configModalAtual.campos.forEach(function (campo) {
+      var elemento = document.getElementById("campo-modal-" + campo.nome);
+      if (!elemento) return;
+      if (campo.tipo === "checkbox") {
+        dados[campo.nome] = elemento.checked;
+      } else if (campo.tipo === "number") {
+        dados[campo.nome] = elemento.value === "" ? 0 : Number(elemento.value);
+      } else {
+        dados[campo.nome] = elemento.value === "" ? null : elemento.value;
+      }
+    });
+    var botaoSalvar = document.getElementById("modal-salvar");
+    botaoSalvar.disabled = true;
+    Promise.resolve(configModalAtual.aoSalvar(dados)).then(function () {
+      botaoSalvar.disabled = false;
+      fecharFormulario();
+    }).catch(function (erro) {
+      botaoSalvar.disabled = false;
+      mostrarToast("Não consegui salvar: " + (erro && erro.message ? erro.message : "erro desconhecido."));
+    });
+  });
+
+  /* =========================================================
+     CARREGAMENTO GERAL
+     Cada tabela é carregada de forma independente: se uma falhar
+     (por exemplo, porque o banco.sql ainda não foi rodado), as
+     outras continuam funcionando normalmente.
+  ========================================================= */
+  function carregarTabela(nomeTabela, ordenarPor) {
+    var consulta = window.banco.from(nomeTabela).select("*");
+    if (ordenarPor) consulta = consulta.order(ordenarPor.campo, { ascending: ordenarPor.asc !== false });
+    return consulta.then(function (resultado) {
+      if (resultado.error) throw resultado.error;
+      return resultado.data || [];
+    });
+  }
+
+  function carregarMarcados() {
+    return window.banco.from("marcados").select("*").then(function (resultado) {
+      if (resultado.error) throw resultado.error;
+      var mapa = {};
+      (resultado.data || []).forEach(function (linha) {
+        mapa[linha.chave] = !!linha.marcado;
+      });
+      return mapa;
+    });
+  }
+
+  function carregarTudo() {
+    var tarefas = [
+      carregarTabela("videos", { campo: "ordem", asc: true }).then(function (dados) { Estado.videos = dados; }).catch(function (erro) { avisarTabelaFaltando("videos", erro); }),
+      carregarTabela("marcas", { campo: "criado_em", asc: false }).then(function (dados) { Estado.marcas = dados; }).catch(function (erro) { avisarTabelaFaltando("marcas", erro); }),
+      carregarTabela("marcas_trabalhadas", { campo: "data", asc: false }).then(function (dados) { Estado.trabalhadas = dados; }).catch(function (erro) { avisarTabelaFaltando("marcas_trabalhadas", erro); }),
+      carregarTabela("calendario", { campo: "data", asc: true }).then(function (dados) { Estado.calendario = dados; }).catch(function (erro) { avisarTabelaFaltando("calendario", erro); }),
+      carregarTabela("campanhas", { campo: "prazo", asc: true }).then(function (dados) { Estado.campanhas = dados; }).catch(function (erro) { avisarTabelaFaltando("campanhas", erro); }),
+      carregarTabela("roteiros", { campo: "atualizado_em", asc: false }).then(function (dados) { Estado.roteiros = dados; }).catch(function (erro) { avisarTabelaFaltando("roteiros", erro); }),
+      carregarTabela("visitas", { campo: "data", asc: false }).then(function (dados) { Estado.visitas = dados; }).catch(function (erro) { avisarTabelaFaltando("visitas", erro); }),
+      carregarMarcados().then(function (mapa) { Estado.marcados = mapa; }).catch(function (erro) { avisarTabelaFaltando("marcados", erro); })
+    ];
+    return Promise.allSettled(tarefas);
+  }
+
+  var tabelasAvisadas = {};
+  function avisarTabelaFaltando(nomeTabela, erro) {
+    if (tabelasAvisadas[nomeTabela]) return;
+    tabelasAvisadas[nomeTabela] = true;
+    console.error("Falha ao carregar " + nomeTabela, erro);
+    var aviso = document.getElementById("aviso-geral");
+    var div = document.createElement("div");
+    div.className = "aviso aviso-erro";
+    div.textContent = "Não consegui carregar os dados de \"" + nomeTabela + "\". Confira se rodou o banco.sql no Supabase. O resto do painel continua funcionando normalmente.";
+    aviso.appendChild(div);
+  }
+
+  /* =========================================================
+     INÍCIO DO PAINEL
+  ========================================================= */
+  function iniciarPainel() {
+    carregarTudo().then(function () {
+      renderizarPortfolio();
+      renderizarMarcas();
+      renderizarTrabalhadas();
+      renderCalendario();
+      renderizarCampanhas();
+      renderizarRoteiros();
+      renderizarChecklist();
+    });
+  }
+
+  /* =========================================================
+     ÍCONES REUTILIZADOS
+  ========================================================= */
+  var ICONE_OLHO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+  var ICONE_OLHO_FECHADO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3l18 18"></path><path d="M10.6 5.2A10.6 10.6 0 0 1 12 5c6.5 0 10 7 10 7a15.6 15.6 0 0 1-3.6 4.4M6.6 6.6C4 8.3 2 12 2 12s3.5 7 10 7a9.7 9.7 0 0 0 3.4-.6"></path><path d="M9.5 9.5a3 3 0 0 0 4.2 4.2"></path></svg>';
+  var ICONE_LAPIS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"></path></svg>';
+  var ICONE_LIXO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path></svg>';
+  var ICONE_ALCA = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.4"></circle><circle cx="15" cy="6" r="1.4"></circle><circle cx="9" cy="12" r="1.4"></circle><circle cx="15" cy="12" r="1.4"></circle><circle cx="9" cy="18" r="1.4"></circle><circle cx="15" cy="18" r="1.4"></circle></svg>';
+  var ICONE_ESTRELA_CHEIA = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7 7 .6-5.3 4.6L18.2 22 12 18l-6.2 4 1.5-7.8L2 9.6 9 9z"></path></svg>';
+  var ICONE_ESTRELA_VAZIA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l3 7 7 .6-5.3 4.6L18.2 22 12 18l-6.2 4 1.5-7.8L2 9.6 9 9z"></path></svg>';
+  var ICONE_WHATSAPP = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"></path></svg>';
+  var ICONE_INSTAGRAM = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1"></circle></svg>';
+
+  function rotuloNicho(id) {
+    var achado = NICHOS.filter(function (n) { return n.id === id; })[0];
+    return achado ? achado.label : (id || "-");
+  }
+  function rotuloSituacao(id) {
+    var achado = SITUACOES.filter(function (s) { return s.id === id; })[0];
+    return achado ? achado.label : (id || "-");
+  }
+  function classePilulaSituacao(id) {
+    if (id === "lead") return "pilula-contorno-azul";
+    if (id === "conversando") return "pilula-contorno-laranja";
+    if (id === "cliente") return "pilula-cheia-laranja";
+    if (id === "parada") return "pilula-contorno-vermelho";
+    return "pilula-contorno-azul";
+  }
+
+  /* =========================================================
+     1. PORTFÓLIO
+  ========================================================= */
+  function renderizarPortfolio() {
+    renderMetricasPortfolio();
+    renderGraficoVisitas();
+    renderListaOrigens();
+    renderTabelaVideos();
+  }
+
+  function renderMetricasPortfolio() {
+    var container = document.getElementById("metricas-portfolio");
+    var agora = new Date();
+    var limite14 = new Date();
+    limite14.setDate(limite14.getDate() - 14);
+
+    var visitas14 = Estado.visitas.filter(function (v) { return new Date(v.data) >= limite14; }).length;
+    var visitasHoje = Estado.visitas.filter(function (v) {
+      var d = new Date(v.data);
+      return d.getFullYear() === agora.getFullYear() && d.getMonth() === agora.getMonth() && d.getDate() === agora.getDate();
+    }).length;
+    var videosNoAr = Estado.videos.filter(function (v) { return v.visivel; }).length;
+
+    var contagemNicho = {};
+    Estado.videos.forEach(function (v) { if (v.nicho) contagemNicho[v.nicho] = (contagemNicho[v.nicho] || 0) + 1; });
+    var nichoForte = "sem dados ainda";
+    var maiorNicho = 0;
+    Object.keys(contagemNicho).forEach(function (n) {
+      if (contagemNicho[n] > maiorNicho) { maiorNicho = contagemNicho[n]; nichoForte = rotuloNicho(n); }
+    });
+
+    var contagemOrigem = {};
+    Estado.visitas.forEach(function (v) {
+      var origem = v.origem || "direto";
+      contagemOrigem[origem] = (contagemOrigem[origem] || 0) + 1;
+    });
+    var origemForte = "sem dados ainda";
+    var maiorOrigem = 0;
+    Object.keys(contagemOrigem).forEach(function (o) {
+      if (contagemOrigem[o] > maiorOrigem) { maiorOrigem = contagemOrigem[o]; origemForte = o; }
+    });
+
+    var itens = [
+      { valor: visitas14, rotulo: "visitas em 14 dias" },
+      { valor: visitasHoje, rotulo: "visitas hoje" },
+      { valor: videosNoAr, rotulo: "vídeos no ar" },
+      { valor: nichoForte, rotulo: "nicho mais forte" },
+      { valor: origemForte, rotulo: "de onde mais vêm" }
+    ];
+    container.innerHTML = itens.map(function (item) {
+      return '<div class="metrica-mini"><strong>' + escaparHtml(item.valor) + '</strong><span>' + escaparHtml(item.rotulo) + '</span></div>';
+    }).join("");
+  }
+
+  function renderGraficoVisitas() {
+    var container = document.getElementById("grafico-visitas");
+    if (!Estado.visitas.length) {
+      container.innerHTML = '<p class="mensagem-vazia">Ainda não há visitas registradas. Assim que as pessoas começarem a visitar o seu portfólio, esse gráfico mostra os últimos 14 dias.</p>';
+      return;
+    }
+    var dias = [];
+    for (var i = 13; i >= 0; i--) {
+      var d = new Date();
+      d.setDate(d.getDate() - i);
+      dias.push(d);
+    }
+    var contagens = dias.map(function (dia) {
+      return Estado.visitas.filter(function (v) {
+        var vd = new Date(v.data);
+        return vd.getFullYear() === dia.getFullYear() && vd.getMonth() === dia.getMonth() && vd.getDate() === dia.getDate();
+      }).length;
+    });
+    var maximo = Math.max.apply(null, contagens.concat([1]));
+    var html = '<div class="grafico-barras">';
+    dias.forEach(function (dia, indice) {
+      var alturaPorcento = Math.round((contagens[indice] / maximo) * 100);
+      html += '<div class="barra-col" title="' + contagens[indice] + ' visita(s)">' +
+        '<div class="barra" style="height:' + Math.max(alturaPorcento, contagens[indice] > 0 ? 4 : 0) + '%"></div>' +
+        '<span class="barra-rotulo">' + String(dia.getDate()).padStart(2, "0") + '</span>' +
+      '</div>';
+    });
+    html += '</div>';
+    container.innerHTML = html;
+  }
+
+  function renderListaOrigens() {
+    var lista = document.getElementById("lista-origens");
+    if (!Estado.visitas.length) {
+      lista.innerHTML = '<p class="mensagem-vazia">Ainda não há visitas registradas. Aqui vai aparecer de onde as pessoas estão chegando (Instagram, direto, buscadores etc).</p>';
+      return;
+    }
+    var contagem = {};
+    Estado.visitas.forEach(function (v) {
+      var origem = v.origem || "direto";
+      contagem[origem] = (contagem[origem] || 0) + 1;
+    });
+    var lista2 = Object.keys(contagem).map(function (o) { return { origem: o, total: contagem[o] }; });
+    lista2.sort(function (a, b) { return b.total - a.total; });
+    lista2 = lista2.slice(0, 8);
+    var maximo = lista2[0] ? lista2[0].total : 1;
+    lista.innerHTML = lista2.map(function (item) {
+      var porcento = Math.round((item.total / maximo) * 100);
+      return '<li><span>' + escaparHtml(item.origem) + '</span><span class="barra-origem"><span style="width:' + porcento + '%"></span></span><span>' + item.total + '</span></li>';
+    }).join("");
+  }
+
+  function renderTabelaVideos() {
+    var corpo = document.getElementById("corpo-tabela-videos");
+    if (!Estado.videos.length) {
+      corpo.innerHTML = '<tr><td colspan="7" class="sem-registros">Nenhum vídeo cadastrado ainda. Clique em "Adicionar vídeo" para começar.</td></tr>';
+      return;
+    }
+    corpo.innerHTML = Estado.videos.map(function (v) {
+      return '<tr draggable="true" data-id="' + v.id + '">' +
+        '<td><span class="alca-arrastar">' + ICONE_ALCA + '</span></td>' +
+        '<td>' + escaparHtml(v.titulo) + '</td>' +
+        '<td>' + escaparHtml(rotuloNicho(v.nicho)) + '</td>' +
+        '<td>' + escaparHtml(v.marca || "-") + '</td>' +
+        '<td>' + escaparHtml(v.destaque || "-") + '</td>' +
+        '<td><button class="btn-icone" data-acao="visivel" data-id="' + v.id + '" type="button" aria-label="Mostrar ou esconder do site">' + (v.visivel ? ICONE_OLHO : ICONE_OLHO_FECHADO) + '</button></td>' +
+        '<td class="celula-acoes">' +
+          '<button class="btn-icone" data-acao="editar" data-id="' + v.id + '" type="button" aria-label="Editar">' + ICONE_LAPIS + '</button>' +
+          '<button class="btn-icone" data-acao="apagar" data-id="' + v.id + '" type="button" aria-label="Apagar">' + ICONE_LIXO + '</button>' +
+        '</td>' +
+      '</tr>';
+    }).join("");
+    ativarArrastarVideos();
+  }
+
+  function camposFormularioVideo() {
+    return [
+      { nome: "titulo", rotulo: "Título", tipo: "text", obrigatorio: true },
+      { nome: "link", rotulo: "Link do vídeo", tipo: "text", placeholder: "https://..." },
+      { nome: "nicho", rotulo: "Nicho", tipo: "select", opcoes: NICHOS },
+      { nome: "formato", rotulo: "Formato", tipo: "text", placeholder: "Reels, TikTok, Stories..." },
+      { nome: "marca", rotulo: "Marca", tipo: "text" },
+      { nome: "destaque", rotulo: "Número de destaque", tipo: "text", placeholder: "ex: 2,4M views" },
+      { nome: "visivel", rotulo: "Aparece no site", tipo: "checkbox" }
+    ];
+  }
+
+  function abrirModalVideo(registro) {
+    abrirFormulario({
+      titulo: registro ? "Editar vídeo" : "Adicionar vídeo",
+      campos: camposFormularioVideo(),
+      valores: registro || { visivel: true },
+      aoSalvar: function (dados) {
+        if (registro) {
+          return window.banco.from("videos").update(dados).eq("id", registro.id).then(tratarResultado).then(function () {
+            return recarregarESetar("videos", { campo: "ordem", asc: true }, "videos").then(renderTabelaVideos).then(function(){ renderMetricasPortfolio(); mostrarToast("Vídeo atualizado."); });
+          });
+        }
+        dados.ordem = Estado.videos.length;
+        return window.banco.from("videos").insert(dados).then(tratarResultado).then(function () {
+          return recarregarESetar("videos", { campo: "ordem", asc: true }, "videos").then(renderTabelaVideos).then(function(){ renderMetricasPortfolio(); mostrarToast("Vídeo adicionado."); });
+        });
+      }
+    });
+  }
+
+  function tratarResultado(resultado) {
+    if (resultado && resultado.error) throw resultado.error;
+    return resultado;
+  }
+
+  function recarregarESetar(tabela, ordem, chaveEstado) {
+    return carregarTabela(tabela, ordem).then(function (dados) { Estado[chaveEstado] = dados; return dados; });
+  }
+
+  document.getElementById("botao-add-video").addEventListener("click", function () { abrirModalVideo(null); });
+
+  document.getElementById("corpo-tabela-videos").addEventListener("click", function (evento) {
+    var botao = evento.target.closest("button[data-acao]");
+    if (!botao) return;
+    var id = botao.getAttribute("data-id");
+    var acao = botao.getAttribute("data-acao");
+    var registro = Estado.videos.filter(function (v) { return String(v.id) === String(id); })[0];
+    if (!registro) return;
+
+    if (acao === "editar") {
+      abrirModalVideo(registro);
+    } else if (acao === "apagar") {
+      if (!confirm('Apagar o vídeo "' + registro.titulo + '"? Isso não pode ser desfeito.')) return;
+      window.banco.from("videos").delete().eq("id", id).then(tratarResultado).then(function () {
+        return recarregarESetar("videos", { campo: "ordem", asc: true }, "videos").then(renderTabelaVideos).then(function(){ renderMetricasPortfolio(); mostrarToast("Vídeo apagado."); });
+      }).catch(function (erro) { mostrarToast("Não consegui apagar: " + erro.message); });
+    } else if (acao === "visivel") {
+      window.banco.from("videos").update({ visivel: !registro.visivel }).eq("id", id).then(tratarResultado).then(function () {
+        return recarregarESetar("videos", { campo: "ordem", asc: true }, "videos").then(renderTabelaVideos).then(renderMetricasPortfolio);
+      }).catch(function (erro) { mostrarToast("Não consegui atualizar: " + erro.message); });
+    }
+  });
+
+  var idArrastado = null;
+  function ativarArrastarVideos() {
+    var linhas = document.querySelectorAll("#corpo-tabela-videos tr[draggable]");
+    linhas.forEach(function (linha) {
+      linha.addEventListener("dragstart", function () {
+        idArrastado = linha.getAttribute("data-id");
+        linha.classList.add("arrastando");
+      });
+      linha.addEventListener("dragend", function () {
+        linha.classList.remove("arrastando");
+      });
+      linha.addEventListener("dragover", function (evento) {
+        evento.preventDefault();
+      });
+      linha.addEventListener("drop", function (evento) {
+        evento.preventDefault();
+        var idAlvo = linha.getAttribute("data-id");
+        if (!idArrastado || idArrastado === idAlvo) return;
+        var listaAtual = Estado.videos.slice();
+        var indiceOrigem = listaAtual.findIndex(function (v) { return String(v.id) === String(idArrastado); });
+        var indiceDestino = listaAtual.findIndex(function (v) { return String(v.id) === String(idAlvo); });
+        if (indiceOrigem === -1 || indiceDestino === -1) return;
+        var item = listaAtual.splice(indiceOrigem, 1)[0];
+        listaAtual.splice(indiceDestino, 0, item);
+        Estado.videos = listaAtual;
+        renderTabelaVideos();
+        var atualizacoes = listaAtual.map(function (v, indice) { return { id: v.id, ordem: indice, titulo: v.titulo }; });
+        window.banco.from("videos").upsert(atualizacoes).then(tratarResultado).catch(function (erro) {
+          mostrarToast("Não consegui salvar a nova ordem: " + erro.message);
+        });
+      });
+    });
+  }
+
+  /* =========================================================
+     2. MARCAS
+  ========================================================= */
+  function camposFormularioMarca() {
+    return [
+      { nome: "nome", rotulo: "Marca", tipo: "text", obrigatorio: true },
+      { nome: "instagram", rotulo: "Instagram", tipo: "text", placeholder: "@marca" },
+      { nome: "email", rotulo: "E-mail", tipo: "email" },
+      { nome: "telefone", rotulo: "Telefone", tipo: "text", placeholder: "(00) 00000-0000" },
+      { nome: "situacao", rotulo: "Situação", tipo: "select", opcoes: SITUACOES },
+      { nome: "ultimo_contato", rotulo: "Último contato", tipo: "date" },
+      { nome: "obs", rotulo: "Observação", tipo: "textarea" }
+    ];
+  }
+
+  function abrirModalMarca(registro) {
+    abrirFormulario({
+      titulo: registro ? "Editar marca" : "Adicionar marca",
+      campos: camposFormularioMarca(),
+      valores: registro || { situacao: "lead" },
+      aoSalvar: function (dados) {
+        var promessa = registro
+          ? window.banco.from("marcas").update(dados).eq("id", registro.id)
+          : window.banco.from("marcas").insert(dados);
+        return promessa.then(tratarResultado).then(function () {
+          return recarregarESetar("marcas", { campo: "criado_em", asc: false }, "marcas").then(function () {
+            renderTabelaMarcas();
+            mostrarToast(registro ? "Marca atualizada." : "Marca adicionada.");
+          });
+        });
+      }
+    });
+  }
+
+  function marcasFiltradas() {
+    var termo = Estado.buscaMarcas.trim().toLowerCase();
+    return Estado.marcas.filter(function (m) {
+      if (Estado.filtroSituacaoMarcas !== "todas" && m.situacao !== Estado.filtroSituacaoMarcas) return false;
+      if (!termo) return true;
+      var alvo = ((m.nome || "") + " " + (m.instagram || "") + " " + (m.email || "")).toLowerCase();
+      return alvo.indexOf(termo) !== -1;
+    });
+  }
+
+  function renderFiltrosSituacao() {
+    var container = document.getElementById("filtros-situacao");
+    var opcoes = [{ id: "todas", label: "Todas" }].concat(SITUACOES);
+    container.innerHTML = opcoes.map(function (opcao) {
+      return '<button class="chip' + (Estado.filtroSituacaoMarcas === opcao.id ? " ativo" : "") + '" data-situacao="' + opcao.id + '" type="button">' + opcao.label + '</button>';
+    }).join("");
+  }
+
+  function renderTabelaMarcas() {
+    renderFiltrosSituacao();
+    var corpo = document.getElementById("corpo-tabela-marcas");
+    var lista = marcasFiltradas();
+    if (!lista.length) {
+      corpo.innerHTML = '<tr><td colspan="7" class="sem-registros">' + (Estado.marcas.length ? "Nenhuma marca encontrada com esse filtro." : 'Nenhuma marca cadastrada ainda. Clique em "Adicionar marca" para começar.') + '</td></tr>';
+      return;
+    }
+    corpo.innerHTML = lista.map(function (m) {
+      var botaoWhats = m.telefone ? '<a class="btn-icone" href="https://wa.me/55' + somenteDigitos(m.telefone) + '" target="_blank" rel="noopener" aria-label="WhatsApp" onclick="event.stopPropagation()">' + ICONE_WHATSAPP + '</a>' : "";
+      var botaoInsta = m.instagram ? '<a class="btn-icone" href="https://instagram.com/' + escaparHtml(String(m.instagram).replace("@", "")) + '" target="_blank" rel="noopener" aria-label="Instagram" onclick="event.stopPropagation()">' + ICONE_INSTAGRAM + '</a>' : "";
+      return '<tr data-id="' + m.id + '">' +
+        '<td>' + escaparHtml(m.nome) + '</td>' +
+        '<td>' + escaparHtml(m.instagram || "-") + '</td>' +
+        '<td>' + escaparHtml(m.email || "-") + '</td>' +
+        '<td>' + escaparHtml(m.telefone || "-") + '</td>' +
+        '<td><span class="pilula ' + classePilulaSituacao(m.situacao) + '">' + escaparHtml(rotuloSituacao(m.situacao)) + '</span></td>' +
+        '<td>' + escaparHtml(formatarData(m.ultimo_contato) || "-") + '</td>' +
+        '<td class="celula-acoes">' + botaoWhats + botaoInsta + '<button class="btn-icone" data-acao="apagar-marca" data-id="' + m.id + '" type="button" aria-label="Apagar" onclick="event.stopPropagation()">' + ICONE_LIXO + '</button></td>' +
+      '</tr>';
+    }).join("");
+  }
+
+  document.getElementById("botao-add-marca").addEventListener("click", function () { abrirModalMarca(null); });
+  document.getElementById("busca-marcas").addEventListener("input", function (evento) {
+    Estado.buscaMarcas = evento.target.value;
+    renderTabelaMarcas();
+  });
+  document.getElementById("filtros-situacao").addEventListener("click", function (evento) {
+    var botao = evento.target.closest(".chip");
+    if (!botao) return;
+    Estado.filtroSituacaoMarcas = botao.getAttribute("data-situacao");
+    renderTabelaMarcas();
+  });
+  document.getElementById("corpo-tabela-marcas").addEventListener("click", function (evento) {
+    var botaoApagar = evento.target.closest('[data-acao="apagar-marca"]');
+    if (botaoApagar) {
+      var id = botaoApagar.getAttribute("data-id");
+      var registro = Estado.marcas.filter(function (m) { return String(m.id) === String(id); })[0];
+      if (!registro || !confirm('Apagar a marca "' + registro.nome + '"? Isso não pode ser desfeito.')) return;
+      window.banco.from("marcas").delete().eq("id", id).then(tratarResultado).then(function () {
+        return recarregarESetar("marcas", { campo: "criado_em", asc: false }, "marcas").then(function () {
+          renderTabelaMarcas();
+          mostrarToast("Marca apagada.");
+        });
+      }).catch(function (erro) { mostrarToast("Não consegui apagar: " + erro.message); });
+      return;
+    }
+    var linha = evento.target.closest("tr[data-id]");
+    if (!linha) return;
+    var registro2 = Estado.marcas.filter(function (m) { return String(m.id) === String(linha.getAttribute("data-id")); })[0];
+    if (registro2) abrirModalMarca(registro2);
+  });
+  document.getElementById("botao-csv-marcas").addEventListener("click", function () {
+    var lista = marcasFiltradas();
+    baixarCSV("marcas.csv",
+      ["Marca", "Instagram", "E-mail", "Telefone", "Situação", "Observação", "Último contato"],
+      lista.map(function (m) { return [m.nome, m.instagram, m.email, m.telefone, rotuloSituacao(m.situacao), m.obs, formatarData(m.ultimo_contato)]; })
+    );
+  });
+
+  function renderizarMarcas() { renderTabelaMarcas(); }
+
+  /* =========================================================
+     3. MARCAS TRABALHADAS
+  ========================================================= */
+  function camposFormularioTrabalhada() {
+    return [
+      { nome: "marca", rotulo: "Marca", tipo: "text", obrigatorio: true },
+      { nome: "telefone", rotulo: "Telefone", tipo: "text", placeholder: "(00) 00000-0000" },
+      { nome: "email", rotulo: "E-mail", tipo: "email" },
+      { nome: "data", rotulo: "Data que trabalhou", tipo: "date" },
+      { nome: "obs", rotulo: "Observação", tipo: "textarea" }
+    ];
+  }
+
+  function abrirModalTrabalhada(registro) {
+    abrirFormulario({
+      titulo: registro ? "Editar marca trabalhada" : "Adicionar marca trabalhada",
+      campos: camposFormularioTrabalhada(),
+      valores: registro || {},
+      aoSalvar: function (dados) {
+        var promessa = registro
+          ? window.banco.from("marcas_trabalhadas").update(dados).eq("id", registro.id)
+          : window.banco.from("marcas_trabalhadas").insert(dados);
+        return promessa.then(tratarResultado).then(function () {
+          return recarregarESetar("marcas_trabalhadas", { campo: "data", asc: false }, "trabalhadas").then(function () {
+            renderTabelaTrabalhadas();
+            mostrarToast(registro ? "Atualizado." : "Adicionado.");
+          });
+        });
+      }
+    });
+  }
+
+  function renderTabelaTrabalhadas() {
+    var corpo = document.getElementById("corpo-tabela-trabalhadas");
+    if (!Estado.trabalhadas.length) {
+      corpo.innerHTML = '<tr><td colspan="6" class="sem-registros">Nenhuma marca trabalhada cadastrada ainda.</td></tr>';
+      return;
+    }
+    corpo.innerHTML = Estado.trabalhadas.map(function (t) {
+      return '<tr data-id="' + t.id + '">' +
+        '<td>' + escaparHtml(t.marca) + '</td>' +
+        '<td>' + escaparHtml(t.telefone || "-") + '</td>' +
+        '<td>' + escaparHtml(t.email || "-") + '</td>' +
+        '<td>' + escaparHtml(formatarData(t.data) || "-") + '</td>' +
+        '<td class="texto-fraco">' + escaparHtml(t.obs || "-") + '</td>' +
+        '<td class="celula-acoes"><button class="btn-icone" data-acao="apagar-trabalhada" data-id="' + t.id + '" type="button" onclick="event.stopPropagation()" aria-label="Apagar">' + ICONE_LIXO + '</button></td>' +
+      '</tr>';
+    }).join("");
+  }
+
+  document.getElementById("botao-add-trabalhada").addEventListener("click", function () { abrirModalTrabalhada(null); });
+  document.getElementById("corpo-tabela-trabalhadas").addEventListener("click", function (evento) {
+    var botaoApagar = evento.target.closest('[data-acao="apagar-trabalhada"]');
+    if (botaoApagar) {
+      var id = botaoApagar.getAttribute("data-id");
+      var registro = Estado.trabalhadas.filter(function (t) { return String(t.id) === String(id); })[0];
+      if (!registro || !confirm('Apagar "' + registro.marca + '"? Isso não pode ser desfeito.')) return;
+      window.banco.from("marcas_trabalhadas").delete().eq("id", id).then(tratarResultado).then(function () {
+        return recarregarESetar("marcas_trabalhadas", { campo: "data", asc: false }, "trabalhadas").then(function () {
+          renderTabelaTrabalhadas();
+          mostrarToast("Apagado.");
+        });
+      }).catch(function (erro) { mostrarToast("Não consegui apagar: " + erro.message); });
+      return;
+    }
+    var linha = evento.target.closest("tr[data-id]");
+    if (!linha) return;
+    var registro2 = Estado.trabalhadas.filter(function (t) { return String(t.id) === String(linha.getAttribute("data-id")); })[0];
+    if (registro2) abrirModalTrabalhada(registro2);
+  });
+
+  function renderizarTrabalhadas() { renderTabelaTrabalhadas(); }
+
+  /* =========================================================
+     4. CALENDÁRIO
+  ========================================================= */
+  function camposFormularioCalendario() {
+    return [
+      { nome: "titulo", rotulo: "Título", tipo: "text", obrigatorio: true },
+      { nome: "marca", rotulo: "Marca", tipo: "text" },
+      { nome: "tipo", rotulo: "Tipo", tipo: "select", opcoes: TIPOS_CALENDARIO },
+      { nome: "data", rotulo: "Data", tipo: "date", obrigatorio: true },
+      { nome: "status", rotulo: "Status", tipo: "select", opcoes: [{ id: "a_fazer", label: "A fazer" }, { id: "feito", label: "Feito" }] }
+    ];
+  }
+
+  function abrirModalCalendario(registro, dataPreenchida) {
+    abrirFormulario({
+      titulo: registro ? "Editar item do calendário" : "Adicionar ao calendário",
+      campos: camposFormularioCalendario(),
+      valores: registro || { data: dataPreenchida || hojeISO(), tipo: "gravar", status: "a_fazer" },
+      aoSalvar: function (dados) {
+        var promessa = registro
+          ? window.banco.from("calendario").update(dados).eq("id", registro.id)
+          : window.banco.from("calendario").insert(dados);
+        return promessa.then(tratarResultado).then(function () {
+          return recarregarESetar("calendario", { campo: "data", asc: true }, "calendario").then(function () {
+            renderCalendario();
+            fecharModalDia();
+            mostrarToast(registro ? "Atualizado." : "Adicionado ao calendário.");
+          });
+        });
+      },
+      aoApagar: registro ? function () {
+        return window.banco.from("calendario").delete().eq("id", registro.id).then(tratarResultado).then(function () {
+          return recarregarESetar("calendario", { campo: "data", asc: true }, "calendario").then(function () {
+            renderCalendario();
+            fecharModalDia();
+            mostrarToast("Apagado do calendário.");
+          });
+        });
+      } : null
+    });
+  }
+
+  function construirItensPorDia() {
+    var mapa = {};
+    function add(dataISO, item) {
+      if (!dataISO) return;
+      dataISO = String(dataISO).slice(0, 10);
+      if (!mapa[dataISO]) mapa[dataISO] = [];
+      mapa[dataISO].push(item);
+    }
+    Estado.calendario.forEach(function (c) {
+      if (Estado.filtroTipoCalendario && c.tipo !== Estado.filtroTipoCalendario) return;
+      add(c.data, { tipoItem: "tarefa", registro: c });
+    });
+    Estado.campanhas.forEach(function (camp) {
+      add(camp.prazo, { tipoItem: "prazo", registro: camp });
+    });
+    return mapa;
+  }
+
+  function htmlItemDia(item) {
+    if (item.tipoItem === "prazo") {
+      return '<div class="item-dia tipo-prazo" data-tipo-item="prazo" data-id="' + item.registro.id + '" title="Prazo da campanha: ' + escaparHtml(item.registro.campanha) + '">Prazo: ' + escaparHtml(item.registro.campanha) + '</div>';
+    }
+    var classeFeito = item.registro.status === "feito" ? " feito" : "";
+    var rotuloTipo = (TIPOS_CALENDARIO.filter(function (t) { return t.id === item.registro.tipo; })[0] || {}).label || item.registro.tipo;
+    return '<div class="item-dia' + classeFeito + '" data-tipo-item="tarefa" data-id="' + item.registro.id + '" title="' + escaparHtml(rotuloTipo + ": " + item.registro.titulo) + '">' + escaparHtml(item.registro.titulo) + '</div>';
+  }
+
+  function renderFiltrosTipoCalendario() {
+    var container = document.getElementById("filtros-tipo-calendario");
+    var opcoes = [{ id: "", label: "Todos" }].concat(TIPOS_CALENDARIO);
+    container.innerHTML = opcoes.map(function (o) {
+      var ativo = (Estado.filtroTipoCalendario || "") === o.id;
+      return '<button class="chip' + (ativo ? " ativo" : "") + '" data-tipo="' + o.id + '" type="button">' + o.label + '</button>';
+    }).join("");
+  }
+
+  function renderCalendario() {
+    renderFiltrosTipoCalendario();
+    var ano = Estado.mesCalendario.getFullYear();
+    var mes = Estado.mesCalendario.getMonth();
+    document.getElementById("calendario-mes-atual").textContent = MESES[mes] + " de " + ano;
+
+    var mapa = construirItensPorDia();
+    var primeiroDoMes = new Date(ano, mes, 1);
+    var deslocamento = (primeiroDoMes.getDay() + 6) % 7;
+    var inicioGrade = new Date(ano, mes, 1 - deslocamento);
+    var hoje = new Date();
+    var htmlDias = DIAS_SEMANA.map(function (d) { return '<div class="cabecalho-dia">' + d + '</div>'; }).join("");
+
+    for (var i = 0; i < 42; i++) {
+      var dia = new Date(inicioGrade.getFullYear(), inicioGrade.getMonth(), inicioGrade.getDate() + i);
+      var iso = paraDataISO(dia);
+      var foraDoMes = dia.getMonth() !== mes;
+      var ehHoje = dia.toDateString() === hoje.toDateString();
+      var itensDoDia = mapa[iso] || [];
+      var visiveis = itensDoDia.slice(0, 3);
+      var resto = itensDoDia.length - visiveis.length;
+
+      htmlDias += '<div class="dia-calendario' + (foraDoMes ? " fora-do-mes" : "") + (ehHoje ? " hoje" : "") + '" data-data="' + iso + '">' +
+        '<span class="numero-dia">' + dia.getDate() + '</span>' +
+        visiveis.map(htmlItemDia).join("") +
+        (resto > 0 ? '<button type="button" class="mais-itens-dia" data-data="' + iso + '">+' + resto + ' mais</button>' : "") +
+        '<button type="button" class="botao-add-dia" data-data="' + iso + '" aria-label="Adicionar neste dia">+</button>' +
+      '</div>';
+    }
+    document.getElementById("grade-calendario").innerHTML = htmlDias;
+    renderAtrasados();
+  }
+
+  function renderAtrasados() {
+    var container = document.getElementById("lista-atrasados");
+    var hojeStr = hojeISO();
+    var atrasados = Estado.calendario.filter(function (c) {
+      return c.status === "a_fazer" && c.data && String(c.data).slice(0, 10) < hojeStr;
+    });
+    atrasados.sort(function (a, b) { return a.data < b.data ? -1 : 1; });
+    if (!atrasados.length) {
+      container.innerHTML = '<p class="mensagem-vazia">Nada atrasado. Tudo em dia por aqui.</p>';
+      return;
+    }
+    container.innerHTML = atrasados.map(function (c) {
+      var diasAtras = Math.round((new Date(hojeStr) - new Date(String(c.data).slice(0, 10))) / 86400000);
+      return '<div class="linha-atrasada" data-id="' + c.id + '"><span>' + escaparHtml(c.titulo) + (c.marca ? " · " + escaparHtml(c.marca) : "") + '</span><span class="pilula pilula-contorno-vermelho">há ' + diasAtras + ' dia' + (diasAtras === 1 ? "" : "s") + '</span></div>';
+    }).join("");
+  }
+
+  document.getElementById("calendario-anterior").addEventListener("click", function () {
+    Estado.mesCalendario = new Date(Estado.mesCalendario.getFullYear(), Estado.mesCalendario.getMonth() - 1, 1);
+    renderCalendario();
+  });
+  document.getElementById("calendario-proximo").addEventListener("click", function () {
+    Estado.mesCalendario = new Date(Estado.mesCalendario.getFullYear(), Estado.mesCalendario.getMonth() + 1, 1);
+    renderCalendario();
+  });
+  document.getElementById("calendario-hoje").addEventListener("click", function () {
+    var hoje = new Date();
+    Estado.mesCalendario = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+    renderCalendario();
+  });
+  document.getElementById("filtros-tipo-calendario").addEventListener("click", function (evento) {
+    var botao = evento.target.closest(".chip");
+    if (!botao) return;
+    Estado.filtroTipoCalendario = botao.getAttribute("data-tipo") || null;
+    renderCalendario();
+  });
+  document.getElementById("botao-add-calendario").addEventListener("click", function () { abrirModalCalendario(null); });
+
+  function acharPorId(lista, id) {
+    return lista.filter(function (item) { return String(item.id) === String(id); })[0];
+  }
+
+  function tratarCliqueItemCalendario(evento) {
+    var botaoAdd = evento.target.closest(".botao-add-dia");
+    if (botaoAdd) { abrirModalCalendario(null, botaoAdd.getAttribute("data-data")); return; }
+
+    var botaoMais = evento.target.closest(".mais-itens-dia");
+    if (botaoMais) { abrirModalDia(botaoMais.getAttribute("data-data")); return; }
+
+    var itemDia = evento.target.closest(".item-dia");
+    if (itemDia) {
+      var idItem = itemDia.getAttribute("data-id");
+      if (itemDia.getAttribute("data-tipo-item") === "prazo") {
+        var campanha = acharPorId(Estado.campanhas, idItem);
+        mostrarToast('Esse prazo vem da campanha "' + (campanha ? campanha.campanha : "") + '". Edite na aba Campanhas.');
+      } else {
+        var registro = acharPorId(Estado.calendario, idItem);
+        if (registro) abrirModalCalendario(registro);
+      }
+      return;
+    }
+
+    var diaCelula = evento.target.closest(".dia-calendario");
+    if (diaCelula) { abrirModalCalendario(null, diaCelula.getAttribute("data-data")); }
+  }
+
+  document.getElementById("grade-calendario").addEventListener("click", tratarCliqueItemCalendario);
+  document.getElementById("lista-atrasados").addEventListener("click", function (evento) {
+    var linha = evento.target.closest(".linha-atrasada");
+    if (!linha) return;
+    var registro = acharPorId(Estado.calendario, linha.getAttribute("data-id"));
+    if (registro) abrirModalCalendario(registro);
+  });
+
+  var modalDiaFundo = document.getElementById("modal-dia-fundo");
+  var modalDia = document.getElementById("modal-dia");
+  function abrirModalDia(dataISO) {
+    var mapa = construirItensPorDia();
+    var itens = mapa[dataISO] || [];
+    var partes = dataISO.split("-");
+    document.getElementById("modal-dia-titulo").textContent = partes[2] + "/" + partes[1] + "/" + partes[0];
+    document.getElementById("modal-dia-corpo").innerHTML =
+      '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">' + itens.map(htmlItemDia).join("") + '</div>' +
+      '<button class="btn btn-laranja" type="button" id="botao-add-dentro-modal-dia">+ Adicionar neste dia</button>';
+    document.getElementById("botao-add-dentro-modal-dia").addEventListener("click", function () {
+      fecharModalDia();
+      abrirModalCalendario(null, dataISO);
+    });
+    document.getElementById("modal-dia-corpo").addEventListener("click", tratarCliqueItemCalendario);
+    modalDiaFundo.classList.remove("oculto");
+    modalDia.classList.remove("oculto");
+  }
+  function fecharModalDia() {
+    modalDiaFundo.classList.add("oculto");
+    modalDia.classList.add("oculto");
+  }
+  document.getElementById("modal-dia-fechar").addEventListener("click", fecharModalDia);
+  modalDiaFundo.addEventListener("click", fecharModalDia);
+
+  /* =========================================================
+     5. CAMPANHAS
+  ========================================================= */
+  var OPCOES_TIPO_CAMPANHA = [{ id: "Conteúdo", label: "Conteúdo" }, { id: "Publicidade", label: "Publicidade" }];
+  var OPCOES_STATUS_CAMPANHA = FUNIL_STATUS.map(function (s) { return { id: s, label: s }; });
+  var OPCOES_PAGAMENTO = [{ id: "pendente", label: "Pendente" }, { id: "pago", label: "Pago" }];
+
+  function camposFormularioCampanha() {
+    return [
+      { nome: "campanha", rotulo: "Campanha", tipo: "text", obrigatorio: true },
+      { nome: "cliente", rotulo: "Cliente", tipo: "text" },
+      { nome: "tipo", rotulo: "Tipo", tipo: "select", opcoes: OPCOES_TIPO_CAMPANHA },
+      { nome: "status", rotulo: "Status", tipo: "select", opcoes: OPCOES_STATUS_CAMPANHA },
+      { nome: "qtd", rotulo: "Quantidade", tipo: "number" },
+      { nome: "valor", rotulo: "Valor (R$)", tipo: "number", step: "0.01" },
+      { nome: "prazo", rotulo: "Prazo", tipo: "date" },
+      { nome: "pagamento", rotulo: "Pagamento", tipo: "select", opcoes: OPCOES_PAGAMENTO },
+      { nome: "ativa", rotulo: "Está ativa", tipo: "checkbox" },
+      { nome: "favorita", rotulo: "Favorita", tipo: "checkbox" }
+    ];
+  }
+
+  function abrirModalCampanha(registro) {
+    abrirFormulario({
+      titulo: registro ? "Editar campanha" : "Adicionar campanha",
+      campos: camposFormularioCampanha(),
+      valores: registro || { qtd: 1, valor: 0, pagamento: "pendente", ativa: true, favorita: false, status: "Briefing" },
+      aoSalvar: function (dados) {
+        var promessa = registro
+          ? window.banco.from("campanhas").update(dados).eq("id", registro.id)
+          : window.banco.from("campanhas").insert(dados);
+        return promessa.then(tratarResultado).then(function () {
+          return recarregarESetar("campanhas", { campo: "prazo", asc: true }, "campanhas").then(function () {
+            renderizarCampanhas();
+            mostrarToast(registro ? "Campanha atualizada." : "Campanha adicionada.");
+          });
+        });
+      },
+      aoApagar: registro ? function () {
+        return window.banco.from("campanhas").delete().eq("id", registro.id).then(tratarResultado).then(function () {
+          return recarregarESetar("campanhas", { campo: "prazo", asc: true }, "campanhas").then(function () {
+            renderizarCampanhas();
+            mostrarToast("Campanha apagada.");
+          });
+        });
+      } : null
+    });
+  }
+
+  function renderMetricasCampanhas() {
+    var container = document.getElementById("metricas-campanhas");
+    var total = Estado.campanhas.length;
+    var ativas = Estado.campanhas.filter(function (c) { return c.ativa; }).length;
+    var valorTotal = Estado.campanhas.reduce(function (soma, c) { return soma + (Number(c.valor) || 0); }, 0);
+    var qtdTotal = Estado.campanhas.reduce(function (soma, c) { return soma + (Number(c.qtd) || 0); }, 0);
+    var ticketMedio = qtdTotal > 0 ? formatarDinheiro(valorTotal / qtdTotal) : "sem dados ainda";
+    var aReceber = Estado.campanhas.filter(function (c) { return c.pagamento === "pendente"; }).reduce(function (s, c) { return s + (Number(c.valor) || 0); }, 0);
+    var jaRecebido = Estado.campanhas.filter(function (c) { return c.pagamento === "pago"; }).reduce(function (s, c) { return s + (Number(c.valor) || 0); }, 0);
+
+    container.innerHTML =
+      '<div class="metrica-mini"><strong>' + total + '</strong><span>campanhas no total</span></div>' +
+      '<div class="metrica-mini"><strong>' + ativas + '</strong><span>ativas</span></div>' +
+      '<div class="metrica-mini"><strong>' + formatarDinheiro(valorTotal) + '</strong><span>valor total · ticket médio ' + ticketMedio + '</span></div>' +
+      '<div class="metrica-mini"><strong>' + formatarDinheiro(aReceber) + '</strong><span>a receber · já recebido ' + formatarDinheiro(jaRecebido) + '</span></div>';
+  }
+
+  function renderFiltrosCampanhas() {
+    var container = document.getElementById("filtros-campanhas");
+    var opcoes = [{ id: "todas", label: "Todas" }, { id: "ativas", label: "Ativas" }, { id: "finalizadas", label: "Finalizadas" }];
+    container.innerHTML = opcoes.map(function (o) {
+      return '<button class="chip' + (Estado.filtroCampanhas === o.id ? " ativo" : "") + '" data-filtro="' + o.id + '" type="button">' + o.label + '</button>';
+    }).join("");
+  }
+
+  function campanhasFiltradas() {
+    var termo = Estado.buscaCampanhas.trim().toLowerCase();
+    var lista = Estado.campanhas.filter(function (c) {
+      if (Estado.filtroCampanhas === "ativas" && !c.ativa) return false;
+      if (Estado.filtroCampanhas === "finalizadas" && c.ativa) return false;
+      if (!termo) return true;
+      var alvo = ((c.campanha || "") + " " + (c.cliente || "")).toLowerCase();
+      return alvo.indexOf(termo) !== -1;
+    });
+    var campo = Estado.ordemCampanhas.campo;
+    var dir = Estado.ordemCampanhas.direcao === "asc" ? 1 : -1;
+    lista.sort(function (a, b) {
+      var va, vb;
+      if (campo === "status") { va = FUNIL_STATUS.indexOf(a.status); vb = FUNIL_STATUS.indexOf(b.status); }
+      else if (campo === "valor" || campo === "qtd") { va = Number(a[campo]) || 0; vb = Number(b[campo]) || 0; }
+      else if (campo === "prazo") { va = a.prazo || ""; vb = b.prazo || ""; }
+      else { va = String(a[campo] || "").toLowerCase(); vb = String(b[campo] || "").toLowerCase(); }
+      if (va < vb) return -1 * dir;
+      if (va > vb) return 1 * dir;
+      return 0;
+    });
+    return lista;
+  }
+
+  function intensidadeStatus(status) {
+    var indice = FUNIL_STATUS.indexOf(status);
+    if (indice === -1) indice = 0;
+    var opacidade = 0.12 + (indice / (FUNIL_STATUS.length - 1)) * 0.7;
+    var ultimo = indice === FUNIL_STATUS.length - 1;
+    return 'background: rgba(232,118,58,' + opacidade.toFixed(2) + ');' + (ultimo ? "color:#1b1b1f;font-weight:800;" : "color:#f3ead6;");
+  }
+
+  function etiquetaPrazo(campanha) {
+    if (!campanha.prazo || campanha.status === "Entregue") return "";
+    var hoje = new Date(hojeISO());
+    var prazo = new Date(String(campanha.prazo).slice(0, 10));
+    var dias = Math.round((prazo - hoje) / 86400000);
+    if (dias < 0) return '<span class="pilula etiqueta-atrasado">atrasado ' + Math.abs(dias) + ' dia' + (Math.abs(dias) === 1 ? "" : "s") + '</span>';
+    if (dias <= 3) return '<span class="pilula etiqueta-vence">' + (dias === 0 ? "vence hoje" : "vence em " + dias + " dia" + (dias === 1 ? "" : "s")) + '</span>';
+    return "";
+  }
+
+  function renderTabelaCampanhas() {
+    var corpo = document.getElementById("corpo-tabela-campanhas");
+    var lista = campanhasFiltradas();
+    if (!lista.length) {
+      corpo.innerHTML = '<tr><td colspan="9" class="sem-registros">' + (Estado.campanhas.length ? "Nenhuma campanha encontrada com esse filtro." : 'Nenhuma campanha cadastrada ainda. Clique em "Adicionar campanha" para começar.') + '</td></tr>';
+      return;
+    }
+    corpo.innerHTML = lista.map(function (c) {
+      return '<tr data-id="' + c.id + '"' + (c.favorita ? ' class="linha-favorita"' : "") + '>' +
+        '<td><button class="btn-icone" data-acao="favorita" data-id="' + c.id + '" type="button" onclick="event.stopPropagation()" style="color:' + (c.favorita ? "var(--laranja)" : "var(--texto-suave)") + '" aria-label="Favoritar">' + (c.favorita ? ICONE_ESTRELA_CHEIA : ICONE_ESTRELA_VAZIA) + '</button></td>' +
+        '<td>' + escaparHtml(c.campanha) + '</td>' +
+        '<td>' + escaparHtml(c.cliente || "-") + '</td>' +
+        '<td><span class="pilula ' + (c.tipo === "Publicidade" ? "pilula-contorno-vermelho" : "pilula-contorno-azul") + '">' + escaparHtml(c.tipo || "-") + '</span></td>' +
+        '<td><span class="pilula" style="' + intensidadeStatus(c.status) + '">' + escaparHtml(c.status || "-") + '</span></td>' +
+        '<td>' + (c.qtd || 0) + '</td>' +
+        '<td>' + formatarDinheiro(c.valor) + '</td>' +
+        '<td>' + escaparHtml(formatarData(c.prazo) || "-") + ' ' + etiquetaPrazo(c) + '</td>' +
+        '<td><span class="pilula ' + (c.pagamento === "pago" ? "pilula-cheia-azul" : "pilula-contorno-vermelho") + '">' + (c.pagamento === "pago" ? "Pago" : "Pendente") + '</span></td>' +
+      '</tr>';
+    }).join("");
+  }
+
+  function renderizarCampanhas() {
+    renderMetricasCampanhas();
+    renderFiltrosCampanhas();
+    renderTabelaCampanhas();
+    document.querySelectorAll("#painel-campanhas th.ordenavel").forEach(function (th) {
+      var ativa = th.getAttribute("data-campo") === Estado.ordemCampanhas.campo;
+      th.classList.toggle("ativa", ativa);
+      var seta = th.querySelector(".seta-ordem");
+      seta.textContent = ativa ? (Estado.ordemCampanhas.direcao === "asc" ? "▲" : "▼") : "–";
+    });
+  }
+
+  document.getElementById("botao-add-campanha").addEventListener("click", function () { abrirModalCampanha(null); });
+  document.getElementById("busca-campanhas").addEventListener("input", function (evento) {
+    Estado.buscaCampanhas = evento.target.value;
+    renderTabelaCampanhas();
+  });
+  document.getElementById("filtros-campanhas").addEventListener("click", function (evento) {
+    var botao = evento.target.closest(".chip");
+    if (!botao) return;
+    Estado.filtroCampanhas = botao.getAttribute("data-filtro");
+    renderizarCampanhas();
+  });
+  document.querySelectorAll("#painel-campanhas th.ordenavel").forEach(function (th) {
+    th.addEventListener("click", function () {
+      var campo = th.getAttribute("data-campo");
+      if (Estado.ordemCampanhas.campo === campo) {
+        Estado.ordemCampanhas.direcao = Estado.ordemCampanhas.direcao === "asc" ? "desc" : "asc";
+      } else {
+        Estado.ordemCampanhas = { campo: campo, direcao: "asc" };
+      }
+      renderizarCampanhas();
+    });
+  });
+  document.getElementById("corpo-tabela-campanhas").addEventListener("click", function (evento) {
+    var botaoFavorita = evento.target.closest('[data-acao="favorita"]');
+    if (botaoFavorita) {
+      var id = botaoFavorita.getAttribute("data-id");
+      var registro = acharPorId(Estado.campanhas, id);
+      if (!registro) return;
+      window.banco.from("campanhas").update({ favorita: !registro.favorita }).eq("id", id).then(tratarResultado).then(function () {
+        return recarregarESetar("campanhas", { campo: "prazo", asc: true }, "campanhas").then(renderizarCampanhas);
+      }).catch(function (erro) { mostrarToast("Não consegui atualizar: " + erro.message); });
+      return;
+    }
+    var linha = evento.target.closest("tr[data-id]");
+    if (!linha) return;
+    var registro2 = acharPorId(Estado.campanhas, linha.getAttribute("data-id"));
+    if (registro2) abrirModalCampanha(registro2);
+  });
+  document.getElementById("botao-csv-campanhas").addEventListener("click", function () {
+    var lista = campanhasFiltradas();
+    baixarCSV("campanhas.csv",
+      ["Campanha", "Cliente", "Tipo", "Status", "Quantidade", "Valor", "Prazo", "Pagamento", "Ativa", "Favorita"],
+      lista.map(function (c) { return [c.campanha, c.cliente, c.tipo, c.status, c.qtd, formatarDinheiro(c.valor), formatarData(c.prazo), c.pagamento === "pago" ? "Pago" : "Pendente", c.ativa ? "Sim" : "Não", c.favorita ? "Sim" : "Não"]; })
+    );
+  });
+
+  /* =========================================================
+     6. ROTEIRO
+  ========================================================= */
+  var OPCOES_STATUS_ROTEIRO = [{ id: "rascunho", label: "Rascunho" }, { id: "pronto", label: "Pronto" }];
+
+  function camposFormularioRoteiro() {
+    return [
+      { nome: "titulo", rotulo: "Título", tipo: "text", obrigatorio: true },
+      { nome: "nicho", rotulo: "Nicho", tipo: "select", opcoes: NICHOS },
+      { nome: "status", rotulo: "Status", tipo: "select", opcoes: OPCOES_STATUS_ROTEIRO },
+      { nome: "conteudo", rotulo: "Roteiro", tipo: "textarea" }
+    ];
+  }
+
+  function abrirModalRoteiro(registro) {
+    abrirFormulario({
+      titulo: registro ? "Editar roteiro" : "Novo roteiro",
+      campos: camposFormularioRoteiro(),
+      valores: registro || { status: "rascunho" },
+      aoSalvar: function (dados) {
+        dados.atualizado_em = new Date().toISOString();
+        var promessa = registro
+          ? window.banco.from("roteiros").update(dados).eq("id", registro.id)
+          : window.banco.from("roteiros").insert(dados);
+        return promessa.then(tratarResultado).then(function () {
+          return recarregarESetar("roteiros", { campo: "atualizado_em", asc: false }, "roteiros").then(function () {
+            renderTabelaRoteiros();
+            mostrarToast(registro ? "Roteiro atualizado." : "Roteiro criado.");
+          });
+        });
+      }
+    });
+  }
+
+  function renderTabelaRoteiros() {
+    var corpo = document.getElementById("corpo-tabela-roteiros");
+    if (!Estado.roteiros.length) {
+      corpo.innerHTML = '<tr><td colspan="5" class="sem-registros">Nenhum roteiro guardado ainda. Clique em "Novo roteiro" para escrever o primeiro.</td></tr>';
+      return;
+    }
+    corpo.innerHTML = Estado.roteiros.map(function (r) {
+      return '<tr data-id="' + r.id + '">' +
+        '<td>' + escaparHtml(r.titulo) + '</td>' +
+        '<td>' + escaparHtml(rotuloNicho(r.nicho)) + '</td>' +
+        '<td><span class="pilula ' + (r.status === "pronto" ? "pilula-cheia-laranja" : "pilula-contorno-azul") + '">' + (r.status === "pronto" ? "Pronto" : "Rascunho") + '</span></td>' +
+        '<td class="texto-fraco">' + escaparHtml(formatarData(r.atualizado_em || r.criado_em) || "-") + '</td>' +
+        '<td class="celula-acoes"><button class="btn-icone" data-acao="apagar-roteiro" data-id="' + r.id + '" type="button" onclick="event.stopPropagation()" aria-label="Apagar">' + ICONE_LIXO + '</button></td>' +
+      '</tr>';
+    }).join("");
+  }
+
+  function renderizarRoteiros() { renderTabelaRoteiros(); }
+
+  document.getElementById("botao-add-roteiro").addEventListener("click", function () { abrirModalRoteiro(null); });
+  document.getElementById("corpo-tabela-roteiros").addEventListener("click", function (evento) {
+    var botaoApagar = evento.target.closest('[data-acao="apagar-roteiro"]');
+    if (botaoApagar) {
+      var id = botaoApagar.getAttribute("data-id");
+      var registro = acharPorId(Estado.roteiros, id);
+      if (!registro || !confirm('Apagar o roteiro "' + registro.titulo + '"? Isso não pode ser desfeito.')) return;
+      window.banco.from("roteiros").delete().eq("id", id).then(tratarResultado).then(function () {
+        return recarregarESetar("roteiros", { campo: "atualizado_em", asc: false }, "roteiros").then(function () {
+          renderTabelaRoteiros();
+          mostrarToast("Roteiro apagado.");
+        });
+      }).catch(function (erro) { mostrarToast("Não consegui apagar: " + erro.message); });
+      return;
+    }
+    var linha = evento.target.closest("tr[data-id]");
+    if (!linha) return;
+    var registro2 = acharPorId(Estado.roteiros, linha.getAttribute("data-id"));
+    if (registro2) abrirModalRoteiro(registro2);
+  });
+
+  /* =========================================================
+     7. CHECKLIST DO PORTFÓLIO (consome window.Biblioteca)
+     Como eu não consegui abrir o link do arquivo js/biblioteca.js
+     por causa de uma trava de rede do meu ambiente, esse código
+     lê o conteúdo dele "no escuro": tenta vários nomes de campo
+     comuns (titulo/nome, itens/items, etc) pra funcionar mesmo
+     sem eu ter visto o arquivo de verdade. Se algum texto não
+     aparecer do jeito esperado quando você adicionar o arquivo
+     real, é só me mandar o conteúdo dele que eu ajusto os nomes.
+  ========================================================= */
+  Estado.checklistAbertas = {};
+  Estado.tiposAbertos = {};
+  Estado.nichosAbertos = {};
+  Estado.revisaoMarcados = {};
+
+  function pegar(obj, chaves, padrao) {
+    if (!obj || typeof obj !== "object") return padrao;
+    for (var i = 0; i < chaves.length; i++) {
+      var v = obj[chaves[i]];
+      if (v !== undefined && v !== null && v !== "") return v;
+    }
+    return padrao;
+  }
+  function paraLista(valor) {
+    if (Array.isArray(valor)) return valor;
+    if (valor && typeof valor === "object") return Object.keys(valor).map(function (k) { return valor[k]; });
+    return [];
+  }
+  function textoDeItem(item) {
+    if (typeof item === "string") return item;
+    return pegar(item, ["titulo", "texto", "nome", "label"], "");
+  }
+
+  function renderizarChecklist() {
+    var aviso = document.getElementById("aviso-biblioteca");
+    aviso.innerHTML = "";
+    if (!window.Biblioteca) {
+      aviso.innerHTML = '<div class="aviso aviso-info">O arquivo js/biblioteca.js ainda não está no projeto, então essa aba não tem conteúdo pra mostrar ainda. Baixe o arquivo do link que você me passou e coloque em js/biblioteca.js (o painel funciona normalmente no resto).</div>';
+      ["sub-checklist", "sub-referencias", "sub-roteiros", "sub-nichos", "sub-revisao"].forEach(function (id) {
+        document.getElementById(id).innerHTML = '<p class="mensagem-vazia">Aguardando o arquivo js/biblioteca.js.</p>';
+      });
+      return;
+    }
+    renderChecklistItens();
+    renderReferencias();
+    renderTiposRoteiro();
+    renderIdeiasNicho();
+    renderRevisaoRoteiro();
+  }
+
+  function renderChecklistItens() {
+    var container = document.getElementById("sub-checklist");
+    var secoes = paraLista(window.Biblioteca.CHECKLIST);
+    if (!secoes.length) {
+      container.innerHTML = '<p class="mensagem-vazia">Não encontrei seções em Biblioteca.CHECKLIST.</p>';
+      return;
+    }
+    var totalItens = 0, totalMarcados = 0;
+    var htmlSecoes = secoes.map(function (secao, indice) {
+      var titulo = pegar(secao, ["titulo", "nome"], "Seção " + (indice + 1));
+      var porque = pegar(secao, ["porque", "motivo", "descricao"], "");
+      var itens = paraLista(pegar(secao, ["itens", "items"], []));
+      var marcadosSecao = 0;
+      var htmlItens = itens.map(function (item, indiceItem) {
+        var chave = "chk-" + indice + "-" + indiceItem;
+        var marcado = !!Estado.marcados[chave];
+        if (marcado) marcadosSecao++;
+        var texto = textoDeItem(item);
+        var explicacao = typeof item === "string" ? "" : pegar(item, ["explicacao", "descricao", "detalhe"], "");
+        return '<label class="item-checklist">' +
+          '<input type="checkbox" data-chave="' + chave + '"' + (marcado ? " checked" : "") + '>' +
+          '<span class="texto-item"><strong>' + escaparHtml(texto) + '</strong>' + (explicacao ? '<p>' + escaparHtml(explicacao) + '</p>' : '') + '</span>' +
+        '</label>';
+      }).join("");
+      totalItens += itens.length;
+      totalMarcados += marcadosSecao;
+      var porcento = itens.length ? Math.round((marcadosSecao / itens.length) * 100) : 0;
+      var aberta = !!Estado.checklistAbertas[indice];
+      return '<div class="secao-checklist' + (aberta ? " aberta" : "") + '" data-indice-secao="' + indice + '">' +
+        '<div class="secao-checklist-cabecalho">' +
+          '<div><h3>' + escaparHtml(titulo) + '</h3>' + (porque ? '<p class="texto-fraco" style="margin-top:4px;">' + escaparHtml(porque) + '</p>' : '') + '</div>' +
+          '<div class="barra-progresso" title="' + porcento + '%"><span style="width:' + porcento + '%"></span></div>' +
+        '</div>' +
+        '<div class="secao-checklist-corpo">' + (htmlItens || '<p class="texto-fraco">Nenhum item nessa seção.</p>') + '</div>' +
+      '</div>';
+    }).join("");
+
+    var porcentoGeral = totalItens ? Math.round((totalMarcados / totalItens) * 100) : 0;
+    container.innerHTML =
+      '<div class="cartao" style="margin-bottom:16px;display:flex;align-items:center;gap:14px;">' +
+        '<strong style="font-size:1.1rem;color:var(--laranja);">' + porcentoGeral + '%</strong>' +
+        '<span class="texto-fraco">do checklist geral concluído (' + totalMarcados + ' de ' + totalItens + ' itens)</span>' +
+      '</div>' + htmlSecoes;
+  }
+
+  document.getElementById("sub-checklist").addEventListener("click", function (evento) {
+    var cabecalho = evento.target.closest(".secao-checklist-cabecalho");
+    if (cabecalho && !evento.target.matches('input[type="checkbox"]')) {
+      var secaoEl = cabecalho.closest(".secao-checklist");
+      var indice = secaoEl.getAttribute("data-indice-secao");
+      Estado.checklistAbertas[indice] = !Estado.checklistAbertas[indice];
+      renderChecklistItens();
+    }
+  });
+  document.getElementById("sub-checklist").addEventListener("change", function (evento) {
+    if (!evento.target.matches('input[type="checkbox"]')) return;
+    var chave = evento.target.getAttribute("data-chave");
+    var marcado = evento.target.checked;
+    Estado.marcados[chave] = marcado;
+    window.banco.from("marcados").upsert({ chave: chave, marcado: marcado, atualizado_em: new Date().toISOString() }).then(tratarResultado).catch(function (erro) {
+      mostrarToast("Não consegui salvar essa marcação: " + erro.message);
+    });
+    renderChecklistItens();
+  });
+
+  function renderReferencias() {
+    var container = document.getElementById("sub-referencias");
+    var lista = paraLista(window.Biblioteca.REFERENCIAS);
+    if (!lista.length) {
+      container.innerHTML = '<p class="mensagem-vazia">Não encontrei itens em Biblioteca.REFERENCIAS.</p>';
+      return;
+    }
+    container.innerHTML = '<div class="grade-referencias">' + lista.map(function (ref, indice) {
+      var emoji = pegar(ref, ["emoji"], "🎬");
+      var titulo = pegar(ref, ["titulo", "nome"], "Referência " + (indice + 1));
+      var estilo = pegar(ref, ["estilo"], "");
+      var duracao = pegar(ref, ["duracao", "duração"], "");
+      var marca = pegar(ref, ["marca"], "");
+      return '<button class="cartao-referencia" type="button" data-indice="' + indice + '">' +
+        '<div class="capa-referencia">' + escaparHtml(emoji) + '</div>' +
+        '<div class="info-referencia"><strong>' + escaparHtml(titulo) + '</strong>' +
+        (estilo ? '<span>' + escaparHtml(estilo) + '</span>' : '') +
+        (duracao ? '<span>' + escaparHtml(duracao) + '</span>' : '') +
+        (marca ? '<span>' + escaparHtml(marca) + '</span>' : '') +
+        '</div></button>';
+    }).join("") + '</div>';
+
+    container.querySelectorAll(".cartao-referencia").forEach(function (botao) {
+      botao.addEventListener("click", function () {
+        abrirModalReferencia(lista[Number(botao.getAttribute("data-indice"))]);
+      });
+    });
+  }
+
+  function abrirModalReferencia(ref) {
+    var titulo = pegar(ref, ["titulo", "nome"], "Referência");
+    var gancho = pegar(ref, ["gancho"], "");
+    var porqueFunciona = pegar(ref, ["porque_funciona", "porqueFunciona", "porque"], "");
+    var diferencial = pegar(ref, ["diferencial"], "");
+    var erroComum = pegar(ref, ["erro_comum", "erroComum"], "");
+    var link = pegar(ref, ["link", "assistir", "url"], "");
+    var blocos = paraLista(pegar(ref, ["roteiro", "blocos"], []));
+
+    var html = '<h2>' + escaparHtml(titulo) + '</h2>';
+    if (gancho) html += '<p style="margin-bottom:10px;"><strong>Gancho:</strong> ' + escaparHtml(gancho) + '</p>';
+    if (porqueFunciona) html += '<p style="margin-bottom:10px;"><strong>Por que funciona:</strong> ' + escaparHtml(porqueFunciona) + '</p>';
+    if (diferencial) html += '<p style="margin-bottom:10px;"><strong>Diferencial:</strong> ' + escaparHtml(diferencial) + '</p>';
+    if (erroComum) html += '<p style="margin-bottom:10px;"><strong>Erro comum:</strong> ' + escaparHtml(erroComum) + '</p>';
+    if (blocos.length) {
+      html += '<div style="margin:14px 0;">' + blocos.map(function (bloco) {
+        var tempo = pegar(bloco, ["tempo", "intervalo"], "");
+        var texto = typeof bloco === "string" ? bloco : pegar(bloco, ["texto", "descricao", "conteudo"], "");
+        return '<div class="bloco-tempo"><span class="tempo">' + escaparHtml(tempo) + '</span><span>' + escaparHtml(texto) + '</span></div>';
+      }).join("") + '</div>';
+    }
+    if (link) html += '<a class="btn btn-laranja" href="' + escaparHtml(link) + '" target="_blank" rel="noopener" style="margin-top:8px;">Assistir vídeo</a>';
+
+    document.getElementById("modal-referencia-corpo").innerHTML = html;
+    document.getElementById("modal-referencia-fundo").classList.remove("oculto");
+    document.getElementById("modal-referencia").classList.remove("oculto");
+  }
+  function fecharModalReferencia() {
+    document.getElementById("modal-referencia-fundo").classList.add("oculto");
+    document.getElementById("modal-referencia").classList.add("oculto");
+  }
+  document.getElementById("modal-referencia-fechar").addEventListener("click", fecharModalReferencia);
+  document.getElementById("modal-referencia-fundo").addEventListener("click", fecharModalReferencia);
+
+  function renderTiposRoteiro() {
+    var container = document.getElementById("sub-roteiros");
+    var lista = paraLista(window.Biblioteca.TIPOS);
+    if (!lista.length) {
+      container.innerHTML = '<p class="mensagem-vazia">Não encontrei itens em Biblioteca.TIPOS.</p>';
+      return;
+    }
+    container.innerHTML = lista.map(function (tipo, indice) {
+      var titulo = pegar(tipo, ["titulo", "nome"], "Tipo " + (indice + 1));
+      var quandoUsar = pegar(tipo, ["quando_usar", "quandoUsar", "quando"], "");
+      var blocos = paraLista(pegar(tipo, ["blocos", "roteiro"], []));
+      var aberta = !!Estado.tiposAbertos[indice];
+      return '<div class="acordeao-item' + (aberta ? " aberta" : "") + '" data-indice="' + indice + '">' +
+        '<div class="acordeao-cabecalho">' + escaparHtml(titulo) + '</div>' +
+        '<div class="acordeao-corpo">' +
+          (quandoUsar ? '<p style="margin-bottom:10px;"><strong>Quando usar:</strong> ' + escaparHtml(quandoUsar) + '</p>' : '') +
+          blocos.map(function (bloco) {
+            var tempo = pegar(bloco, ["tempo", "intervalo"], "");
+            var texto = typeof bloco === "string" ? bloco : pegar(bloco, ["texto", "descricao", "conteudo"], "");
+            return '<div class="bloco-tempo"><span class="tempo">' + escaparHtml(tempo) + '</span><span>' + escaparHtml(texto) + '</span></div>';
+          }).join("") +
+        '</div>' +
+      '</div>';
+    }).join("");
+    ativarAcordeoes(container, Estado.tiposAbertos, renderTiposRoteiro);
+  }
+
+  function renderIdeiasNicho() {
+    var container = document.getElementById("sub-nichos");
+    var lista = paraLista(window.Biblioteca.NICHOS);
+    if (!lista.length) {
+      container.innerHTML = '<p class="mensagem-vazia">Não encontrei itens em Biblioteca.NICHOS.</p>';
+      return;
+    }
+    container.innerHTML = lista.map(function (nicho, indice) {
+      var titulo = pegar(nicho, ["titulo", "nome"], "Nicho " + (indice + 1));
+      var ideias = paraLista(pegar(nicho, ["ideias"], []));
+      var ganchos = paraLista(pegar(nicho, ["ganchos"], []));
+      var aberta = !!Estado.nichosAbertos[indice];
+      return '<div class="acordeao-item' + (aberta ? " aberta" : "") + '" data-indice="' + indice + '">' +
+        '<div class="acordeao-cabecalho">' + escaparHtml(titulo) + '</div>' +
+        '<div class="acordeao-corpo">' +
+          (ideias.length ? '<p style="margin-bottom:6px;"><strong>Ideias:</strong></p>' + ideias.map(function (i) { return '<div class="bloco-tempo">' + escaparHtml(textoDeItem(i)) + '</div>'; }).join("") : "") +
+          (ganchos.length ? '<p style="margin:10px 0 6px;"><strong>Ganchos:</strong></p>' + ganchos.map(function (g) { return '<div class="bloco-tempo">' + escaparHtml(textoDeItem(g)) + '</div>'; }).join("") : "") +
+        '</div>' +
+      '</div>';
+    }).join("");
+    ativarAcordeoes(container, Estado.nichosAbertos, renderIdeiasNicho);
+  }
+
+  function ativarAcordeoes(container, mapaAbertas, rerender) {
+    container.querySelectorAll(".acordeao-cabecalho").forEach(function (cabecalho) {
+      cabecalho.addEventListener("click", function () {
+        var item = cabecalho.closest(".acordeao-item");
+        var indice = item.getAttribute("data-indice");
+        mapaAbertas[indice] = !mapaAbertas[indice];
+        rerender();
+      });
+    });
+  }
+
+  function renderRevisaoRoteiro() {
+    var container = document.getElementById("sub-revisao");
+    var blocos = paraLista(window.Biblioteca.REVISAO);
+    var htmlChecklist = blocos.length
+      ? blocos.map(function (item, indice) {
+          var texto = textoDeItem(item);
+          var marcado = !!Estado.revisaoMarcados[indice];
+          return '<label class="item-checklist"><input type="checkbox" data-indice-revisao="' + indice + '"' + (marcado ? " checked" : "") + '><span class="texto-item"><strong>' + escaparHtml(texto) + '</strong></span></label>';
+        }).join("")
+      : '<p class="mensagem-vazia">Não encontrei itens em Biblioteca.REVISAO.</p>';
+
+    container.innerHTML =
+      '<label for="campo-revisao-texto" style="display:block;font-size:.82rem;font-weight:700;color:var(--texto-suave);margin-bottom:8px;">Cole aqui o roteiro que você quer revisar</label>' +
+      '<textarea class="revisao-textarea" id="campo-revisao-texto" placeholder="Cole o texto do seu roteiro aqui..."></textarea>' +
+      '<h3 style="font-size:.9rem;margin-bottom:10px;">Confira item por item</h3>' +
+      htmlChecklist;
+
+    container.querySelectorAll('input[data-indice-revisao]').forEach(function (input) {
+      input.addEventListener("change", function () {
+        Estado.revisaoMarcados[input.getAttribute("data-indice-revisao")] = input.checked;
+      });
+    });
+  }
+
+  /* sub-abas do Checklist */
+  document.getElementById("sub-abas-checklist").addEventListener("click", function (evento) {
+    var botao = evento.target.closest(".chip");
+    if (!botao) return;
+    var alvo = botao.getAttribute("data-sub");
+    document.querySelectorAll("#sub-abas-checklist .chip").forEach(function (c) { c.classList.toggle("ativo", c === botao); });
+    document.querySelectorAll(".sub-painel-checklist").forEach(function (painel) {
+      painel.classList.toggle("oculto", painel.getAttribute("data-sub") !== alvo);
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -112,6 +112,12 @@
     font-size: clamp(1rem, 1.6vw, 1.1rem);
     margin-bottom: 40px;
   }
+  .mensagem-vazia{
+    color: var(--texto-suave);
+    font-size: .95rem;
+    padding: 18px 0;
+  }
+  .fundo-rotulo .mensagem-vazia{ color: #6b6555; }
 
   .secao{
     padding: 96px 0;
@@ -1237,20 +1243,11 @@
       <h2 class="titulo-secao">Conteúdos de destaque</h2>
       <p class="subtitulo-secao">Os vídeos que mais renderam resultado para as marcas que já trabalharam comigo.</p>
       <!--
-        O carrossel inteiro é montado pelo JavaScript a partir do array "destaquesConteudo" no final do arquivo.
-        Lá você encontra, para cada item:
-        - link: onde entra o endereço real do vídeo (TikTok, Reels, YouTube etc)
-        - capaLegenda: o texto do formato da capa (troque o bloco .midia-placeholder por uma <img> real com a capa do vídeo)
-        - marca, visualizacoes, salvamentos, alcance: preencha quando tiver esses resultados específicos de cada vídeo
+        O carrossel inteiro é montado pelo JavaScript, com os vídeos que têm o
+        campo "destaque" preenchido na tabela "videos" do banco (editada no /admin).
+        Veja a função renderDestaques() e carregarVideosDoPortfolio() mais abaixo.
       -->
-      <div class="destaques-coverflow">
-        <div class="destaques-info revelar" id="destaques-info-painel" aria-live="polite"></div>
-        <div class="destaques-carrossel">
-          <button class="carrossel-seta seta-anterior" id="destaque-anterior" type="button" aria-label="Vídeo anterior">‹</button>
-          <div class="destaques-trilha" id="destaques-trilha" aria-roledescription="carrossel" aria-label="Vídeos em destaque"></div>
-          <button class="carrossel-seta seta-proximo" id="destaque-proximo" type="button" aria-label="Próximo vídeo">›</button>
-        </div>
-      </div>
+      <div class="destaques-coverflow"></div>
       <div class="destaques-indicadores" id="destaques-indicadores"></div>
     </div>
   </section>
@@ -1372,6 +1369,8 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/banco.js"></script>
 <script>
 (function(){
   "use strict";
@@ -1394,49 +1393,11 @@
     "UGC Creator", "Influencer", "Consultoria", "Palestras"
   ];
 
-  // Conteúdos de destaque (seção 3). "link" é o endereço do vídeo real.
-  // marca, visualizacoes, salvamentos e alcance são opcionais: deixe "" para não exibir,
-  // ou preencha com o resultado real do vídeo quando você tiver esse dado.
-  var destaquesConteudo = [
-    {
-      titulo: "Rotina de skincare que virou trend",
-      contexto: "Vídeo de rotina noturna gravado para lançamento de linha de skincare.",
-      numero: "+2,4M",
-      rotulo: "views no reels",
-      capaLegenda: "capa vertical do vídeo · 9:16",
-      link: "#", // troque pelo link real do vídeo (TikTok, Reels ou YouTube)
-      marca: "",
-      visualizacoes: "",
-      salvamentos: "",
-      alcance: ""
-    },
-    {
-      titulo: "Unboxing surpresa de produto fitness",
-      contexto: "Reação genuína de unboxing usada como anúncio em vídeo.",
-      numero: "+980K",
-      rotulo: "visualizações no anúncio",
-      capaLegenda: "capa vertical do vídeo · 9:16",
-      link: "#", // troque pelo link real do vídeo
-      marca: "",
-      visualizacoes: "",
-      salvamentos: "",
-      alcance: ""
-    },
-    {
-      titulo: "Antes e depois com produto de moda",
-      contexto: "Vídeo comparativo usado em campanha de lançamento de coleção.",
-      numero: "+3,1K",
-      rotulo: "comentários no post",
-      capaLegenda: "capa vertical do vídeo · 9:16",
-      link: "#", // troque pelo link real do vídeo
-      marca: "",
-      visualizacoes: "",
-      salvamentos: "",
-      alcance: ""
-    }
-  ];
+  // Os vídeos de destaque e os vídeos por nicho (seções 3 e 4) agora vêm do
+  // banco de dados (tabela "videos"), editados por você no painel /admin.
+  // Veja a função carregarVideosDoPortfolio() mais abaixo neste arquivo.
 
-  // Trabalhos por nicho (seção 4)
+  // Nichos usados nos filtros e nas linhas de trabalhos (seção 4)
   var nichos = [
     { id: "beleza", label: "Beleza" },
     { id: "skincare", label: "Skincare" },
@@ -1447,18 +1408,6 @@
     { id: "tech", label: "Tech" },
     { id: "hobby", label: "Hobby" },
     { id: "casal", label: "Casal" }
-  ];
-
-  var trabalhos = [
-    { nicho: "beleza", titulo: "Resenha de batom em vídeo curto", contexto: "Conteúdo de review usado como anúncio no feed.", legenda: "foto do trabalho · 4:5" },
-    { nicho: "skincare", titulo: "Rotina completa com produto novo", contexto: "Série de vídeos para lançamento de linha de skincare.", legenda: "foto do trabalho · 4:5" },
-    { nicho: "moda", titulo: "Prova de look para a semana", contexto: "Vídeo de styling para divulgação de coleção.", legenda: "foto do trabalho · 4:5" },
-    { nicho: "casa", titulo: "Tour por cantinho decorado", contexto: "Conteúdo de decoração para marca de casa e presentes.", legenda: "foto do trabalho · 4:5" },
-    { nicho: "fitness", titulo: "Treino testado com produto fitness", contexto: "Vídeo de treino real usando o produto da marca.", legenda: "foto do trabalho · 4:5" },
-    { nicho: "viagem", titulo: "Mala pronta com itens de viagem", contexto: "Conteúdo de bastidor de viagem patrocinado.", legenda: "foto do trabalho · 4:5" },
-    { nicho: "tech", titulo: "Unboxing de gadget novo", contexto: "Primeiras impressões em vídeo para lançamento de tech.", legenda: "foto do trabalho · 4:5" },
-    { nicho: "hobby", titulo: "Testando um hobby novo em vídeo", contexto: "Conteúdo leve mostrando produto ligado a um hobby.", legenda: "foto do trabalho · 4:5" },
-    { nicho: "casal", titulo: "Desafio em casal com produto", contexto: "Vídeo divertido em dupla para engajamento de marca.", legenda: "foto do trabalho · 4:5" }
   ];
 
   // Serviços oferecidos (seção 5)
@@ -1547,11 +1496,34 @@
     container.innerHTML = html;
   })();
 
+  function escaparHtml(texto){
+    if(texto === null || texto === undefined) return "";
+    return String(texto).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+
   // Destaques :: carrossel coverflow (lateral | centro | lateral) com autoplay e navegação manual
-  (function renderDestaques(){
+  // Recebe os vídeos vindos do banco (tabela "videos", filtrados pelos que têm o campo "destaque" preenchido)
+  function renderDestaques(destaquesConteudo){
+    var coverflowWrap = document.querySelector(".destaques-coverflow");
+    var indicadoresWrap = document.getElementById("destaques-indicadores");
+
+    if(!destaquesConteudo || !destaquesConteudo.length){
+      coverflowWrap.innerHTML = '<p class="mensagem-vazia">Em breve, os vídeos em destaque aparecem aqui. Adicione um vídeo com um número de destaque preenchido no painel para ele aparecer nesta seção.</p>';
+      indicadoresWrap.innerHTML = "";
+      return;
+    }
+
+    coverflowWrap.innerHTML =
+      '<div class="destaques-info revelar" id="destaques-info-painel" aria-live="polite"></div>' +
+      '<div class="destaques-carrossel">' +
+        '<button class="carrossel-seta seta-anterior" id="destaque-anterior" type="button" aria-label="Vídeo anterior">‹</button>' +
+        '<div class="destaques-trilha" id="destaques-trilha" aria-roledescription="carrossel" aria-label="Vídeos em destaque"></div>' +
+        '<button class="carrossel-seta seta-proximo" id="destaque-proximo" type="button" aria-label="Próximo vídeo">›</button>' +
+      '</div>';
+
     var trilha = document.getElementById("destaques-trilha");
     var painelInfo = document.getElementById("destaques-info-painel");
-    var indicadores = document.getElementById("destaques-indicadores");
+    var indicadores = indicadoresWrap;
     var botaoAnterior = document.getElementById("destaque-anterior");
     var botaoProximo = document.getElementById("destaque-proximo");
     var total = destaquesConteudo.length;
@@ -1564,8 +1536,8 @@
 
     var htmlSlides = "";
     destaquesConteudo.forEach(function(item, indice){
-      htmlSlides += '<a class="destaque-slide" href="' + item.link + '" target="_blank" rel="noopener" data-indice="' + indice + '" aria-label="Assistir: ' + item.titulo + '">' +
-        criarPlaceholder(item.capaLegenda) +
+      htmlSlides += '<a class="destaque-slide" href="' + escaparHtml(item.link || "#") + '" target="_blank" rel="noopener" data-indice="' + indice + '" aria-label="Assistir: ' + escaparHtml(item.titulo) + '">' +
+        criarPlaceholder(escaparHtml(item.capaLegenda)) +
         '<span class="botao-play" aria-hidden="true"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span></span>' +
       '</a>';
     });
@@ -1582,10 +1554,10 @@
 
     function montarExtras(item){
       var partes = [];
-      if(item.marca) partes.push('<span>marca: <b>' + item.marca + '</b></span>');
-      if(item.visualizacoes) partes.push('<span>visualizações: <b>' + item.visualizacoes + '</b></span>');
-      if(item.salvamentos) partes.push('<span>salvamentos: <b>' + item.salvamentos + '</b></span>');
-      if(item.alcance) partes.push('<span>alcance: <b>' + item.alcance + '</b></span>');
+      if(item.marca) partes.push('<span>marca: <b>' + escaparHtml(item.marca) + '</b></span>');
+      if(item.visualizacoes) partes.push('<span>visualizações: <b>' + escaparHtml(item.visualizacoes) + '</b></span>');
+      if(item.salvamentos) partes.push('<span>salvamentos: <b>' + escaparHtml(item.salvamentos) + '</b></span>');
+      if(item.alcance) partes.push('<span>alcance: <b>' + escaparHtml(item.alcance) + '</b></span>');
       return partes.join("");
     }
 
@@ -1593,13 +1565,13 @@
       var item = destaquesConteudo[atual];
       var extras = montarExtras(item);
       painelInfo.innerHTML =
-        '<span class="tag-marca"' + (item.marca ? '' : ' hidden') + '>' + (item.marca || "") + '</span>' +
-        '<h3>' + item.titulo + '</h3>' +
-        '<p class="info-contexto">' + item.contexto + '</p>' +
-        '<span class="info-numero">' + item.numero + '</span>' +
-        '<span class="info-rotulo">' + item.rotulo + '</span>' +
+        '<span class="tag-marca"' + (item.marca ? '' : ' hidden') + '>' + escaparHtml(item.marca) + '</span>' +
+        '<h3>' + escaparHtml(item.titulo) + '</h3>' +
+        '<p class="info-contexto">' + escaparHtml(item.contexto) + '</p>' +
+        '<span class="info-numero">' + escaparHtml(item.numero) + '</span>' +
+        '<span class="info-rotulo"' + (item.rotulo ? '' : ' hidden') + '>' + escaparHtml(item.rotulo) + '</span>' +
         '<div class="info-extra"' + (extras ? '' : ' hidden') + '>' + extras + '</div>' +
-        '<a class="btn btn-laranja" href="' + item.link + '" target="_blank" rel="noopener">Assistir vídeo</a>';
+        '<a class="btn btn-laranja" href="' + escaparHtml(item.link || "#") + '" target="_blank" rel="noopener">Assistir vídeo</a>';
     }
 
     function atualizarSlides(){
@@ -1681,12 +1653,19 @@
 
     atualizarSlides();
     iniciarAutoplay();
-  })();
+  }
 
-  // Filtros de nicho (agora como navegação rápida) + uma linha horizontal por nicho
-  (function renderTrabalhos(){
+  // Filtros de nicho (navegação rápida) + uma linha horizontal por nicho.
+  // Recebe TODOS os vídeos vindos do banco (tabela "videos"), agrupados por nicho.
+  function renderTrabalhos(trabalhos){
     var filtros = document.getElementById("filtros-nicho");
     var container = document.getElementById("linhas-nichos");
+
+    if(!trabalhos || !trabalhos.length){
+      filtros.innerHTML = "";
+      container.innerHTML = '<p class="mensagem-vazia">Em breve, os trabalhos por nicho aparecem aqui. Adicione vídeos no painel para eles aparecerem nesta seção.</p>';
+      return;
+    }
 
     var htmlFiltros = '<button class="filtro-btn" type="button" data-nicho="todos" aria-pressed="true">Todos</button>';
     nichos.forEach(function(n){
@@ -1701,12 +1680,14 @@
 
       var htmlCards = "";
       trabalhosDoNicho.forEach(function(t){
-        htmlCards += '<article class="trabalho-card revelar" data-nicho="' + t.nicho + '">' +
-          criarPlaceholder(t.legenda) +
+        var legenda = t.formato ? (t.formato + " · 4:5") : "foto do trabalho · 4:5";
+        var contexto = t.marca ? ("Trabalho em parceria com " + t.marca + ".") : "";
+        htmlCards += '<article class="trabalho-card revelar" data-nicho="' + escaparHtml(t.nicho) + '">' +
+          criarPlaceholder(escaparHtml(legenda)) +
           '<div class="trabalho-info">' +
-            '<span class="trabalho-tag">' + n.label + '</span>' +
-            '<h3>' + t.titulo + '</h3>' +
-            '<p>' + t.contexto + '</p>' +
+            '<span class="trabalho-tag">' + escaparHtml(n.label) + '</span>' +
+            '<h3>' + escaparHtml(t.titulo) + '</h3>' +
+            '<p>' + escaparHtml(contexto) + '</p>' +
           '</div>' +
         '</article>';
       });
@@ -1716,6 +1697,11 @@
         '<div class="linha-nicho-trilho">' + htmlCards + '</div>' +
       '</div>';
     });
+
+    if(!htmlLinhas){
+      container.innerHTML = '<p class="mensagem-vazia">Em breve, os trabalhos por nicho aparecem aqui.</p>';
+      return;
+    }
     container.innerHTML = htmlLinhas;
 
     var botoes = filtros.querySelectorAll(".filtro-btn");
@@ -1732,7 +1718,7 @@
       var destino = alvo === "todos" ? secaoTrabalhos : document.getElementById("nicho-" + alvo);
       if(destino) destino.scrollIntoView({ behavior: "smooth", block: alvo === "todos" ? "start" : "nearest" });
     });
-  })();
+  }
 
   // Serviços
   (function renderServicos(){
@@ -1814,26 +1800,26 @@
   /* =========================================================
      ANIMAÇÃO DE ENTRADA AO ROLAR
   ========================================================= */
-  (function animacaoEntrada(){
-    var reduzMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var elementos = document.querySelectorAll(".revelar");
+  var reduzMovimentoGlobal = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var observadorRevelar = (!reduzMovimentoGlobal && "IntersectionObserver" in window) ? new IntersectionObserver(function(entradas){
+    entradas.forEach(function(entrada){
+      if(entrada.isIntersecting){
+        entrada.target.classList.add("em-vista");
+        observadorRevelar.unobserve(entrada.target);
+      }
+    });
+  }, { threshold: 0.15 }) : null;
 
-    if(reduzMovimento || !("IntersectionObserver" in window)){
-      elementos.forEach(function(el){ el.classList.add("em-vista"); });
-      return;
-    }
+  // Chamada tanto no carregamento da página quanto depois que os vídeos
+  // do banco são inseridos dinamicamente, pra essas seções também animarem.
+  function ativarRevelar(elementos){
+    elementos.forEach(function(el){
+      if(observadorRevelar) observadorRevelar.observe(el);
+      else el.classList.add("em-vista");
+    });
+  }
 
-    var observador = new IntersectionObserver(function(entradas){
-      entradas.forEach(function(entrada){
-        if(entrada.isIntersecting){
-          entrada.target.classList.add("em-vista");
-          observador.unobserve(entrada.target);
-        }
-      });
-    }, { threshold: 0.15 });
-
-    elementos.forEach(function(el){ observador.observe(el); });
-  })();
+  ativarRevelar(document.querySelectorAll(".revelar"));
 
   /* =========================================================
      CONTADOR ANIMADO NAS MÉTRICAS
@@ -1902,8 +1888,42 @@
         formulario.reportValidity();
         return;
       }
-      confirmacao.hidden = false;
-      formulario.reset();
+      var nome = document.getElementById("campo-nome").value.trim();
+      var email = document.getElementById("campo-email").value.trim();
+      var mensagem = document.getElementById("campo-mensagem").value.trim();
+      var botaoEnviar = formulario.querySelector('button[type="submit"]');
+
+      function mostrarConfirmacao(){
+        confirmacao.hidden = false;
+        confirmacao.textContent = "Mensagem recebida! Eu respondo em breve por e-mail ou WhatsApp.";
+        formulario.reset();
+      }
+
+      if(!window.banco){
+        // Sem conexão com o banco: ainda assim não deixa a visitante sem retorno.
+        mostrarConfirmacao();
+        return;
+      }
+
+      if(botaoEnviar){ botaoEnviar.disabled = true; }
+      window.banco.from("marcas").insert({
+        nome: nome,
+        email: email,
+        obs: mensagem,
+        situacao: "lead"
+      }).then(function(resultado){
+        if(botaoEnviar){ botaoEnviar.disabled = false; }
+        if(resultado.error){
+          confirmacao.hidden = false;
+          confirmacao.textContent = "Não consegui enviar por aqui agora. Me chama direto pelo WhatsApp ou e-mail ao lado, por favor.";
+          return;
+        }
+        mostrarConfirmacao();
+      }).catch(function(){
+        if(botaoEnviar){ botaoEnviar.disabled = false; }
+        confirmacao.hidden = false;
+        confirmacao.textContent = "Não consegui enviar por aqui agora. Me chama direto pelo WhatsApp ou e-mail ao lado, por favor.";
+      });
     });
   })();
 
@@ -2037,6 +2057,73 @@
      ANO AUTOMÁTICO NO RODAPÉ
   ========================================================= */
   document.getElementById("ano-atual").textContent = new Date().getFullYear();
+
+  /* =========================================================
+     VÍDEOS VINDOS DO BANCO DE DADOS (tabela "videos", editada no /admin)
+     Busca só os vídeos marcados como visíveis, através de uma função
+     pública do banco que não expõe a tabela inteira. Os que têm o
+     campo "destaque" preenchido entram na seção de destaques; todos
+     entram nas linhas por nicho.
+  ========================================================= */
+  function carregarVideosDoPortfolio(){
+    if(!window.banco){
+      renderDestaques([]);
+      renderTrabalhos([]);
+      return;
+    }
+    window.banco.rpc("videos_publicos").then(function(resultado){
+      if(resultado.error) throw resultado.error;
+      var lista = (resultado.data || []).slice().sort(function(a, b){
+        return (a.ordem || 0) - (b.ordem || 0);
+      });
+      var destaques = lista.filter(function(v){ return v.destaque; }).map(function(v){
+        return {
+          titulo: v.titulo,
+          contexto: v.marca ? ("Vídeo em parceria com " + v.marca + ".") : (v.formato ? ("Conteúdo em " + v.formato + ".") : ""),
+          numero: v.destaque,
+          rotulo: "",
+          capaLegenda: v.formato ? (v.formato + " · 9:16") : "capa vertical do vídeo · 9:16",
+          link: v.link || "#",
+          marca: v.marca || "",
+          visualizacoes: "",
+          salvamentos: "",
+          alcance: ""
+        };
+      });
+      renderDestaques(destaques);
+      renderTrabalhos(lista);
+      ativarRevelar(document.querySelectorAll(".destaques-coverflow .revelar, #linhas-nichos .revelar"));
+    }).catch(function(erro){
+      console.error("Não consegui carregar os vídeos do portfólio:", erro);
+      renderDestaques([]);
+      renderTrabalhos([]);
+    });
+  }
+  carregarVideosDoPortfolio();
+
+  /* =========================================================
+     REGISTRO SIMPLES DE VISITA (tabela "visitas")
+     Não usa nenhum serviço externo, não pede nada para quem visita
+     e não guarda dado pessoal: só a página e de onde a pessoa veio.
+  ========================================================= */
+  (function registrarVisita(){
+    if(!window.banco) return;
+    try {
+      var origem = "direto";
+      if(document.referrer){
+        try {
+          var hostReferencia = new URL(document.referrer).hostname.replace(/^www\./, "");
+          origem = (hostReferencia && hostReferencia !== window.location.hostname) ? hostReferencia : "direto";
+        } catch(erroUrl){ origem = "direto"; }
+      }
+      window.banco.from("visitas").insert({
+        pagina: window.location.pathname,
+        origem: origem
+      }).then(function(){}).catch(function(){});
+    } catch(erro){
+      // Nunca deixa isso quebrar o resto do site.
+    }
+  })();
 
 })();
 </script>
