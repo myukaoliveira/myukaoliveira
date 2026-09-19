@@ -411,6 +411,83 @@
     white-space: nowrap;
   }
 
+  /* ============ LETREIRO :: áreas de atuação ============ */
+  .letreiro-atuacao{
+    background: var(--laranja);
+    border-top: 1px solid var(--plastico);
+    border-bottom: 1px solid var(--plastico);
+    overflow: hidden;
+    padding: 14px 0;
+  }
+  .letreiro-trilho{
+    display: flex;
+    align-items: center;
+    width: max-content;
+    animation: rolar-marcas 26s linear infinite;
+  }
+  @media (prefers-reduced-motion: reduce){
+    .letreiro-trilho{ animation: none; flex-wrap: wrap; padding: 0 24px; }
+  }
+  .letreiro-item{
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--plastico);
+    font-size: clamp(.9rem, 1.6vw, 1.1rem);
+    white-space: nowrap;
+    padding: 0 18px;
+  }
+  .letreiro-separador{
+    color: var(--plastico);
+    opacity: .55;
+    font-size: 1.1rem;
+  }
+
+  /* ============ MARCAS QUE CONFIARAM ============ */
+  .marcas-confianca{
+    background: var(--plastico);
+    padding: 44px 0;
+    border-bottom: 1px solid var(--linha);
+    text-align: center;
+  }
+  .marcas-confianca-titulo{
+    font-family: "Permanent Marker", cursive;
+    color: var(--azul);
+    font-size: clamp(1.1rem, 2.4vw, 1.4rem);
+    letter-spacing: .01em;
+    margin-bottom: 24px;
+  }
+  .marcas-confianca-faixa{ overflow: hidden; }
+  .marcas-confianca-trilho{
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    width: max-content;
+    animation: rolar-marcas 34s linear infinite;
+  }
+  @media (prefers-reduced-motion: reduce){
+    .marcas-confianca-trilho{ animation: none; flex-wrap: wrap; justify-content: center; gap: 12px; }
+  }
+  /* Chip placeholder de marca: troque por <img src="logo-da-marca.svg" alt="Nome da marca" class="marca-logo-real"> quando tiver os logos reais */
+  .marca-chip{
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 150px;
+    height: 64px;
+    padding: 0 22px;
+    border-radius: 12px;
+    background: var(--plastico-2);
+    border: 1px solid var(--linha);
+    color: var(--texto-suave);
+    font-weight: 700;
+    font-size: .88rem;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
   /* ============ SOBRE ============ */
   .sobre-grade{
     display: grid;
@@ -455,27 +532,149 @@
     margin-top: 6px;
   }
 
-  /* ============ DESTAQUES ============ */
-  .destaques-grade{
+  /* Bloco de números reaproveitado dentro do Sobre mim, mesmos dados do array "metricas" */
+  .sobre-numeros{
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 28px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin: 8px 0 30px;
   }
-  .destaque-card{
+  .sobre-numeros div{
+    text-align: center;
+    background: rgba(27,27,31,.05);
+    border: 1px solid rgba(27,27,31,.12);
+    border-radius: 14px;
+    padding: 16px 8px;
+  }
+  .sobre-numeros strong{
     display: block;
+    font-size: clamp(1.4rem, 2.6vw, 1.8rem);
+    font-weight: 900;
+    color: var(--vermelho);
+  }
+  .sobre-numeros span{
+    font-size: .76rem;
+    color: #6b6555;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+  }
+
+  /* ============ DESTAQUES :: coverflow de 3 vídeos ============ */
+  .destaques-coverflow{
+    display: grid;
+    grid-template-columns: .85fr 1.15fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .destaques-info .tag-marca{
+    display: inline-block;
+    font-size: .74rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--azul);
+    background: rgba(59,110,165,.14);
+    border: 1px solid var(--azul);
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  .destaques-info .tag-marca[hidden]{ display: none; }
+  .destaques-info h3{
+    font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+    color: var(--rotulo);
+    margin-bottom: 10px;
+  }
+  .info-contexto{ color: var(--texto-suave); font-size: .98rem; margin-bottom: 22px; }
+  .info-numero{
+    font-size: clamp(2.2rem, 4vw, 2.8rem);
+    font-weight: 900;
+    color: var(--laranja);
+    display: block;
+    line-height: 1;
+  }
+  .info-rotulo{
+    font-size: .82rem;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--texto-suave);
+    display: block;
+    margin-bottom: 18px;
+  }
+  .info-extra{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .info-extra[hidden]{ display: none; }
+  .info-extra span{
+    font-size: .82rem;
+    font-weight: 600;
+    color: var(--rotulo);
     background: var(--plastico-2);
     border: 1px solid var(--linha);
+    padding: 7px 13px;
+    border-radius: 999px;
+  }
+  .info-extra span b{ color: var(--azul); }
+
+  .destaques-carrossel{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    --largura-slide: 216px;
+    --deslocamento: 168px;
+  }
+  .destaques-trilha{
+    position: relative;
+    width: 100%;
+    height: calc(var(--largura-slide) * 16 / 9 + 24px);
+    overflow: hidden;
+  }
+  .destaque-slide{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--largura-slide);
+    aspect-ratio: 9 / 16;
     border-radius: var(--raio);
     overflow: hidden;
-    transition: transform .2s ease, border-color .2s ease;
+    display: block;
+    border: 1px solid var(--linha);
+    transition: transform .6s cubic-bezier(.22,.68,0,1.01), opacity .6s ease, filter .6s ease;
   }
-  @media (prefers-reduced-motion: reduce){ .destaque-card{ transition: none; } }
-  .destaque-card:hover{ transform: translateY(-6px); border-color: var(--laranja); }
-  .destaque-capa{
-    aspect-ratio: 9 / 16;
-    position: relative;
+  @media (prefers-reduced-motion: reduce){
+    .destaque-slide{ transition: opacity .2s ease; }
   }
-  .destaque-capa .midia-placeholder{ height: 100%; aspect-ratio: auto; }
+  .destaque-slide .midia-placeholder{ height: 100%; }
+  .destaque-slide.posicao-centro{
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    filter: none;
+    z-index: 3;
+  }
+  .destaque-slide.posicao-esquerda{
+    transform: translate(calc(-50% - var(--deslocamento)), -50%) scale(.76);
+    opacity: .5;
+    filter: blur(2px);
+    z-index: 2;
+    cursor: pointer;
+  }
+  .destaque-slide.posicao-direita{
+    transform: translate(calc(-50% + var(--deslocamento)), -50%) scale(.76);
+    opacity: .5;
+    filter: blur(2px);
+    z-index: 2;
+    cursor: pointer;
+  }
+  .destaque-slide.posicao-oculta{
+    transform: translate(-50%, -50%) scale(.5);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
   .botao-play{
     position: absolute;
     inset: 0;
@@ -484,8 +683,8 @@
     justify-content: center;
   }
   .botao-play span{
-    width: 66px;
-    height: 66px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     background: rgba(27,27,31,.55);
     border: 2px solid var(--rotulo);
@@ -494,28 +693,52 @@
     justify-content: center;
     color: var(--rotulo);
   }
-  .botao-play svg{ width: 22px; height: 22px; margin-left: 3px; }
-  .destaque-info{ padding: 20px; }
-  .destaque-numero{
-    font-size: 1.8rem;
-    font-weight: 900;
-    color: var(--laranja);
-    display: block;
-  }
-  .destaque-rotulo{
-    font-size: .78rem;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    color: var(--texto-suave);
-    display: block;
-    margin-bottom: 12px;
-  }
-  .destaque-info h3{
-    font-size: 1.15rem;
+  .botao-play svg{ width: 20px; height: 20px; margin-left: 3px; }
+
+  .carrossel-seta{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--plastico-2);
+    border: 2px solid var(--rotulo);
     color: var(--rotulo);
-    margin-bottom: 6px;
+    font-size: 1.4rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 4;
+    transition: background .18s ease, transform .18s ease;
   }
-  .destaque-info p{ color: var(--texto-suave); font-size: .92rem; }
+  @media (prefers-reduced-motion: reduce){ .carrossel-seta{ transition: none; } }
+  .carrossel-seta:hover{ background: var(--laranja); color: var(--plastico); }
+  .seta-anterior{ left: -4px; }
+  .seta-proximo{ right: -4px; }
+
+  .destaques-indicadores{
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 22px;
+  }
+  .destaques-indicadores button{
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--linha);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+  .destaques-indicadores button[aria-current="true"]{
+    background: var(--laranja);
+    width: 22px;
+    border-radius: 999px;
+  }
 
   /* ============ TRABALHOS ============ */
   .filtros-nicho{
@@ -542,18 +765,34 @@
     border-color: var(--laranja);
     color: var(--plastico);
   }
-  .trabalhos-grade{
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
+  .linha-nicho{ margin-bottom: 40px; scroll-margin-top: calc(var(--topo-altura) + 20px); }
+  .linha-nicho:last-child{ margin-bottom: 0; }
+  .linha-nicho-titulo{
+    font-family: "Permanent Marker", cursive;
+    color: var(--vermelho);
+    font-size: 1.2rem;
+    margin-bottom: 14px;
   }
+  .linha-nicho-trilho{
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    padding-bottom: 10px;
+    -webkit-overflow-scrolling: touch;
+    mask-image: linear-gradient(90deg, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+  }
+  .linha-nicho-trilho::-webkit-scrollbar{ height: 6px; }
+  .linha-nicho-trilho::-webkit-scrollbar-thumb{ background: var(--linha); border-radius: 999px; }
   .trabalho-card{
+    flex: 0 0 auto;
+    width: 220px;
+    scroll-snap-align: start;
     background: var(--plastico-2);
     border: 1px solid var(--linha);
     border-radius: var(--raio);
     overflow: hidden;
   }
-  .trabalho-card.escondido{ display: none; }
   .trabalho-card .midia-placeholder{ aspect-ratio: 4 / 5; }
   .trabalho-info{ padding: 18px; }
   .trabalho-tag{
@@ -817,6 +1056,31 @@
   }
   .modal-caixa .btn{ width: 100%; border: none; margin-top: 4px; }
 
+  /* ============ CURSOR PERSONALIZADO (desktop com mouse) ============ */
+  @media (hover: hover) and (pointer: fine){
+    body.cursor-emoji-ativo,
+    body.cursor-emoji-ativo a,
+    body.cursor-emoji-ativo button,
+    body.cursor-emoji-ativo .filtro-btn{
+      cursor: none;
+    }
+    body.cursor-emoji-ativo input,
+    body.cursor-emoji-ativo textarea{
+      cursor: text;
+    }
+  }
+  .cursor-emoji{
+    position: fixed;
+    top: 0;
+    left: 0;
+    font-size: 24px;
+    z-index: 600;
+    pointer-events: none;
+    user-select: none;
+    will-change: transform;
+  }
+  .cursor-emoji[hidden]{ display: none; }
+
   /* ============ RESPONSIVO ============ */
   @media (max-width: 980px){
     .capa-grade, .sobre-grade, .contato-grade{
@@ -824,21 +1088,27 @@
     }
     .sobre-grade{ gap: 40px; }
     .sobre-foto{ max-width: 340px; }
-    .destaques-grade, .servicos-grade, .campanhas-grade{
+    .servicos-grade, .campanhas-grade{
       grid-template-columns: repeat(2, 1fr);
     }
-    .trabalhos-grade{ grid-template-columns: repeat(2, 1fr); }
     .metricas-grade{ grid-template-columns: repeat(2, 1fr); }
     .depoimentos-grade{ grid-template-columns: 1fr; }
+    .destaques-coverflow{ grid-template-columns: 1fr; gap: 32px; }
+    .destaques-carrossel{ --largura-slide: 190px; --deslocamento: 140px; }
   }
   @media (max-width: 640px){
     .secao{ padding: 64px 0; }
-    .destaques-grade, .servicos-grade, .campanhas-grade, .trabalhos-grade, .metricas-grade{
+    .servicos-grade, .campanhas-grade, .metricas-grade{
       grid-template-columns: 1fr;
     }
+    .sobre-numeros{ grid-template-columns: repeat(2, 1fr); }
     .capa-numeros{ gap: 24px; }
     .capa-botoes .btn{ width: 100%; }
     .contato-links{ margin-top: 8px; }
+    .destaques-carrossel{ --largura-slide: 150px; --deslocamento: 104px; }
+    .carrossel-seta{ width: 38px; height: 38px; font-size: 1.2rem; }
+    .trabalho-card{ width: 180px; }
+    .marca-chip{ min-width: 120px; height: 54px; padding: 0 16px; font-size: .78rem; }
   }
 </style>
 </head>
@@ -917,6 +1187,11 @@
     </div>
   </section>
 
+  <!-- LETREIRO :: áreas de atuação em loop contínuo. Dados no array "areasAtuacao" -->
+  <div class="letreiro-atuacao" aria-label="Áreas de atuação de Myuka Oliveira">
+    <div class="letreiro-trilho" id="trilho-letreiro"></div>
+  </div>
+
   <!-- 2. SOBRE MIM -->
   <section id="sobre" class="secao fundo-rotulo">
     <div class="container">
@@ -932,6 +1207,8 @@
         <div class="sobre-texto revelar">
           <p>Oi, eu sou a Myuka! Moro em São Paulo e transformo produtos em vídeos que parecem indicação de amiga, porque é exatamente assim que eu gravo: câmera na mão, luz natural e muita vontade de contar uma história de verdade.</p>
           <p>Já gravei para marcas de beleza, skincare, moda, casa e decoração, fitness, viagem, tech, hobby e casal, sempre pensando no que faz a pessoa do outro lado parar de rolar o feed e prestar atenção.</p>
+          <!-- Números reaproveitados do array "metricas", sem valores novos -->
+          <div class="sobre-numeros" id="sobre-numeros"></div>
           <ul class="lista-promessas">
             <li>Roteiro aprovado por você antes de eu gravar</li>
             <li>Uma rodada de ajuste inclusa no valor combinado</li>
@@ -943,6 +1220,14 @@
     </div>
   </section>
 
+  <!-- MARCAS QUE CONFIARAM NO MEU TRABALHO :: esteira contínua a partir do array "marcas" -->
+  <section class="marcas-confianca" aria-label="Marcas que confiaram no meu trabalho">
+    <p class="marcas-confianca-titulo">marcas que confiaram no meu trabalho</p>
+    <div class="marcas-confianca-faixa">
+      <div class="marcas-confianca-trilho" id="trilho-marcas-confianca"></div>
+    </div>
+  </section>
+
   <!-- 3. CONTEÚDOS DE DESTAQUE -->
   <section id="destaques" class="secao">
     <div class="container">
@@ -950,12 +1235,21 @@
       <h2 class="titulo-secao">Conteúdos de destaque</h2>
       <p class="subtitulo-secao">Os vídeos que mais renderam resultado para as marcas que já trabalharam comigo.</p>
       <!--
-        Cada card de destaque é montado pelo JavaScript a partir do array "destaquesConteudo" no final do arquivo.
+        O carrossel inteiro é montado pelo JavaScript a partir do array "destaquesConteudo" no final do arquivo.
         Lá você encontra, para cada item:
         - link: onde entra o endereço real do vídeo (TikTok, Reels, YouTube etc)
         - capaLegenda: o texto do formato da capa (troque o bloco .midia-placeholder por uma <img> real com a capa do vídeo)
+        - marca, visualizacoes, salvamentos, alcance: preencha quando tiver esses resultados específicos de cada vídeo
       -->
-      <div class="destaques-grade" id="grade-destaques"></div>
+      <div class="destaques-coverflow">
+        <div class="destaques-info revelar" id="destaques-info-painel" aria-live="polite"></div>
+        <div class="destaques-carrossel">
+          <button class="carrossel-seta seta-anterior" id="destaque-anterior" type="button" aria-label="Vídeo anterior">‹</button>
+          <div class="destaques-trilha" id="destaques-trilha" aria-roledescription="carrossel" aria-label="Vídeos em destaque"></div>
+          <button class="carrossel-seta seta-proximo" id="destaque-proximo" type="button" aria-label="Próximo vídeo">›</button>
+        </div>
+      </div>
+      <div class="destaques-indicadores" id="destaques-indicadores"></div>
     </div>
   </section>
 
@@ -964,9 +1258,9 @@
     <div class="container">
       <span class="rotulo-secao">lado A · faixa 3</span>
       <h2 class="titulo-secao">Trabalhos por nicho</h2>
-      <p class="subtitulo-secao">Filtre por nicho para ver exemplos do tipo de conteúdo que eu entrego para cada tipo de marca.</p>
-      <div class="filtros-nicho" id="filtros-nicho" role="group" aria-label="Filtrar trabalhos por nicho"></div>
-      <div class="trabalhos-grade" id="grade-trabalhos"></div>
+      <p class="subtitulo-secao">Escolha um nicho para ir direto aos exemplos, ou deslize cada linha para ver mais conteúdos daquele segmento.</p>
+      <div class="filtros-nicho" id="filtros-nicho" role="group" aria-label="Ir para um nicho"></div>
+      <div id="linhas-nichos"></div>
     </div>
   </section>
 
@@ -1092,7 +1386,15 @@
     "Marca 07","Marca 08","Marca 09","Marca 10","Marca 11","Marca 12"
   ];
 
+  // Áreas de atuação do letreiro logo abaixo da capa
+  var areasAtuacao = [
+    "Mentoria", "Clube de Creators", "Clips", "TikTok Shop",
+    "UGC Creator", "Influencer", "Consultoria", "Palestras"
+  ];
+
   // Conteúdos de destaque (seção 3). "link" é o endereço do vídeo real.
+  // marca, visualizacoes, salvamentos e alcance são opcionais: deixe "" para não exibir,
+  // ou preencha com o resultado real do vídeo quando você tiver esse dado.
   var destaquesConteudo = [
     {
       titulo: "Rotina de skincare que virou trend",
@@ -1100,7 +1402,11 @@
       numero: "+2,4M",
       rotulo: "views no reels",
       capaLegenda: "capa vertical do vídeo · 9:16",
-      link: "#" // troque pelo link real do vídeo (TikTok, Reels ou YouTube)
+      link: "#", // troque pelo link real do vídeo (TikTok, Reels ou YouTube)
+      marca: "",
+      visualizacoes: "",
+      salvamentos: "",
+      alcance: ""
     },
     {
       titulo: "Unboxing surpresa de produto fitness",
@@ -1108,7 +1414,11 @@
       numero: "+980K",
       rotulo: "visualizações no anúncio",
       capaLegenda: "capa vertical do vídeo · 9:16",
-      link: "#" // troque pelo link real do vídeo
+      link: "#", // troque pelo link real do vídeo
+      marca: "",
+      visualizacoes: "",
+      salvamentos: "",
+      alcance: ""
     },
     {
       titulo: "Antes e depois com produto de moda",
@@ -1116,7 +1426,11 @@
       numero: "+3,1K",
       rotulo: "comentários no post",
       capaLegenda: "capa vertical do vídeo · 9:16",
-      link: "#" // troque pelo link real do vídeo
+      link: "#", // troque pelo link real do vídeo
+      marca: "",
+      visualizacoes: "",
+      salvamentos: "",
+      alcance: ""
     }
   ];
 
@@ -1187,7 +1501,7 @@
       '<span class="midia-legenda">' + legenda + '</span></div>';
   }
 
-  // Faixa de marcas (duplicada para permitir rolagem contínua)
+  // Faixa de marcas da capa (duplicada para permitir rolagem contínua)
   (function renderMarcas(){
     var trilho = document.getElementById("trilho-marcas");
     var html = "";
@@ -1198,31 +1512,179 @@
     trilho.innerHTML = html;
   })();
 
-  // Destaques
-  (function renderDestaques(){
-    var grade = document.getElementById("grade-destaques");
+  // Letreiro de áreas de atuação (duplicado 3x para o loop nunca mostrar espaço vazio)
+  (function renderLetreiro(){
+    var trilho = document.getElementById("trilho-letreiro");
     var html = "";
-    destaquesConteudo.forEach(function(item){
-      html += '<a class="destaque-card revelar" href="' + item.link + '" target="_blank" rel="noopener" aria-label="Assistir: ' + item.titulo + '">' +
-        '<div class="destaque-capa">' +
-          criarPlaceholder(item.capaLegenda) +
-          '<span class="botao-play" aria-hidden="true"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span></span>' +
-        '</div>' +
-        '<div class="destaque-info">' +
-          '<span class="destaque-numero">' + item.numero + '</span>' +
-          '<span class="destaque-rotulo">' + item.rotulo + '</span>' +
-          '<h3>' + item.titulo + '</h3>' +
-          '<p>' + item.contexto + '</p>' +
-        '</div>' +
-      '</a>';
+    var listaTripla = areasAtuacao.concat(areasAtuacao, areasAtuacao);
+    listaTripla.forEach(function(area){
+      html += '<span class="letreiro-item">' + area + '</span><span class="letreiro-separador" aria-hidden="true">✦</span>';
     });
-    grade.innerHTML = html;
+    trilho.innerHTML = html;
   })();
 
-  // Filtros de nicho + grade de trabalhos
+  // Seção "Marcas que confiaram no meu trabalho" (esteira contínua, mesmo array "marcas")
+  (function renderMarcasConfianca(){
+    var trilho = document.getElementById("trilho-marcas-confianca");
+    var html = "";
+    var listaDupla = marcas.concat(marcas);
+    listaDupla.forEach(function(marca){
+      // Chip placeholder: troque o <span> por <img src="logo-da-marca.svg" alt="..." class="marca-logo-real"> quando tiver o logo real
+      html += '<span class="marca-chip">' + marca + '</span>';
+    });
+    trilho.innerHTML = html;
+  })();
+
+  // Números reaproveitados dentro do Sobre mim (mesmo array "metricas", sem contador animado)
+  (function renderSobreNumeros(){
+    var container = document.getElementById("sobre-numeros");
+    var html = "";
+    metricas.forEach(function(m){
+      html += "<div><strong>" + m.valor + m.sufixo + "</strong><span>" + m.rotulo + "</span></div>";
+    });
+    container.innerHTML = html;
+  })();
+
+  // Destaques :: carrossel coverflow (lateral | centro | lateral) com autoplay e navegação manual
+  (function renderDestaques(){
+    var trilha = document.getElementById("destaques-trilha");
+    var painelInfo = document.getElementById("destaques-info-painel");
+    var indicadores = document.getElementById("destaques-indicadores");
+    var botaoAnterior = document.getElementById("destaque-anterior");
+    var botaoProximo = document.getElementById("destaque-proximo");
+    var total = destaquesConteudo.length;
+    var atual = 0;
+    var reduzMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var TEMPO_AUTOPLAY = 5000;
+    var TEMPO_RETOMADA = 6000;
+    var idIntervalo = null;
+    var idRetomada = null;
+
+    var htmlSlides = "";
+    destaquesConteudo.forEach(function(item, indice){
+      htmlSlides += '<a class="destaque-slide" href="' + item.link + '" target="_blank" rel="noopener" data-indice="' + indice + '" aria-label="Assistir: ' + item.titulo + '">' +
+        criarPlaceholder(item.capaLegenda) +
+        '<span class="botao-play" aria-hidden="true"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span></span>' +
+      '</a>';
+    });
+    trilha.innerHTML = htmlSlides;
+
+    var htmlIndicadores = "";
+    destaquesConteudo.forEach(function(item, indice){
+      htmlIndicadores += '<button type="button" data-indice="' + indice + '" aria-label="Ir para o vídeo ' + (indice + 1) + '"></button>';
+    });
+    indicadores.innerHTML = htmlIndicadores;
+
+    var slides = trilha.querySelectorAll(".destaque-slide");
+    var botoesIndicador = indicadores.querySelectorAll("button");
+
+    function montarExtras(item){
+      var partes = [];
+      if(item.marca) partes.push('<span>marca: <b>' + item.marca + '</b></span>');
+      if(item.visualizacoes) partes.push('<span>visualizações: <b>' + item.visualizacoes + '</b></span>');
+      if(item.salvamentos) partes.push('<span>salvamentos: <b>' + item.salvamentos + '</b></span>');
+      if(item.alcance) partes.push('<span>alcance: <b>' + item.alcance + '</b></span>');
+      return partes.join("");
+    }
+
+    function atualizarPainel(){
+      var item = destaquesConteudo[atual];
+      var extras = montarExtras(item);
+      painelInfo.innerHTML =
+        '<span class="tag-marca"' + (item.marca ? '' : ' hidden') + '>' + (item.marca || "") + '</span>' +
+        '<h3>' + item.titulo + '</h3>' +
+        '<p class="info-contexto">' + item.contexto + '</p>' +
+        '<span class="info-numero">' + item.numero + '</span>' +
+        '<span class="info-rotulo">' + item.rotulo + '</span>' +
+        '<div class="info-extra"' + (extras ? '' : ' hidden') + '>' + extras + '</div>' +
+        '<a class="btn btn-laranja" href="' + item.link + '" target="_blank" rel="noopener">Assistir vídeo</a>';
+    }
+
+    function atualizarSlides(){
+      slides.forEach(function(slide){
+        var indice = parseInt(slide.getAttribute("data-indice"), 10);
+        var diferenca = (indice - atual + total) % total;
+        slide.classList.remove("posicao-centro", "posicao-esquerda", "posicao-direita", "posicao-oculta");
+        if(diferenca === 0){
+          slide.classList.add("posicao-centro");
+          slide.setAttribute("aria-hidden", "false");
+          slide.setAttribute("tabindex", "0");
+        } else if(diferenca === 1){
+          slide.classList.add("posicao-direita");
+          slide.setAttribute("aria-hidden", "true");
+          slide.setAttribute("tabindex", "-1");
+        } else if(diferenca === total - 1){
+          slide.classList.add("posicao-esquerda");
+          slide.setAttribute("aria-hidden", "true");
+          slide.setAttribute("tabindex", "-1");
+        } else {
+          slide.classList.add("posicao-oculta");
+          slide.setAttribute("aria-hidden", "true");
+          slide.setAttribute("tabindex", "-1");
+        }
+      });
+      botoesIndicador.forEach(function(botao, indice){
+        botao.setAttribute("aria-current", indice === atual ? "true" : "false");
+      });
+      atualizarPainel();
+    }
+
+    function irPara(indice){
+      atual = (indice + total) % total;
+      atualizarSlides();
+    }
+
+    function avancar(){ irPara(atual + 1); }
+    function voltar(){ irPara(atual - 1); }
+
+    function iniciarAutoplay(){
+      if(reduzMovimento || total < 2) return;
+      pararAutoplay();
+      idIntervalo = window.setInterval(avancar, TEMPO_AUTOPLAY);
+    }
+    function pararAutoplay(){
+      if(idIntervalo){ window.clearInterval(idIntervalo); idIntervalo = null; }
+    }
+    function pausarEretomar(){
+      pararAutoplay();
+      if(idRetomada) window.clearTimeout(idRetomada);
+      idRetomada = window.setTimeout(iniciarAutoplay, TEMPO_RETOMADA);
+    }
+
+    trilha.addEventListener("click", function(evento){
+      var slide = evento.target.closest(".destaque-slide");
+      if(!slide) return;
+      var indice = parseInt(slide.getAttribute("data-indice"), 10);
+      if(indice !== atual){
+        evento.preventDefault();
+        irPara(indice);
+        pausarEretomar();
+      }
+    });
+
+    botaoProximo.addEventListener("click", function(){ avancar(); pausarEretomar(); });
+    botaoAnterior.addEventListener("click", function(){ voltar(); pausarEretomar(); });
+    indicadores.addEventListener("click", function(evento){
+      var botao = evento.target.closest("button");
+      if(!botao) return;
+      irPara(parseInt(botao.getAttribute("data-indice"), 10));
+      pausarEretomar();
+    });
+
+    var carrossel = document.querySelector(".destaques-carrossel");
+    carrossel.addEventListener("mouseenter", pararAutoplay);
+    carrossel.addEventListener("mouseleave", iniciarAutoplay);
+    carrossel.addEventListener("focusin", pararAutoplay);
+    carrossel.addEventListener("focusout", iniciarAutoplay);
+
+    atualizarSlides();
+    iniciarAutoplay();
+  })();
+
+  // Filtros de nicho (agora como navegação rápida) + uma linha horizontal por nicho
   (function renderTrabalhos(){
     var filtros = document.getElementById("filtros-nicho");
-    var grade = document.getElementById("grade-trabalhos");
+    var container = document.getElementById("linhas-nichos");
 
     var htmlFiltros = '<button class="filtro-btn" type="button" data-nicho="todos" aria-pressed="true">Todos</button>';
     nichos.forEach(function(n){
@@ -1230,24 +1692,32 @@
     });
     filtros.innerHTML = htmlFiltros;
 
-    var mapaLabels = {};
-    nichos.forEach(function(n){ mapaLabels[n.id] = n.label; });
+    var htmlLinhas = "";
+    nichos.forEach(function(n){
+      var trabalhosDoNicho = trabalhos.filter(function(t){ return t.nicho === n.id; });
+      if(trabalhosDoNicho.length === 0) return;
 
-    var htmlTrabalhos = "";
-    trabalhos.forEach(function(t){
-      htmlTrabalhos += '<article class="trabalho-card revelar" data-nicho="' + t.nicho + '">' +
-        criarPlaceholder(t.legenda) +
-        '<div class="trabalho-info">' +
-          '<span class="trabalho-tag">' + mapaLabels[t.nicho] + '</span>' +
-          '<h3>' + t.titulo + '</h3>' +
-          '<p>' + t.contexto + '</p>' +
-        '</div>' +
-      '</article>';
+      var htmlCards = "";
+      trabalhosDoNicho.forEach(function(t){
+        htmlCards += '<article class="trabalho-card revelar" data-nicho="' + t.nicho + '">' +
+          criarPlaceholder(t.legenda) +
+          '<div class="trabalho-info">' +
+            '<span class="trabalho-tag">' + n.label + '</span>' +
+            '<h3>' + t.titulo + '</h3>' +
+            '<p>' + t.contexto + '</p>' +
+          '</div>' +
+        '</article>';
+      });
+
+      htmlLinhas += '<div class="linha-nicho" id="nicho-' + n.id + '" data-nicho="' + n.id + '">' +
+        '<h3 class="linha-nicho-titulo manuscrita">' + n.label + '</h3>' +
+        '<div class="linha-nicho-trilho">' + htmlCards + '</div>' +
+      '</div>';
     });
-    grade.innerHTML = htmlTrabalhos;
+    container.innerHTML = htmlLinhas;
 
     var botoes = filtros.querySelectorAll(".filtro-btn");
-    var cards = grade.querySelectorAll(".trabalho-card");
+    var secaoTrabalhos = document.getElementById("trabalhos");
 
     filtros.addEventListener("click", function(evento){
       var botao = evento.target.closest(".filtro-btn");
@@ -1257,10 +1727,8 @@
       botoes.forEach(function(b){ b.setAttribute("aria-pressed", "false"); });
       botao.setAttribute("aria-pressed", "true");
 
-      cards.forEach(function(card){
-        var mostrar = alvo === "todos" || card.getAttribute("data-nicho") === alvo;
-        card.classList.toggle("escondido", !mostrar);
-      });
+      var destino = alvo === "todos" ? secaoTrabalhos : document.getElementById("nicho-" + alvo);
+      if(destino) destino.scrollIntoView({ behavior: "smooth", block: alvo === "todos" ? "start" : "nearest" });
     });
   })();
 
@@ -1369,7 +1837,7 @@
      CONTADOR ANIMADO NAS MÉTRICAS
   ========================================================= */
   (function contadorMetricas(){
-    var secaoNumeros = document.getElementById("numeros");
+    var secaoNumeros = document.getElementById("grade-metricas");
     if(!secaoNumeros) return;
     var reduzMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     var jaAnimou = false;
@@ -1414,7 +1882,7 @@
           observadorMetricas.disconnect();
         }
       });
-    }, { threshold: 0.4 });
+    }, { threshold: 0.3 });
 
     observadorMetricas.observe(secaoNumeros);
   })();
@@ -1477,6 +1945,59 @@
       evento.preventDefault();
       fecharModal();
     });
+  })();
+
+  /* =========================================================
+     CURSOR PERSONALIZADO (apenas em telas com mouse)
+  ========================================================= */
+  (function cursorPersonalizado(){
+    var suportaMouse = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    if(!suportaMouse) return; // no celular/tablet não existe cursor, então não ativa
+
+    var EMOJI_CURSOR = "🎬"; // troque aqui pelo emoji que você quiser usar
+
+    var reduzMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var elemento = document.createElement("span");
+    elemento.className = "cursor-emoji";
+    elemento.setAttribute("aria-hidden", "true");
+    elemento.hidden = true;
+    elemento.textContent = EMOJI_CURSOR;
+    document.body.appendChild(elemento);
+    document.body.classList.add("cursor-emoji-ativo");
+
+    var alvoX = 0, alvoY = 0, atualX = 0, atualY = 0, iniciado = false;
+
+    function posicionar(x, y){
+      elemento.style.transform = "translate(" + x + "px, " + y + "px) translate(-50%, -50%)";
+    }
+
+    document.addEventListener("mousemove", function(evento){
+      alvoX = evento.clientX;
+      alvoY = evento.clientY;
+      if(!iniciado){
+        iniciado = true;
+        atualX = alvoX;
+        atualY = alvoY;
+        elemento.hidden = false;
+      }
+      if(reduzMovimento){
+        atualX = alvoX;
+        atualY = alvoY;
+        posicionar(atualX, atualY);
+      }
+    });
+
+    document.addEventListener("mouseleave", function(){ elemento.hidden = true; });
+    document.addEventListener("mouseenter", function(){ if(iniciado) elemento.hidden = false; });
+
+    if(!reduzMovimento){
+      (function seguir(){
+        atualX += (alvoX - atualX) * 0.2;
+        atualY += (alvoY - atualY) * 0.2;
+        posicionar(atualX, atualY);
+        window.requestAnimationFrame(seguir);
+      })();
+    }
   })();
 
   /* =========================================================
