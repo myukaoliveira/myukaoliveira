@@ -446,6 +446,30 @@ where not exists (select 1 from public.roteiros);
 
 
 -- =============================================================
+-- BLOCO 13: VÍDEO MAIS ASSISTIDO + TEMPO REAL
+-- Adiciona uma coluna em "visitas" pra saber qual vídeo foi
+-- assistido em cada clique, e liga a tabela "visitas" no recurso
+-- de tempo real do Supabase, pra o painel atualizar sozinho assim
+-- que alguém visita o portfólio ou assiste um vídeo, sem precisar
+-- dar F5.
+-- =============================================================
+alter table public.visitas
+  add column if not exists video_id uuid references public.videos(id) on delete set null;
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_publication_tables
+    where pubname = 'supabase_realtime'
+      and schemaname = 'public'
+      and tablename = 'visitas'
+  ) then
+    alter publication supabase_realtime add table public.visitas;
+  end if;
+end $$;
+
+
+-- =============================================================
 -- FIM DO SCRIPT
 -- Depois de rodar com sucesso, falta um passo fora daqui: criar
 -- o seu usuário de login (Authentication > Users > Add user, no

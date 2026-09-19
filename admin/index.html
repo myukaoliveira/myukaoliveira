@@ -323,6 +323,19 @@
   .grafico-barras .barra{ width: 100%; background: var(--laranja); border-radius: 5px 5px 0 0; min-height: 2px; }
   .grafico-barras .barra-rotulo{ font-size: .62rem; color: var(--texto-suave); white-space: nowrap; }
   .mensagem-vazia{ color: var(--texto-suave); font-size: .82rem; padding: 20px 4px; }
+  .ponto-ao-vivo{
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--laranja);
+    display: inline-block;
+    animation: pulsar-ao-vivo 1.6s ease-in-out infinite;
+  }
+  @keyframes pulsar-ao-vivo{
+    0%, 100%{ opacity: 1; transform: scale(1); }
+    50%{ opacity: .4; transform: scale(.7); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .ponto-ao-vivo{ animation: none; }
+  }
 
   .lista-origem{ display: flex; flex-direction: column; gap: 8px; }
   .lista-origem li{ display: flex; align-items: center; justify-content: space-between; font-size: .82rem; }
@@ -545,6 +558,13 @@
             <h2 style="font-size:.88rem;margin-bottom:10px;">De onde vêm as visitas</h2>
             <ul class="lista-origem" id="lista-origens"></ul>
           </div>
+        </div>
+        <div class="cartao" style="margin-bottom:18px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+            <h2 style="font-size:.88rem;">Vídeos mais assistidos</h2>
+            <span id="indicador-tempo-real" class="texto-fraco" style="display:flex;align-items:center;gap:6px;"></span>
+          </div>
+          <ul class="lista-origem" id="lista-videos-assistidos"></ul>
         </div>
         <div class="campo-topo">
           <h2 style="font-size:.95rem;">Vídeos do portfólio</h2>
@@ -1142,7 +1162,37 @@
       renderizarCampanhas();
       renderizarRoteiros();
       renderizarChecklist();
+      ativarTempoRealPortfolio();
     });
+  }
+
+  // Assina novas visitas (páginas e cliques em vídeo) em tempo real, direto
+  // do Supabase. Assim que alguém visita o portfólio ou assiste um vídeo,
+  // a aba Portfólio atualiza sozinha, sem precisar dar F5.
+  function ativarTempoRealPortfolio() {
+    var indicador = document.getElementById("indicador-tempo-real");
+    if (!window.banco || typeof window.banco.channel !== "function") {
+      if (indicador) indicador.textContent = "";
+      return;
+    }
+
+    window.banco
+      .channel("painel-visitas-tempo-real")
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "visitas" }, function (mensagem) {
+        Estado.visitas.push(mensagem.new);
+        renderMetricasPortfolio();
+        renderGraficoVisitas();
+        renderListaOrigens();
+        renderVideosMaisAssistidos();
+      })
+      .subscribe(function (status) {
+        if (!indicador) return;
+        if (status === "SUBSCRIBED") {
+          indicador.innerHTML = '<span class="ponto-ao-vivo" aria-hidden="true"></span> ao vivo';
+        } else if (status === "CLOSED" || status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+          indicador.textContent = "";
+        }
+      });
   }
 
   /* =========================================================
@@ -1181,7 +1231,14 @@
     renderMetricasPortfolio();
     renderGraficoVisitas();
     renderListaOrigens();
+    renderVideosMaisAssistidos();
     renderTabelaVideos();
+  }
+
+  // Visitas de página de verdade, sem contar os cliques em vídeo
+  // (que ficam na mesma tabela, mas marcados com video_id preenchido).
+  function visitasDePagina() {
+    return Estado.visitas.filter(function (v) { return !v.video_id; });
   }
 
   function renderMetricasPortfolio() {
@@ -1189,9 +1246,11 @@
     var agora = new Date();
     var limite14 = new Date();
     limite14.setDate(limite14.getDate() - 14);
+    var visitasPagina = visitasDePagina();
 
-    var visitas14 = Estado.visitas.filter(function (v) { return new Date(v.data) >= limite14; }).length;
-    var visitasHoje = Estado.visitas.filter(function (v) {
+    var visitasTotais = visitasPagina.length;
+    var visitas14 = visitasPagina.filter(function (v) { return new Date(v.data) >= limite14; }).length;
+    var visitasHoje = visitasPagina.filter(function (v) {
       var d = new Date(v.data);
       return d.getFullYear() === agora.getFullYear() && d.getMonth() === agora.getMonth() && d.getDate() === agora.getDate();
     }).length;
@@ -1206,7 +1265,7 @@
     });
 
     var contagemOrigem = {};
-    Estado.visitas.forEach(function (v) {
+    visitasPagina.forEach(function (v) {
       var origem = v.origem || "direto";
       contagemOrigem[origem] = (contagemOrigem[origem] || 0) + 1;
     });
@@ -1217,6 +1276,7 @@
     });
 
     var itens = [
+      { valor: visitasTotais, rotulo: "visitas ao todo" },
       { valor: visitas14, rotulo: "visitas em 14 dias" },
       { valor: visitasHoje, rotulo: "visitas hoje" },
       { valor: videosNoAr, rotulo: "vídeos no ar" },
@@ -1230,7 +1290,8 @@
 
   function renderGraficoVisitas() {
     var container = document.getElementById("grafico-visitas");
-    if (!Estado.visitas.length) {
+    var visitasPagina = visitasDePagina();
+    if (!visitasPagina.length) {
       container.innerHTML = '<p class="mensagem-vazia">Ainda não há visitas registradas. Assim que as pessoas começarem a visitar o seu portfólio, esse gráfico mostra os últimos 14 dias.</p>';
       return;
     }
@@ -1241,7 +1302,7 @@
       dias.push(d);
     }
     var contagens = dias.map(function (dia) {
-      return Estado.visitas.filter(function (v) {
+      return visitasPagina.filter(function (v) {
         var vd = new Date(v.data);
         return vd.getFullYear() === dia.getFullYear() && vd.getMonth() === dia.getMonth() && vd.getDate() === dia.getDate();
       }).length;
@@ -1261,12 +1322,13 @@
 
   function renderListaOrigens() {
     var lista = document.getElementById("lista-origens");
-    if (!Estado.visitas.length) {
+    var visitasPagina = visitasDePagina();
+    if (!visitasPagina.length) {
       lista.innerHTML = '<p class="mensagem-vazia">Ainda não há visitas registradas. Aqui vai aparecer de onde as pessoas estão chegando (Instagram, direto, buscadores etc).</p>';
       return;
     }
     var contagem = {};
-    Estado.visitas.forEach(function (v) {
+    visitasPagina.forEach(function (v) {
       var origem = v.origem || "direto";
       contagem[origem] = (contagem[origem] || 0) + 1;
     });
@@ -1277,6 +1339,28 @@
     lista.innerHTML = lista2.map(function (item) {
       var porcento = Math.round((item.total / maximo) * 100);
       return '<li><span>' + escaparHtml(item.origem) + '</span><span class="barra-origem"><span style="width:' + porcento + '%"></span></span><span>' + item.total + '</span></li>';
+    }).join("");
+  }
+
+  function renderVideosMaisAssistidos() {
+    var lista = document.getElementById("lista-videos-assistidos");
+    var cliques = Estado.visitas.filter(function (v) { return v.video_id; });
+    if (!cliques.length) {
+      lista.innerHTML = '<p class="mensagem-vazia">Ainda não há cliques em vídeo registrados. Assim que alguém assistir um vídeo pelo seu portfólio (destaques), ele aparece aqui.</p>';
+      return;
+    }
+    var contagem = {};
+    cliques.forEach(function (v) { contagem[v.video_id] = (contagem[v.video_id] || 0) + 1; });
+    var lista2 = Object.keys(contagem).map(function (id) {
+      var video = acharPorId(Estado.videos, id);
+      return { titulo: video ? video.titulo : "Vídeo removido", total: contagem[id] };
+    });
+    lista2.sort(function (a, b) { return b.total - a.total; });
+    lista2 = lista2.slice(0, 8);
+    var maximo = lista2[0] ? lista2[0].total : 1;
+    lista.innerHTML = lista2.map(function (item, indice) {
+      var porcento = Math.round((item.total / maximo) * 100);
+      return '<li><span>' + (indice + 1) + '. ' + escaparHtml(item.titulo) + '</span><span class="barra-origem"><span style="width:' + porcento + '%"></span></span><span>' + item.total + '</span></li>';
     }).join("");
   }
 

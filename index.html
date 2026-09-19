@@ -1633,7 +1633,14 @@
         evento.preventDefault();
         irPara(indice);
         pausarEretomar();
+      } else {
+        registrarCliqueVideo(destaquesConteudo[indice].id);
       }
+    });
+
+    painelInfo.addEventListener("click", function(evento){
+      var botaoAssistir = evento.target.closest(".btn-laranja");
+      if(botaoAssistir) registrarCliqueVideo(destaquesConteudo[atual].id);
     });
 
     botaoProximo.addEventListener("click", function(){ avancar(); pausarEretomar(); });
@@ -2078,6 +2085,7 @@
       });
       var destaques = lista.filter(function(v){ return v.destaque; }).map(function(v){
         return {
+          id: v.id,
           titulo: v.titulo,
           contexto: v.marca ? ("Vídeo em parceria com " + v.marca + ".") : (v.formato ? ("Conteúdo em " + v.formato + ".") : ""),
           numero: v.destaque,
@@ -2100,6 +2108,24 @@
     });
   }
   carregarVideosDoPortfolio();
+
+  /* =========================================================
+     REGISTRO DE CLIQUE EM VÍDEO (mesma tabela "visitas", com o
+     campo video_id preenchido) pra alimentar "vídeos mais
+     assistidos" na aba Portfólio do painel.
+  ========================================================= */
+  function registrarCliqueVideo(videoId){
+    if(!window.banco || !videoId) return;
+    try {
+      window.banco.from("visitas").insert({
+        pagina: window.location.pathname,
+        origem: "clique_video",
+        video_id: videoId
+      }).then(function(){}).catch(function(){});
+    } catch(erro){
+      // Nunca deixa isso quebrar o site.
+    }
+  }
 
   /* =========================================================
      REGISTRO SIMPLES DE VISITA (tabela "visitas")
