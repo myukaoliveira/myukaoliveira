@@ -76,6 +76,16 @@
   }
   .pular-conteudo:focus{ left: 0; }
 
+  .apenas-leitor{
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+  }
+
   .container{
     width: 100%;
     max-width: 1180px;
@@ -153,7 +163,7 @@
   }
   .btn:hover{ transform: translateY(-2px); }
   .btn-laranja{ background: var(--laranja); color: var(--plastico); }
-  .btn-laranja:hover{ box-shadow: 0 10px 26px rgba(232,118,58,.35); }
+  .btn-laranja:hover{ box-shadow: 0 10px 26px rgba(193,124,91,.35); }
   .btn-contorno{ background: transparent; color: var(--rotulo); border-color: var(--rotulo); }
   .btn-contorno:hover{ background: var(--rotulo); color: var(--plastico); }
   .fundo-rotulo .btn-contorno{ color: var(--texto); border-color: var(--texto); }
@@ -164,7 +174,7 @@
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 200;
-    background: rgba(27,27,31,.9);
+    background: rgba(43,32,22,.9);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--linha);
     height: var(--topo-altura);
@@ -253,8 +263,24 @@
 
   /* ============ CAPA / HERO ============ */
   .secao-capa{
-    padding-top: calc(var(--topo-altura) + 64px);
+    padding-top: var(--topo-altura);
     padding-bottom: 0;
+  }
+  .capa-foto-banner{
+    width: 100%;
+    aspect-ratio: 1290 / 476;
+    max-height: 62vh;
+    overflow: hidden;
+  }
+  .capa-foto-banner img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    display: block;
+  }
+  .capa-conteudo-abaixo{
+    padding-top: 48px;
   }
   .capa-grade{
     display: grid;
@@ -266,7 +292,7 @@
     display: inline-block;
     font-family: var(--fonte-manuscrita);
     color: var(--laranja);
-    background: rgba(232,118,58,.12);
+    background: rgba(193,124,91,.12);
     border: 1px dashed var(--laranja);
     padding: 6px 14px;
     border-radius: 999px;
@@ -527,8 +553,8 @@
   }
   .sobre-numeros div{
     text-align: center;
-    background: rgba(27,27,31,.05);
-    border: 1px solid rgba(27,27,31,.12);
+    background: rgba(43,32,22,.05);
+    border: 1px solid rgba(43,32,22,.12);
     border-radius: 14px;
     padding: 16px 8px;
   }
@@ -559,7 +585,7 @@
     text-transform: uppercase;
     letter-spacing: .05em;
     color: var(--azul);
-    background: rgba(59,110,165,.14);
+    background: rgba(107,124,94,.14);
     border: 1px solid var(--azul);
     padding: 5px 12px;
     border-radius: 999px;
@@ -672,7 +698,7 @@
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    background: rgba(27,27,31,.55);
+    background: rgba(43,32,22,.55);
     border: 2px solid var(--rotulo);
     display: flex;
     align-items: center;
@@ -922,7 +948,7 @@
   .form-contato .btn{ align-self: flex-start; border: none; }
   .confirmacao-envio{
     margin-top: 16px;
-    background: rgba(59,110,165,.18);
+    background: rgba(107,124,94,.18);
     border: 1px solid var(--azul);
     color: var(--rotulo);
     padding: 14px 18px;
@@ -1126,37 +1152,32 @@
 
   <!-- 1. CAPA -->
   <section id="capa" class="secao-capa" aria-label="Apresentação">
-    <div class="container">
-      <div class="capa-grade">
-        <div class="capa-texto">
-          <span class="tagline-etiqueta">UGC Creator · Influencer</span>
-          <h1 class="capa-titulo">Myuka Oliveira</h1>
-          <p class="capa-frase">Eu crio vídeos e fotos autênticos que fazem a sua marca parar o scroll e vender, sem parecer comercial.</p>
-          <div class="capa-botoes">
-            <a class="btn btn-laranja" href="#contato">Falar comigo</a>
-            <a class="btn btn-contorno" href="#trabalhos">Ver os trabalhos</a>
-          </div>
-          <div class="capa-numeros">
-            <div>
-              <strong>430</strong>
-              <span>vídeos entregues</span>
-            </div>
-            <div>
-              <strong>200</strong>
-              <span>marcas atendidas</span>
-            </div>
-            <div>
-              <strong>1M+</strong>
-              <span>views somadas</span>
-            </div>
-          </div>
+    <!-- Foto de capa real. Para trocar por outra foto, é só substituir o
+         arquivo imagens/capa-myuka.jpg por uma nova imagem (mesmo nome
+         ou ajuste o src abaixo). -->
+    <div class="capa-foto-banner">
+      <img src="imagens/capa-myuka.jpg" alt="Myuka Oliveira, UGC Creator e Influencer, com o nome dela e a chamada &quot;foco em gerar conexão&quot;">
+    </div>
+    <div class="container capa-conteudo-abaixo">
+      <h1 class="apenas-leitor">Myuka Oliveira</h1>
+      <span class="tagline-etiqueta">UGC Creator · Influencer</span>
+      <p class="capa-frase">Eu crio vídeos e fotos autênticos que fazem a sua marca parar o scroll e vender, sem parecer comercial.</p>
+      <div class="capa-botoes">
+        <a class="btn btn-laranja" href="#contato">Falar comigo</a>
+        <a class="btn btn-contorno" href="#trabalhos">Ver os trabalhos</a>
+      </div>
+      <div class="capa-numeros">
+        <div>
+          <strong>430</strong>
+          <span>vídeos entregues</span>
         </div>
-
-        <!-- Espaço de foto: troque o bloco .midia-placeholder abaixo por uma tag <img src="sua-foto.jpg" alt="Myuka Oliveira"> -->
-        <div class="foto-capa-moldura">
-          <div class="foto-capa-area midia-placeholder" role="img" aria-label="Foto de Myuka Oliveira, formato retrato 4 por 5">
-            <span class="midia-legenda">foto da creator · 4:5</span>
-          </div>
+        <div>
+          <strong>200</strong>
+          <span>marcas atendidas</span>
+        </div>
+        <div>
+          <strong>1M+</strong>
+          <span>views somadas</span>
         </div>
       </div>
 
