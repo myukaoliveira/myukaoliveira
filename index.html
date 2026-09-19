@@ -7,26 +7,29 @@
 <meta name="description" content="Portfólio de Myuka Oliveira, UGC Creator. Vídeos, fotos e conteúdo autêntico para marcas de beleza, moda, fitness e muito mais.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Permanent+Marker&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,600&family=Jost:wght@300;400;500;600;700&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-  /* ============ VARIÁVEIS :: FITA CASSETE ============ */
+  /* ============ VARIÁVEIS :: IDENTIDADE TERRACOTA/CREME ============ */
   :root{
-    --plastico: #1b1b1f;
-    --plastico-2: #26262c;
-    --plastico-3: #303038;
-    --rotulo: #f3ead6;
-    --rotulo-2: #ece0c4;
-    --laranja: #e8763a;
-    --azul: #3b6ea5;
-    --vermelho: #c8402c;
-    --texto: #1b1b1f;
-    --texto-claro: #f3ead6;
-    --texto-suave: #cfc7b3;
-    --linha: rgba(243,234,214,.16);
-    --raio: 18px;
-    --raio-g: 28px;
-    --sombra: 0 20px 50px rgba(0,0,0,.35);
+    --plastico: #2b2016;
+    --plastico-2: #3a2c1e;
+    --plastico-3: #4a3826;
+    --rotulo: #f3ead9;
+    --rotulo-2: #ece0c8;
+    --laranja: #c17c5b;
+    --azul: #6b7c5e;
+    --vermelho: #a34a34;
+    --texto: #2b2016;
+    --texto-claro: #f3ead9;
+    --texto-suave: #d8c9b3;
+    --linha: rgba(243,234,217,.16);
+    --raio: 16px;
+    --raio-g: 24px;
+    --sombra: 0 20px 50px rgba(30,20,10,.3);
     --topo-altura: 78px;
+    --fonte-titulo: "Playfair Display", Georgia, serif;
+    --fonte-corpo: "Jost", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --fonte-manuscrita: "Caveat", cursive;
   }
 
   *, *::before, *::after{ box-sizing: border-box; }
@@ -39,7 +42,7 @@
     margin: 0;
     background: var(--plastico);
     color: var(--texto-claro);
-    font-family: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-family: var(--fonte-corpo);
     line-height: 1.6;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
@@ -49,10 +52,10 @@
   ul{ list-style: none; margin: 0; padding: 0; }
   a{ color: inherit; text-decoration: none; }
   button, input, textarea{ font: inherit; color: inherit; }
-  h1, h2, h3{ margin: 0; line-height: 1.1; }
+  h1, h2, h3{ margin: 0; line-height: 1.1; font-family: var(--fonte-titulo); }
   p{ margin: 0; }
 
-  .manuscrita{ font-family: "Permanent Marker", cursive; font-weight: 400; letter-spacing: .01em; }
+  .manuscrita{ font-family: var(--fonte-manuscrita); font-weight: 600; letter-spacing: .01em; }
 
   :focus-visible{
     outline: 3px solid var(--laranja);
@@ -84,7 +87,7 @@
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    font-family: "Permanent Marker", cursive;
+    font-family: var(--fonte-manuscrita);
     color: var(--laranja);
     font-size: clamp(.95rem, 1.6vw, 1.15rem);
     margin-bottom: 10px;
@@ -173,7 +176,7 @@
     justify-content: space-between;
   }
   .marca-nome{
-    font-family: "Permanent Marker", cursive;
+    font-family: var(--fonte-manuscrita);
     font-size: 1.35rem;
     color: var(--rotulo);
   }
@@ -261,7 +264,7 @@
   }
   .capa-texto .tagline-etiqueta{
     display: inline-block;
-    font-family: "Permanent Marker", cursive;
+    font-family: var(--fonte-manuscrita);
     color: var(--laranja);
     background: rgba(232,118,58,.12);
     border: 1px dashed var(--laranja);
@@ -305,58 +308,22 @@
     color: var(--texto-suave);
   }
 
-  /* fita cassete com a foto no rótulo */
-  .fita-visual{
-    background: linear-gradient(180deg, var(--plastico-3), var(--plastico-2));
+  /* Moldura da foto de capa */
+  .foto-capa-moldura{
+    background: linear-gradient(165deg, var(--plastico-3), var(--plastico-2));
     border-radius: var(--raio-g);
-    padding: 22px;
+    padding: 14px;
     box-shadow: var(--sombra);
     border: 1px solid var(--linha);
-  }
-  .fita-tarja{
-    height: 22px;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    background: repeating-linear-gradient(
-      -45deg,
-      var(--laranja) 0 18px,
-      var(--azul) 18px 36px
-    );
-  }
-  .fita-rotulo{
-    background: var(--rotulo);
-    border-radius: 14px;
-    padding: 22px;
     position: relative;
   }
-  .fita-rolos{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-  .rolo{
-    width: 58px;
-    height: 58px;
-    border-radius: 50%;
-    background:
-      radial-gradient(circle at center, var(--plastico) 0 10px, transparent 11px),
-      conic-gradient(var(--plastico-3) 0 90deg, var(--plastico-2) 90deg 180deg, var(--plastico-3) 180deg 270deg, var(--plastico-2) 270deg 360deg);
-    border: 3px solid var(--plastico);
-    animation: girar 5s linear infinite;
-  }
-  @keyframes girar{ to{ transform: rotate(360deg); } }
-  @media (prefers-reduced-motion: reduce){
-    .rolo{ animation: none; }
-  }
-  .fita-linha-central{
-    position: absolute;
-    top: 54px;
-    left: 22px;
-    right: 22px;
-    height: 2px;
-    background: var(--plastico);
-    opacity: .25;
+  .foto-capa-moldura::before{
+    content: "";
+    display: block;
+    height: 4px;
+    border-radius: 4px;
+    margin-bottom: 14px;
+    background: var(--laranja);
   }
 
   /* Bloco de foto: troque a classe .midia-placeholder pela tag <img> real quando tiver a foto da creator */
@@ -371,22 +338,16 @@
     background: linear-gradient(135deg, var(--laranja), var(--azul));
   }
   .midia-placeholder .midia-legenda{
-    background: rgba(27,27,31,.55);
+    background: rgba(43,32,22,.6);
     font-size: .78rem;
     font-weight: 600;
     padding: 8px 12px;
     width: 100%;
   }
-  .fita-foto-area{
+  .foto-capa-area{
     aspect-ratio: 4 / 5;
-    margin-bottom: 14px;
-  }
-  .fita-legenda-manuscrita{
-    text-align: center;
-    font-family: "Permanent Marker", cursive;
-    color: var(--vermelho);
-    font-size: 1.3rem;
-    transform: rotate(-2deg);
+    border-radius: calc(var(--raio-g) - 8px);
+    overflow: hidden;
   }
 
   .faixa-marcas{
@@ -457,7 +418,7 @@
     text-align: center;
   }
   .marcas-confianca-titulo{
-    font-family: "Permanent Marker", cursive;
+    font-family: var(--fonte-manuscrita);
     color: var(--azul);
     font-size: clamp(1.1rem, 2.4vw, 1.4rem);
     letter-spacing: .01em;
@@ -474,23 +435,24 @@
   @media (prefers-reduced-motion: reduce){
     .marcas-confianca-trilho{ animation: none; flex-wrap: wrap; justify-content: center; gap: 12px; }
   }
-  /* Chip placeholder de marca: troque por <img src="logo-da-marca.svg" alt="Nome da marca" class="marca-logo-real"> quando tiver os logos reais */
+  /* Chip placeholder de marca (imita as bolinhas de logo do print de referência): troque por <img src="logo-da-marca.svg" alt="Nome da marca" class="marca-logo-real"> quando tiver os logos reais */
   .marca-chip{
     flex: 0 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 150px;
-    height: 64px;
-    padding: 0 22px;
-    border-radius: 12px;
+    min-width: 96px;
+    height: 96px;
+    padding: 0 14px;
+    border-radius: 999px;
     background: var(--plastico-2);
-    border: 1px solid var(--linha);
+    border: 2px solid var(--laranja);
     color: var(--texto-suave);
     font-weight: 700;
-    font-size: .88rem;
+    font-size: .78rem;
     letter-spacing: .03em;
     text-transform: uppercase;
+    text-align: center;
     white-space: nowrap;
   }
 
@@ -503,6 +465,24 @@
   }
   .sobre-foto .midia-placeholder{ aspect-ratio: 4 / 5; }
   .sobre-texto p{ margin-bottom: 18px; color: #4a4638; font-size: 1.05rem; }
+  .fatos-pessoais{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 4px 0 22px;
+  }
+  .fatos-pessoais span{
+    font-family: var(--fonte-manuscrita);
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--vermelho);
+    background: rgba(163,74,52,.08);
+    border: 1px dashed var(--vermelho);
+    padding: 4px 15px;
+    border-radius: 999px;
+  }
+  .fatos-pessoais span:nth-child(odd){ transform: rotate(-1.2deg); }
+  .fatos-pessoais span:nth-child(even){ transform: rotate(1deg); }
   .lista-promessas{
     display: flex;
     flex-direction: column;
@@ -530,7 +510,7 @@
     font-size: .85rem;
   }
   .assinatura{
-    font-family: "Permanent Marker", cursive;
+    font-family: var(--fonte-manuscrita);
     font-size: 1.6rem;
     color: var(--vermelho);
     transform: rotate(-2deg);
@@ -774,7 +754,7 @@
   .linha-nicho{ margin-bottom: 40px; scroll-margin-top: calc(var(--topo-altura) + 20px); }
   .linha-nicho:last-child{ margin-bottom: 0; }
   .linha-nicho-titulo{
-    font-family: "Permanent Marker", cursive;
+    font-family: var(--fonte-manuscrita);
     color: var(--vermelho);
     font-size: 1.2rem;
     margin-bottom: 14px;
@@ -826,7 +806,7 @@
     padding: 28px;
   }
   .servico-numero{
-    font-family: "Permanent Marker", cursive;
+    font-family: var(--fonte-manuscrita);
     color: var(--laranja);
     font-size: 1.6rem;
     display: block;
@@ -858,7 +838,7 @@
   .metrica-card span{ color: var(--texto-suave); font-size: .88rem; }
 
   .subtitulo-interno{
-    font-family: "Permanent Marker", cursive;
+    font-family: var(--fonte-manuscrita);
     color: var(--azul);
     font-size: 1.2rem;
     margin-bottom: 22px;
@@ -900,7 +880,7 @@
   }
   .depoimento-card blockquote{
     margin: 0 0 16px;
-    font-family: "Permanent Marker", cursive;
+    font-family: var(--fonte-manuscrita);
     font-size: 1.15rem;
     line-height: 1.5;
     color: var(--texto);
@@ -1045,7 +1025,7 @@
     line-height: 1;
   }
   .modal-caixa h2{
-    font-family: "Permanent Marker", cursive;
+    font-family: var(--fonte-manuscrita);
     color: var(--vermelho);
     font-size: 1.5rem;
     margin-bottom: 10px;
@@ -1116,7 +1096,7 @@
     .destaques-carrossel{ --largura-slide: 150px; --deslocamento: 104px; }
     .carrossel-seta{ width: 38px; height: 38px; font-size: 1.2rem; }
     .trabalho-card{ width: 180px; }
-    .marca-chip{ min-width: 120px; height: 54px; padding: 0 16px; font-size: .78rem; }
+    .marca-chip{ min-width: 74px; height: 74px; padding: 0 10px; font-size: .68rem; }
   }
 </style>
 </head>
@@ -1149,7 +1129,7 @@
     <div class="container">
       <div class="capa-grade">
         <div class="capa-texto">
-          <span class="tagline-etiqueta">UGC Creator · fita gravada em casa</span>
+          <span class="tagline-etiqueta">UGC Creator · Influencer</span>
           <h1 class="capa-titulo">Myuka Oliveira</h1>
           <p class="capa-frase">Eu crio vídeos e fotos autênticos que fazem a sua marca parar o scroll e vender, sem parecer comercial.</p>
           <div class="capa-botoes">
@@ -1173,18 +1153,9 @@
         </div>
 
         <!-- Espaço de foto: troque o bloco .midia-placeholder abaixo por uma tag <img src="sua-foto.jpg" alt="Myuka Oliveira"> -->
-        <div class="fita-visual" aria-hidden="false">
-          <div class="fita-tarja"></div>
-          <div class="fita-rotulo">
-            <div class="fita-rolos">
-              <span class="rolo" aria-hidden="true"></span>
-              <span class="rolo" aria-hidden="true"></span>
-            </div>
-            <div class="fita-linha-central" aria-hidden="true"></div>
-            <div class="fita-foto-area midia-placeholder" role="img" aria-label="Foto de Myuka Oliveira, formato retrato 4 por 5">
-              <span class="midia-legenda">foto da creator · 4:5</span>
-            </div>
-            <p class="fita-legenda-manuscrita">lado A</p>
+        <div class="foto-capa-moldura">
+          <div class="foto-capa-area midia-placeholder" role="img" aria-label="Foto de Myuka Oliveira, formato retrato 4 por 5">
+            <span class="midia-legenda">foto da creator · 4:5</span>
           </div>
         </div>
       </div>
@@ -1203,7 +1174,7 @@
   <!-- 2. SOBRE MIM -->
   <section id="sobre" class="secao fundo-rotulo">
     <div class="container">
-      <span class="rotulo-secao">lado A · faixa 1</span>
+      <span class="rotulo-secao">sobre mim</span>
       <h2 class="titulo-secao">Sobre mim</h2>
       <div class="sobre-grade">
         <!-- Troque o bloco .midia-placeholder por <img src="minha-foto.jpg" alt="Myuka Oliveira sorrindo"> quando tiver a foto -->
@@ -1213,8 +1184,21 @@
           </div>
         </div>
         <div class="sobre-texto revelar">
-          <p>Oi, eu sou a Myuka! Moro em São Paulo e transformo produtos em vídeos que parecem indicação de amiga, porque é exatamente assim que eu gravo: câmera na mão, luz natural e muita vontade de contar uma história de verdade.</p>
-          <p>Já gravei para marcas de beleza, skincare, moda, casa e decoração, fitness, viagem, tech, hobby e casal, sempre pensando no que faz a pessoa do outro lado parar de rolar o feed e prestar atenção.</p>
+          <div class="fatos-pessoais" aria-label="Um pouco sobre mim">
+            <span>carioca morando em Alphaville SP</span>
+            <span>28 anos</span>
+            <span>casada há 12 anos</span>
+            <span>plusize</span>
+            <span>preta</span>
+            <span>fundadora da @criae</span>
+            <span>UGC manager</span>
+            <span>mentora com foco em mentalidade</span>
+            <span>apaixonada por hobby</span>
+          </div>
+          <p>Comecei a criar com o que eu tinha: celular simples, rotina corrida. Mas foi mostrando essa realidade, sem filtro e com intenção, que consegui gerar identificação com pessoas e marcas.</p>
+          <p>Meu foco sempre foi mostrar que é possível criar com verdade, vender com propósito e conectar com quem realmente importa.</p>
+          <p>Hoje, como criadora e mentora, sigo em busca dos meus sonhos e me tornei uma incentivadora da mudança de mentalidade.</p>
+          <p>Sou especialista em conteúdos humanizados e estratégias que geram conversão e senso de comunidade.</p>
           <!-- Números reaproveitados do array "metricas", sem valores novos -->
           <div class="sobre-numeros" id="sobre-numeros"></div>
           <ul class="lista-promessas">
@@ -1239,7 +1223,7 @@
   <!-- 3. CONTEÚDOS DE DESTAQUE -->
   <section id="destaques" class="secao">
     <div class="container">
-      <span class="rotulo-secao">lado A · faixa 2</span>
+      <span class="rotulo-secao">cases de sucesso</span>
       <h2 class="titulo-secao">Conteúdos de destaque</h2>
       <p class="subtitulo-secao">Os vídeos que mais renderam resultado para as marcas que já trabalharam comigo.</p>
       <!--
@@ -1255,7 +1239,7 @@
   <!-- 4. TRABALHOS POR NICHO -->
   <section id="trabalhos" class="secao fundo-rotulo">
     <div class="container">
-      <span class="rotulo-secao">lado A · faixa 3</span>
+      <span class="rotulo-secao">portfólio por nicho</span>
       <h2 class="titulo-secao">Trabalhos por nicho</h2>
       <p class="subtitulo-secao">Escolha um nicho para ir direto aos exemplos, ou deslize cada linha para ver mais conteúdos daquele segmento.</p>
       <div class="filtros-nicho" id="filtros-nicho" role="group" aria-label="Ir para um nicho"></div>
@@ -1266,7 +1250,7 @@
   <!-- 5. COMO EU TE AJUDO -->
   <section id="servicos" class="secao">
     <div class="container">
-      <span class="rotulo-secao">lado B · faixa 1</span>
+      <span class="rotulo-secao">como eu ajudo</span>
       <h2 class="titulo-secao">Como eu te ajudo</h2>
       <p class="subtitulo-secao">Serviços pensados para encaixar no funil de conteúdo da sua marca, do anúncio ao orgânico.</p>
       <div class="servicos-grade" id="grade-servicos"></div>
@@ -1276,7 +1260,7 @@
   <!-- 6. NÚMEROS E DEPOIMENTOS -->
   <section id="numeros" class="secao fundo-rotulo">
     <div class="container">
-      <span class="rotulo-secao">lado B · faixa 2</span>
+      <span class="rotulo-secao">resultados</span>
       <h2 class="titulo-secao">Números e depoimentos</h2>
       <p class="subtitulo-secao">O que os resultados e as marcas parceiras dizem sobre o meu trabalho.</p>
 
@@ -1293,7 +1277,7 @@
   <!-- 7. BORA CRIAR JUNTOS -->
   <section id="contato" class="secao">
     <div class="container">
-      <span class="rotulo-secao">lado B · faixa 3</span>
+      <span class="rotulo-secao">contato</span>
       <h2 class="titulo-secao">Bora criar juntos</h2>
       <p class="subtitulo-secao">Me conta um pouco sobre a sua marca e eu respondo com uma proposta rapidinho.</p>
       <div class="contato-grade">
@@ -1992,9 +1976,9 @@
         '<g transform="rotate(45 12 12)">' +
           '<rect x="10" y="1" width="4" height="9" rx="2" fill="#caa472"/>' +
           '<rect x="9.4" y="9.2" width="5.2" height="2.2" fill="#9a9fa8"/>' +
-          '<path d="M9.6 11.2h4.8l-1.1 5.4a1.3 1.3 0 0 1-2.6 0z" fill="#e8763a"/>' +
+          '<path d="M9.6 11.2h4.8l-1.1 5.4a1.3 1.3 0 0 1-2.6 0z" fill="#c17c5b"/>' +
         '</g>' +
-        '<circle cx="6.3" cy="19.2" r="1.5" fill="#3b6ea5"/>' +
+        '<circle cx="6.3" cy="19.2" r="1.5" fill="#6b7c5e"/>' +
       '</svg>';
 
     if(!("PointerEvent" in window)) return;
