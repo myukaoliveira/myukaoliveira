@@ -1071,12 +1071,15 @@
     position: fixed;
     top: 0;
     left: 0;
-    font-size: 30px;
+    width: 32px;
+    height: 32px;
     z-index: 900;
     pointer-events: none;
     user-select: none;
     will-change: transform;
-    line-height: 1;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,.45));
+  }
+  .cursor-emoji svg{ display: block; width: 100%; height: 100%; }
   }
   .cursor-emoji[hidden]{ display: none; }
 
@@ -1950,9 +1953,22 @@
      CURSOR PERSONALIZADO (ativa só quando detecta um mouse de verdade,
      usando o pointerType do evento, que é mais confiável do que checar
      media features como hover/pointer)
+
+     O cursor é um pincel desenhado em SVG (nas cores do site) em vez de
+     um emoji de texto: assim ele aparece igual em qualquer aparelho,
+     sem depender da fonte de emoji instalada no sistema do visitante.
+     Para trocar o desenho, edite o conteúdo de ICONE_CURSOR abaixo.
   ========================================================= */
   (function cursorPersonalizado(){
-    var EMOJI_CURSOR = "🖌️"; // troque aqui pelo emoji que você quiser usar
+    var ICONE_CURSOR =
+      '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">' +
+        '<g transform="rotate(45 12 12)">' +
+          '<rect x="10" y="1" width="4" height="9" rx="2" fill="#caa472"/>' +
+          '<rect x="9.4" y="9.2" width="5.2" height="2.2" fill="#9a9fa8"/>' +
+          '<path d="M9.6 11.2h4.8l-1.1 5.4a1.3 1.3 0 0 1-2.6 0z" fill="#e8763a"/>' +
+        '</g>' +
+        '<circle cx="6.3" cy="19.2" r="1.5" fill="#3b6ea5"/>' +
+      '</svg>';
 
     if(!("PointerEvent" in window)) return;
 
@@ -1970,7 +1986,7 @@
       elemento = document.createElement("span");
       elemento.className = "cursor-emoji";
       elemento.setAttribute("aria-hidden", "true");
-      elemento.textContent = EMOJI_CURSOR;
+      elemento.innerHTML = ICONE_CURSOR;
       document.body.appendChild(elemento);
       document.body.classList.add("cursor-emoji-ativo");
 
