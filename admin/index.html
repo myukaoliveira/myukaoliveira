@@ -630,10 +630,6 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M8 12.5l2.5 2.5L16 9"></path></svg>
           Marcas trabalhadas
         </button>
-        <button class="item-nav" data-aba="base-prospeccao" type="button">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.35-4.35"></path></svg>
-          Base de prospecção
-        </button>
         <button class="item-nav" data-aba="prospeccao" type="button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M4 7l8 6 8-6"></path></svg>
           Prospecção
@@ -745,39 +741,25 @@
         </div>
       </section>
 
-      <!-- 3. MARCAS TRABALHADAS -->
+      <!-- 3. MARCAS TRABALHADAS (histórico + prospecção por planilha, tudo junto) -->
       <section class="painel" id="painel-marcas-trabalhadas">
+        <div class="grade-metricas-admin" id="metricas-trabalhadas"></div>
         <div class="campo-topo">
-          <h2 style="font-size:.95rem;">Marcas com quem já trabalhei</h2>
-          <span style="flex:1"></span>
-          <button class="btn btn-laranja" id="botao-add-trabalhada" type="button">+ Adicionar</button>
+          <input class="campo-busca" id="busca-trabalhadas" type="text" placeholder="Buscar por marca, @ ou e-mail">
+          <select class="campo-busca" id="filtro-nicho-trabalhadas" style="flex:none;min-width:150px;"></select>
+          <select class="campo-busca" id="filtro-origem-trabalhadas" style="flex:none;min-width:150px;"></select>
+          <button class="btn btn-contorno btn-pequeno" id="botao-csv-trabalhadas" type="button">Baixar CSV</button>
+          <button class="btn btn-contorno btn-pequeno" id="botao-importar-trabalhadas" type="button">Importar CSV</button>
+          <button class="btn btn-laranja" id="botao-add-trabalhada" type="button">+ Adicionar marca</button>
         </div>
-        <div class="tabela-wrap">
-          <table>
-            <thead><tr><th>Marca</th><th>Telefone</th><th>E-mail</th><th>Data</th><th>Observação</th><th></th></tr></thead>
-            <tbody id="corpo-tabela-trabalhadas"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- 3b. BASE DE PROSPECÇÃO (captação por planilha CSV) -->
-      <section class="painel" id="painel-base-prospeccao">
-        <div class="grade-metricas-admin" id="metricas-prospeccao"></div>
-        <div class="campo-topo">
-          <input class="campo-busca" id="busca-prospeccao" type="text" placeholder="Buscar por nome, @ ou e-mail">
-          <select class="campo-busca" id="filtro-nicho-prospeccao" style="flex:none;min-width:150px;"></select>
-          <select class="campo-busca" id="filtro-origem-prospeccao" style="flex:none;min-width:150px;"></select>
-          <button class="btn btn-contorno btn-pequeno" id="botao-csv-prospeccao" type="button">Baixar CSV</button>
-          <button class="btn btn-contorno btn-pequeno" id="botao-importar-prospeccao" type="button">Importar CSV</button>
-          <button class="btn btn-laranja" id="botao-add-prospeccao" type="button">+ Adicionar marca</button>
-        </div>
-        <div id="filtros-status-prospeccao" class="campo-topo" style="margin-top:-6px;"></div>
+        <div id="filtros-status-trabalhadas" class="campo-topo" style="margin-top:-6px;"></div>
         <div class="tabela-wrap">
           <table>
             <thead><tr>
+              <th style="width:30px;"></th>
               <th>Marca</th><th>Nicho</th><th>Seguidores</th><th>Origem</th><th>Status</th><th>Data</th><th></th>
             </tr></thead>
-            <tbody id="corpo-tabela-prospeccao"></tbody>
+            <tbody id="corpo-tabela-trabalhadas"></tbody>
           </table>
         </div>
       </section>
@@ -1078,7 +1060,7 @@
     { id: "cliente", label: "Cliente" },
     { id: "parada", label: "Parada" }
   ];
-  var STATUS_PROSPECCAO = [
+  var STATUS_TRABALHADA = [
     { id: "a_enviar", label: "A enviar", classe: "pilula-contorno-azul" },
     { id: "enviado", label: "Enviado", classe: "pilula-cheia-azul" },
     { id: "respondeu", label: "Respondeu", classe: "pilula-contorno-laranja" },
@@ -1086,18 +1068,18 @@
     { id: "fechado", label: "Fechado", classe: "pilula-contorno-verde" },
     { id: "sem_interesse", label: "Sem interesse", classe: "pilula-contorno-cinza" }
   ];
-  var CAMPOS_PROSPECCAO = [
-    { id: "nome", label: "Marca" },
+  var CAMPOS_TRABALHADA = [
+    { id: "marca", label: "Marca" },
     { id: "site", label: "Site" },
     { id: "instagram", label: "Instagram" },
     { id: "seguidores", label: "Seguidores" },
     { id: "email", label: "E-mail" },
-    { id: "whatsapp", label: "WhatsApp" },
+    { id: "telefone", label: "WhatsApp" },
     { id: "pessoa_contato", label: "Pessoa de contato" },
     { id: "nicho", label: "Nicho" },
     { id: "origem", label: "Onde encontrei" },
     { id: "status", label: "Status" },
-    { id: "observacao", label: "Observação" },
+    { id: "obs", label: "Observação" },
     { id: "data", label: "Data" }
   ];
   var TIPOS_CALENDARIO = [
@@ -1118,7 +1100,6 @@
     videos: [],
     marcas: [],
     trabalhadas: [],
-    prospeccao: [],
     emailEnvios: [],
     emailOptout: [],
     disparo: {
@@ -1141,10 +1122,10 @@
     filtroTipoCalendario: null,
     filtroSituacaoMarcas: "todas",
     buscaMarcas: "",
-    filtroStatusProspeccao: "todas",
-    filtroNichoProspeccao: "",
-    filtroOrigemProspeccao: "",
-    buscaProspeccao: "",
+    filtroStatusTrabalhadas: "todas",
+    filtroNichoTrabalhadas: "",
+    filtroOrigemTrabalhadas: "",
+    buscaTrabalhadas: "",
     filtroCampanhas: "todas",
     buscaCampanhas: "",
     ordemCampanhas: { campo: "prazo", direcao: "asc" }
@@ -1283,7 +1264,6 @@
     portfolio: "Portfólio",
     marcas: "Marcas",
     "marcas-trabalhadas": "Marcas trabalhadas",
-    "base-prospeccao": "Base de prospecção",
     prospeccao: "Prospecção",
     calendario: "Calendário",
     campanhas: "Campanhas",
@@ -1488,8 +1468,7 @@
     var tarefas = [
       carregarTabela("videos", { campo: "ordem", asc: true }).then(function (dados) { Estado.videos = dados; }).catch(function (erro) { avisarTabelaFaltando("videos", erro); }),
       carregarTabela("marcas", { campo: "criado_em", asc: false }).then(function (dados) { Estado.marcas = dados; }).catch(function (erro) { avisarTabelaFaltando("marcas", erro); }),
-      carregarTabela("marcas_trabalhadas", { campo: "data", asc: false }).then(function (dados) { Estado.trabalhadas = dados; }).catch(function (erro) { avisarTabelaFaltando("marcas_trabalhadas", erro); }),
-      carregarTabela("prospeccao", { campo: "criado_em", asc: false }).then(function (dados) { Estado.prospeccao = dados; }).catch(function (erro) { avisarTabelaFaltando("prospeccao", erro); }),
+      carregarTabela("marcas_trabalhadas", { campo: "criado_em", asc: false }).then(function (dados) { Estado.trabalhadas = dados; }).catch(function (erro) { avisarTabelaFaltando("marcas_trabalhadas", erro); }),
       carregarTabela("calendario", { campo: "data", asc: true }).then(function (dados) { Estado.calendario = dados; }).catch(function (erro) { avisarTabelaFaltando("calendario", erro); }),
       carregarTabela("campanhas", { campo: "prazo", asc: true }).then(function (dados) { Estado.campanhas = dados; }).catch(function (erro) { avisarTabelaFaltando("campanhas", erro); }),
       carregarTabela("roteiros", { campo: "atualizado_em", asc: false }).then(function (dados) { Estado.roteiros = dados; }).catch(function (erro) { avisarTabelaFaltando("roteiros", erro); }),
@@ -1523,7 +1502,6 @@
       renderizarPortfolio();
       renderizarMarcas();
       renderizarTrabalhadas();
-      renderizarProspeccao();
       renderizarDisparo();
       renderCalendario();
       renderizarCampanhas();
@@ -1592,10 +1570,6 @@
     if (id === "parada") return "pilula-contorno-vermelho";
     return "pilula-contorno-azul";
   }
-  function statusProspeccaoInfo(id) {
-    return STATUS_PROSPECCAO.filter(function (s) { return s.id === id; })[0] || STATUS_PROSPECCAO[0];
-  }
-
   /* =========================================================
      1. PORTFÓLIO
   ========================================================= */
@@ -1933,7 +1907,7 @@
         '<td>' + escaparHtml(m.telefone || "-") + '</td>' +
         '<td><span class="pilula ' + classePilulaSituacao(m.situacao) + '">' + escaparHtml(rotuloSituacao(m.situacao)) + '</span></td>' +
         '<td>' + escaparHtml(formatarData(m.ultimo_contato) || "-") + '</td>' +
-        '<td class="celula-acoes">' + botaoWhats + botaoInsta + '<button class="btn-icone" data-acao="apagar-marca" data-id="' + m.id + '" type="button" aria-label="Apagar" onclick="event.stopPropagation()">' + ICONE_LIXO + '</button></td>' +
+        '<td class="celula-acoes">' + botaoWhats + botaoInsta + '<button class="btn-icone" data-acao="apagar-marca" data-id="' + m.id + '" type="button" aria-label="Apagar">' + ICONE_LIXO + '</button></td>' +
       '</tr>';
     }).join("");
     renderResumoSelecaoMarcas();
@@ -2032,65 +2006,203 @@
   function renderizarMarcas() { renderTabelaMarcas(); }
 
   /* =========================================================
-     3. MARCAS TRABALHADAS
+     3. MARCAS TRABALHADAS (histórico de quem já trabalhei +
+     prospecção por planilha, tudo numa aba só)
   ========================================================= */
   function camposFormularioTrabalhada() {
     return [
       { nome: "marca", rotulo: "Marca", tipo: "text", obrigatorio: true },
-      { nome: "telefone", rotulo: "Telefone", tipo: "text", placeholder: "(00) 00000-0000" },
+      { nome: "site", rotulo: "Site", tipo: "text", placeholder: "https://..." },
+      { nome: "instagram", rotulo: "Instagram", tipo: "text", placeholder: "@marca" },
+      { nome: "seguidores", rotulo: "Seguidores", tipo: "number" },
       { nome: "email", rotulo: "E-mail", tipo: "email" },
-      { nome: "data", rotulo: "Data que trabalhou", tipo: "date" },
+      { nome: "telefone", rotulo: "WhatsApp", tipo: "text", placeholder: "(00) 00000-0000" },
+      { nome: "pessoa_contato", rotulo: "Pessoa de contato", tipo: "text" },
+      { nome: "nicho", rotulo: "Nicho", tipo: "select", opcoes: NICHOS },
+      { nome: "origem", rotulo: "Onde encontrei", tipo: "text", placeholder: "Instagram, indicação, evento..." },
+      { nome: "status", rotulo: "Status", tipo: "select", opcoes: STATUS_TRABALHADA },
+      { nome: "data", rotulo: "Data", tipo: "date" },
+      { nome: "favorita", rotulo: "Favoritar", tipo: "checkbox" },
       { nome: "obs", rotulo: "Observação", tipo: "textarea" }
     ];
   }
 
   function abrirModalTrabalhada(registro) {
     abrirFormulario({
-      titulo: registro ? "Editar marca trabalhada" : "Adicionar marca trabalhada",
+      titulo: registro ? "Editar marca" : "Adicionar marca",
       campos: camposFormularioTrabalhada(),
-      valores: registro || {},
+      valores: registro || { status: "fechado", data: hojeISO(), favorita: false },
       aoSalvar: function (dados) {
         var promessa = registro
           ? window.banco.from("marcas_trabalhadas").update(dados).eq("id", registro.id)
           : window.banco.from("marcas_trabalhadas").insert(dados);
         return promessa.then(tratarResultado).then(function () {
-          return recarregarESetar("marcas_trabalhadas", { campo: "data", asc: false }, "trabalhadas").then(function () {
-            renderTabelaTrabalhadas();
-            mostrarToast(registro ? "Atualizado." : "Adicionado.");
+          return recarregarESetar("marcas_trabalhadas", { campo: "criado_em", asc: false }, "trabalhadas").then(function () {
+            renderizarTrabalhadas();
+            mostrarToast(registro ? "Marca atualizada." : "Marca adicionada.");
           });
         });
-      }
+      },
+      aoApagar: registro ? function () {
+        return window.banco.from("marcas_trabalhadas").delete().eq("id", registro.id).then(tratarResultado).then(function () {
+          return recarregarESetar("marcas_trabalhadas", { campo: "criado_em", asc: false }, "trabalhadas").then(function () {
+            renderizarTrabalhadas();
+            mostrarToast("Marca apagada.");
+          });
+        });
+      } : null
     });
   }
 
-  function renderTabelaTrabalhadas() {
-    var corpo = document.getElementById("corpo-tabela-trabalhadas");
-    if (!Estado.trabalhadas.length) {
-      corpo.innerHTML = '<tr><td colspan="6" class="sem-registros">Nenhuma marca trabalhada cadastrada ainda.</td></tr>';
-      return;
-    }
-    corpo.innerHTML = Estado.trabalhadas.map(function (t) {
-      return '<tr data-id="' + t.id + '">' +
-        '<td>' + escaparHtml(t.marca) + '</td>' +
-        '<td>' + escaparHtml(t.telefone || "-") + '</td>' +
-        '<td>' + escaparHtml(t.email || "-") + '</td>' +
-        '<td>' + escaparHtml(formatarData(t.data) || "-") + '</td>' +
-        '<td class="texto-fraco">' + escaparHtml(t.obs || "-") + '</td>' +
-        '<td class="celula-acoes"><button class="btn-icone" data-acao="apagar-trabalhada" data-id="' + t.id + '" type="button" onclick="event.stopPropagation()" aria-label="Apagar">' + ICONE_LIXO + '</button></td>' +
-      '</tr>';
+  function statusTrabalhadaInfo(id) {
+    return STATUS_TRABALHADA.filter(function (s) { return s.id === id; })[0] || STATUS_TRABALHADA[0];
+  }
+
+  function origensDisponiveisTrabalhadas() {
+    var vistas = {};
+    Estado.trabalhadas.forEach(function (t) { if (t.origem) vistas[t.origem] = true; });
+    return Object.keys(vistas).sort();
+  }
+
+  function trabalhadasFiltradas() {
+    var termo = Estado.buscaTrabalhadas.trim().toLowerCase();
+    var lista = Estado.trabalhadas.filter(function (t) {
+      if (Estado.filtroStatusTrabalhadas !== "todas" && t.status !== Estado.filtroStatusTrabalhadas) return false;
+      if (Estado.filtroNichoTrabalhadas && t.nicho !== Estado.filtroNichoTrabalhadas) return false;
+      if (Estado.filtroOrigemTrabalhadas && t.origem !== Estado.filtroOrigemTrabalhadas) return false;
+      if (!termo) return true;
+      var alvo = ((t.marca || "") + " " + (t.instagram || "") + " " + (t.email || "")).toLowerCase();
+      return alvo.indexOf(termo) !== -1;
+    });
+    lista.sort(function (a, b) { return (b.favorita ? 1 : 0) - (a.favorita ? 1 : 0); });
+    return lista;
+  }
+
+  function renderFiltrosStatusTrabalhadas() {
+    var container = document.getElementById("filtros-status-trabalhadas");
+    var opcoes = [{ id: "todas", label: "Todas" }].concat(STATUS_TRABALHADA);
+    container.innerHTML = opcoes.map(function (opcao) {
+      return '<button class="chip' + (Estado.filtroStatusTrabalhadas === opcao.id ? " ativo" : "") + '" data-status="' + opcao.id + '" type="button">' + opcao.label + '</button>';
     }).join("");
   }
 
+  function renderFiltroNichoTrabalhadas() {
+    var select = document.getElementById("filtro-nicho-trabalhadas");
+    var opcoes = [{ id: "", label: "Todos os nichos" }].concat(NICHOS);
+    select.innerHTML = opcoes.map(function (o) { return '<option value="' + o.id + '">' + o.label + '</option>'; }).join("");
+    select.value = Estado.filtroNichoTrabalhadas;
+  }
+
+  function renderFiltroOrigemTrabalhadas() {
+    var select = document.getElementById("filtro-origem-trabalhadas");
+    var origens = origensDisponiveisTrabalhadas();
+    var opcoes = ['<option value="">Todas as origens</option>'].concat(
+      origens.map(function (o) { return '<option value="' + escaparHtml(o) + '">' + escaparHtml(o) + '</option>'; })
+    );
+    select.innerHTML = opcoes.join("");
+    select.value = Estado.filtroOrigemTrabalhadas;
+  }
+
+  function renderMetricasTrabalhadas() {
+    var container = document.getElementById("metricas-trabalhadas");
+    var total = Estado.trabalhadas.length;
+    var favoritas = Estado.trabalhadas.filter(function (t) { return t.favorita; }).length;
+    var itens = [
+      { valor: total, rotulo: "no total" },
+      { valor: favoritas, rotulo: "favoritas" }
+    ].concat(
+      STATUS_TRABALHADA.map(function (s) {
+        var qtd = Estado.trabalhadas.filter(function (t) { return t.status === s.id; }).length;
+        return { valor: qtd, rotulo: s.label.toLowerCase() };
+      })
+    );
+    container.innerHTML = itens.map(function (item) {
+      return '<div class="metrica-mini"><strong>' + item.valor + '</strong><span>' + escaparHtml(item.rotulo) + '</span></div>';
+    }).join("");
+  }
+
+  function renderTabelaTrabalhadas() {
+    renderFiltrosStatusTrabalhadas();
+    renderFiltroNichoTrabalhadas();
+    renderFiltroOrigemTrabalhadas();
+    var corpo = document.getElementById("corpo-tabela-trabalhadas");
+    var lista = trabalhadasFiltradas();
+    if (!lista.length) {
+      corpo.innerHTML = '<tr><td colspan="8" class="sem-registros">' + (Estado.trabalhadas.length ? "Nenhuma marca encontrada com esse filtro." : 'Nenhuma marca cadastrada ainda. Clique em "Adicionar marca" ou importe sua planilha em CSV.') + '</td></tr>';
+      return;
+    }
+    var opcoesStatusHtml = STATUS_TRABALHADA.map(function (s) { return '<option value="' + s.id + '">' + s.label + '</option>'; }).join("");
+    corpo.innerHTML = lista.map(function (t) {
+      var botaoSite = t.site ? '<a class="btn-icone" href="' + escaparHtml(t.site) + '" target="_blank" rel="noopener" aria-label="Site" onclick="event.stopPropagation()">' + ICONE_SITE + '</a>' : "";
+      var botaoInsta = t.instagram ? '<a class="btn-icone" href="https://instagram.com/' + escaparHtml(String(t.instagram).replace("@", "")) + '" target="_blank" rel="noopener" aria-label="Instagram" onclick="event.stopPropagation()">' + ICONE_INSTAGRAM + '</a>' : "";
+      var botaoWhats = t.telefone ? '<a class="btn-icone" href="https://wa.me/55' + somenteDigitos(t.telefone) + '" target="_blank" rel="noopener" aria-label="WhatsApp" onclick="event.stopPropagation()">' + ICONE_WHATSAPP + '</a>' : "";
+      var botaoEmail = t.email ? '<a class="btn-icone" href="mailto:' + escaparHtml(t.email) + '" aria-label="E-mail" onclick="event.stopPropagation()">' + ICONE_EMAIL + '</a>' : "";
+      return '<tr data-id="' + t.id + '"' + (t.favorita ? ' class="linha-favorita"' : "") + '>' +
+        '<td><button class="btn-icone" data-acao="favoritar-trabalhada" data-id="' + t.id + '" type="button" style="color:' + (t.favorita ? "var(--laranja)" : "var(--texto-suave)") + '" aria-label="Favoritar">' + (t.favorita ? ICONE_ESTRELA_CHEIA : ICONE_ESTRELA_VAZIA) + '</button></td>' +
+        '<td>' + escaparHtml(t.marca) + '</td>' +
+        '<td>' + escaparHtml(rotuloNicho(t.nicho)) + '</td>' +
+        '<td>' + (t.seguidores ? Number(t.seguidores).toLocaleString("pt-BR") : "-") + '</td>' +
+        '<td>' + escaparHtml(t.origem || "-") + '</td>' +
+        '<td><select class="select-status-linha" data-acao="mudar-status-trabalhada" data-id="' + t.id + '" onclick="event.stopPropagation()">' + opcoesStatusHtml + '</select></td>' +
+        '<td>' + escaparHtml(formatarData(t.data) || "-") + '</td>' +
+        '<td class="celula-acoes">' + botaoSite + botaoInsta + botaoWhats + botaoEmail + '<button class="btn-icone" data-acao="apagar-trabalhada" data-id="' + t.id + '" type="button" aria-label="Apagar">' + ICONE_LIXO + '</button></td>' +
+      '</tr>';
+    }).join("");
+    lista.forEach(function (t) {
+      var select = corpo.querySelector('select[data-acao="mudar-status-trabalhada"][data-id="' + t.id + '"]');
+      if (select) select.value = t.status;
+    });
+  }
+
+  function renderizarTrabalhadas() { renderMetricasTrabalhadas(); renderTabelaTrabalhadas(); }
+
   document.getElementById("botao-add-trabalhada").addEventListener("click", function () { abrirModalTrabalhada(null); });
+  document.getElementById("busca-trabalhadas").addEventListener("input", function (evento) {
+    Estado.buscaTrabalhadas = evento.target.value;
+    renderTabelaTrabalhadas();
+  });
+  document.getElementById("filtro-nicho-trabalhadas").addEventListener("change", function (evento) {
+    Estado.filtroNichoTrabalhadas = evento.target.value;
+    renderTabelaTrabalhadas();
+  });
+  document.getElementById("filtro-origem-trabalhadas").addEventListener("change", function (evento) {
+    Estado.filtroOrigemTrabalhadas = evento.target.value;
+    renderTabelaTrabalhadas();
+  });
+  document.getElementById("filtros-status-trabalhadas").addEventListener("click", function (evento) {
+    var botao = evento.target.closest(".chip");
+    if (!botao) return;
+    Estado.filtroStatusTrabalhadas = botao.getAttribute("data-status");
+    renderTabelaTrabalhadas();
+  });
+  document.getElementById("botao-csv-trabalhadas").addEventListener("click", function () {
+    var lista = trabalhadasFiltradas();
+    baixarCSV("marcas-trabalhadas.csv",
+      ["Marca", "Site", "Instagram", "Seguidores", "E-mail", "WhatsApp", "Pessoa de contato", "Nicho", "Origem", "Status", "Favorita", "Observação", "Data"],
+      lista.map(function (t) { return [t.marca, t.site, t.instagram, t.seguidores, t.email, t.telefone, t.pessoa_contato, rotuloNicho(t.nicho), t.origem, statusTrabalhadaInfo(t.status).label, t.favorita ? "sim" : "não", t.obs, formatarData(t.data)]; })
+    );
+  });
   document.getElementById("corpo-tabela-trabalhadas").addEventListener("click", function (evento) {
+    var botaoFavoritar = evento.target.closest('[data-acao="favoritar-trabalhada"]');
+    if (botaoFavoritar) {
+      var idFav = botaoFavoritar.getAttribute("data-id");
+      var registroFav = Estado.trabalhadas.filter(function (t) { return String(t.id) === String(idFav); })[0];
+      if (!registroFav) return;
+      window.banco.from("marcas_trabalhadas").update({ favorita: !registroFav.favorita }).eq("id", idFav).then(tratarResultado).then(function () {
+        return recarregarESetar("marcas_trabalhadas", { campo: "criado_em", asc: false }, "trabalhadas").then(function () {
+          renderizarTrabalhadas();
+        });
+      }).catch(function (erro) { mostrarToast("Não consegui favoritar: " + erro.message); });
+      return;
+    }
     var botaoApagar = evento.target.closest('[data-acao="apagar-trabalhada"]');
     if (botaoApagar) {
       var id = botaoApagar.getAttribute("data-id");
       var registro = Estado.trabalhadas.filter(function (t) { return String(t.id) === String(id); })[0];
       if (!registro || !confirm('Apagar "' + registro.marca + '"? Isso não pode ser desfeito.')) return;
       window.banco.from("marcas_trabalhadas").delete().eq("id", id).then(tratarResultado).then(function () {
-        return recarregarESetar("marcas_trabalhadas", { campo: "data", asc: false }, "trabalhadas").then(function () {
-          renderTabelaTrabalhadas();
+        return recarregarESetar("marcas_trabalhadas", { campo: "criado_em", asc: false }, "trabalhadas").then(function () {
+          renderizarTrabalhadas();
           mostrarToast("Apagado.");
         });
       }).catch(function (erro) { mostrarToast("Não consegui apagar: " + erro.message); });
@@ -2101,223 +2213,36 @@
     var registro2 = Estado.trabalhadas.filter(function (t) { return String(t.id) === String(linha.getAttribute("data-id")); })[0];
     if (registro2) abrirModalTrabalhada(registro2);
   });
-
-  function renderizarTrabalhadas() { renderTabelaTrabalhadas(); }
-
-  /* =========================================================
-     3b. PROSPECÇÃO (base de prospecção, separada do funil "Marcas")
-  ========================================================= */
-  function camposFormularioProspeccao() {
-    return [
-      { nome: "nome", rotulo: "Marca", tipo: "text", obrigatorio: true },
-      { nome: "site", rotulo: "Site", tipo: "text", placeholder: "https://..." },
-      { nome: "instagram", rotulo: "Instagram", tipo: "text", placeholder: "@marca" },
-      { nome: "seguidores", rotulo: "Seguidores", tipo: "number" },
-      { nome: "email", rotulo: "E-mail", tipo: "email" },
-      { nome: "whatsapp", rotulo: "WhatsApp", tipo: "text", placeholder: "(00) 00000-0000" },
-      { nome: "pessoa_contato", rotulo: "Pessoa de contato", tipo: "text" },
-      { nome: "nicho", rotulo: "Nicho", tipo: "select", opcoes: NICHOS },
-      { nome: "origem", rotulo: "Onde encontrei", tipo: "text", placeholder: "Instagram, indicação, evento..." },
-      { nome: "status", rotulo: "Status", tipo: "select", opcoes: STATUS_PROSPECCAO },
-      { nome: "data", rotulo: "Data", tipo: "date" },
-      { nome: "observacao", rotulo: "Observação", tipo: "textarea" }
-    ];
-  }
-
-  function abrirModalProspeccao(registro) {
-    abrirFormulario({
-      titulo: registro ? "Editar marca" : "Adicionar marca",
-      campos: camposFormularioProspeccao(),
-      valores: registro || { status: "a_enviar", data: hojeISO() },
-      aoSalvar: function (dados) {
-        var promessa = registro
-          ? window.banco.from("prospeccao").update(dados).eq("id", registro.id)
-          : window.banco.from("prospeccao").insert(dados);
-        return promessa.then(tratarResultado).then(function () {
-          return recarregarESetar("prospeccao", { campo: "criado_em", asc: false }, "prospeccao").then(function () {
-            renderizarProspeccao();
-            mostrarToast(registro ? "Marca atualizada." : "Marca adicionada.");
-          });
-        });
-      },
-      aoApagar: registro ? function () {
-        return window.banco.from("prospeccao").delete().eq("id", registro.id).then(tratarResultado).then(function () {
-          return recarregarESetar("prospeccao", { campo: "criado_em", asc: false }, "prospeccao").then(function () {
-            renderizarProspeccao();
-            mostrarToast("Marca apagada.");
-          });
-        });
-      } : null
-    });
-  }
-
-  function origensDisponiveisProspeccao() {
-    var vistas = {};
-    Estado.prospeccao.forEach(function (p) { if (p.origem) vistas[p.origem] = true; });
-    return Object.keys(vistas).sort();
-  }
-
-  function prospeccaoFiltrada() {
-    var termo = Estado.buscaProspeccao.trim().toLowerCase();
-    return Estado.prospeccao.filter(function (p) {
-      if (Estado.filtroStatusProspeccao !== "todas" && p.status !== Estado.filtroStatusProspeccao) return false;
-      if (Estado.filtroNichoProspeccao && p.nicho !== Estado.filtroNichoProspeccao) return false;
-      if (Estado.filtroOrigemProspeccao && p.origem !== Estado.filtroOrigemProspeccao) return false;
-      if (!termo) return true;
-      var alvo = ((p.nome || "") + " " + (p.instagram || "") + " " + (p.email || "")).toLowerCase();
-      return alvo.indexOf(termo) !== -1;
-    });
-  }
-
-  function renderFiltrosStatusProspeccao() {
-    var container = document.getElementById("filtros-status-prospeccao");
-    var opcoes = [{ id: "todas", label: "Todas" }].concat(STATUS_PROSPECCAO);
-    container.innerHTML = opcoes.map(function (opcao) {
-      return '<button class="chip' + (Estado.filtroStatusProspeccao === opcao.id ? " ativo" : "") + '" data-status="' + opcao.id + '" type="button">' + opcao.label + '</button>';
-    }).join("");
-  }
-
-  function renderFiltroNichoProspeccao() {
-    var select = document.getElementById("filtro-nicho-prospeccao");
-    var opcoes = [{ id: "", label: "Todos os nichos" }].concat(NICHOS);
-    var valorAtual = select.value;
-    select.innerHTML = opcoes.map(function (o) { return '<option value="' + o.id + '">' + o.label + '</option>'; }).join("");
-    select.value = Estado.filtroNichoProspeccao;
-  }
-
-  function renderFiltroOrigemProspeccao() {
-    var select = document.getElementById("filtro-origem-prospeccao");
-    var origens = origensDisponiveisProspeccao();
-    var opcoes = ['<option value="">Todas as origens</option>'].concat(
-      origens.map(function (o) { return '<option value="' + escaparHtml(o) + '">' + escaparHtml(o) + '</option>'; })
-    );
-    select.innerHTML = opcoes.join("");
-    select.value = Estado.filtroOrigemProspeccao;
-  }
-
-  function renderMetricasProspeccao() {
-    var container = document.getElementById("metricas-prospeccao");
-    var total = Estado.prospeccao.length;
-    var itens = [{ valor: total, rotulo: "no total" }].concat(
-      STATUS_PROSPECCAO.map(function (s) {
-        var qtd = Estado.prospeccao.filter(function (p) { return p.status === s.id; }).length;
-        return { valor: qtd, rotulo: s.label.toLowerCase() };
-      })
-    );
-    container.innerHTML = itens.map(function (item) {
-      return '<div class="metrica-mini"><strong>' + item.valor + '</strong><span>' + escaparHtml(item.rotulo) + '</span></div>';
-    }).join("");
-  }
-
-  function renderTabelaProspeccao() {
-    renderFiltrosStatusProspeccao();
-    renderFiltroNichoProspeccao();
-    renderFiltroOrigemProspeccao();
-    var corpo = document.getElementById("corpo-tabela-prospeccao");
-    var lista = prospeccaoFiltrada();
-    if (!lista.length) {
-      corpo.innerHTML = '<tr><td colspan="7" class="sem-registros">' + (Estado.prospeccao.length ? "Nenhuma marca encontrada com esse filtro." : 'Nenhuma marca cadastrada ainda. Clique em "Adicionar marca" ou importe sua planilha em CSV.') + '</td></tr>';
-      return;
-    }
-    var opcoesStatusHtml = STATUS_PROSPECCAO.map(function (s) { return '<option value="' + s.id + '">' + s.label + '</option>'; }).join("");
-    corpo.innerHTML = lista.map(function (p) {
-      var botaoSite = p.site ? '<a class="btn-icone" href="' + escaparHtml(p.site) + '" target="_blank" rel="noopener" aria-label="Site" onclick="event.stopPropagation()">' + ICONE_SITE + '</a>' : "";
-      var botaoInsta = p.instagram ? '<a class="btn-icone" href="https://instagram.com/' + escaparHtml(String(p.instagram).replace("@", "")) + '" target="_blank" rel="noopener" aria-label="Instagram" onclick="event.stopPropagation()">' + ICONE_INSTAGRAM + '</a>' : "";
-      var botaoWhats = p.whatsapp ? '<a class="btn-icone" href="https://wa.me/55' + somenteDigitos(p.whatsapp) + '" target="_blank" rel="noopener" aria-label="WhatsApp" onclick="event.stopPropagation()">' + ICONE_WHATSAPP + '</a>' : "";
-      var botaoEmail = p.email ? '<a class="btn-icone" href="mailto:' + escaparHtml(p.email) + '" aria-label="E-mail" onclick="event.stopPropagation()">' + ICONE_EMAIL + '</a>' : "";
-      return '<tr data-id="' + p.id + '">' +
-        '<td>' + escaparHtml(p.nome) + '</td>' +
-        '<td>' + escaparHtml(rotuloNicho(p.nicho)) + '</td>' +
-        '<td>' + (p.seguidores ? Number(p.seguidores).toLocaleString("pt-BR") : "-") + '</td>' +
-        '<td>' + escaparHtml(p.origem || "-") + '</td>' +
-        '<td><select class="select-status-linha" data-acao="mudar-status" data-id="' + p.id + '" onclick="event.stopPropagation()">' + opcoesStatusHtml + '</select></td>' +
-        '<td>' + escaparHtml(formatarData(p.data) || "-") + '</td>' +
-        '<td class="celula-acoes">' + botaoSite + botaoInsta + botaoWhats + botaoEmail + '<button class="btn-icone" data-acao="apagar-prospeccao" data-id="' + p.id + '" type="button" onclick="event.stopPropagation()" aria-label="Apagar">' + ICONE_LIXO + '</button></td>' +
-      '</tr>';
-    }).join("");
-    lista.forEach(function (p) {
-      var select = corpo.querySelector('select[data-id="' + p.id + '"]');
-      if (select) select.value = p.status;
-    });
-  }
-
-  function renderizarProspeccao() { renderMetricasProspeccao(); renderTabelaProspeccao(); }
-
-  document.getElementById("botao-add-prospeccao").addEventListener("click", function () { abrirModalProspeccao(null); });
-  document.getElementById("busca-prospeccao").addEventListener("input", function (evento) {
-    Estado.buscaProspeccao = evento.target.value;
-    renderTabelaProspeccao();
-  });
-  document.getElementById("filtro-nicho-prospeccao").addEventListener("change", function (evento) {
-    Estado.filtroNichoProspeccao = evento.target.value;
-    renderTabelaProspeccao();
-  });
-  document.getElementById("filtro-origem-prospeccao").addEventListener("change", function (evento) {
-    Estado.filtroOrigemProspeccao = evento.target.value;
-    renderTabelaProspeccao();
-  });
-  document.getElementById("filtros-status-prospeccao").addEventListener("click", function (evento) {
-    var botao = evento.target.closest(".chip");
-    if (!botao) return;
-    Estado.filtroStatusProspeccao = botao.getAttribute("data-status");
-    renderTabelaProspeccao();
-  });
-  document.getElementById("botao-csv-prospeccao").addEventListener("click", function () {
-    var lista = prospeccaoFiltrada();
-    baixarCSV("prospeccao.csv",
-      ["Marca", "Site", "Instagram", "Seguidores", "E-mail", "WhatsApp", "Pessoa de contato", "Nicho", "Origem", "Status", "Observação", "Data"],
-      lista.map(function (p) { return [p.nome, p.site, p.instagram, p.seguidores, p.email, p.whatsapp, p.pessoa_contato, rotuloNicho(p.nicho), p.origem, statusProspeccaoInfo(p.status).label, p.observacao, formatarData(p.data)]; })
-    );
-  });
-  document.getElementById("corpo-tabela-prospeccao").addEventListener("click", function (evento) {
-    var botaoApagar = evento.target.closest('[data-acao="apagar-prospeccao"]');
-    if (botaoApagar) {
-      var id = botaoApagar.getAttribute("data-id");
-      var registro = Estado.prospeccao.filter(function (p) { return String(p.id) === String(id); })[0];
-      if (!registro || !confirm('Apagar "' + registro.nome + '"? Isso não pode ser desfeito.')) return;
-      window.banco.from("prospeccao").delete().eq("id", id).then(tratarResultado).then(function () {
-        return recarregarESetar("prospeccao", { campo: "criado_em", asc: false }, "prospeccao").then(function () {
-          renderizarProspeccao();
-          mostrarToast("Marca apagada.");
-        });
-      }).catch(function (erro) { mostrarToast("Não consegui apagar: " + erro.message); });
-      return;
-    }
-    var linha = evento.target.closest("tr[data-id]");
-    if (!linha) return;
-    var registro2 = Estado.prospeccao.filter(function (p) { return String(p.id) === String(linha.getAttribute("data-id")); })[0];
-    if (registro2) abrirModalProspeccao(registro2);
-  });
-  document.getElementById("corpo-tabela-prospeccao").addEventListener("change", function (evento) {
-    var select = evento.target.closest('select[data-acao="mudar-status"]');
+  document.getElementById("corpo-tabela-trabalhadas").addEventListener("change", function (evento) {
+    var select = evento.target.closest('select[data-acao="mudar-status-trabalhada"]');
     if (!select) return;
     var id = select.getAttribute("data-id");
     var novoStatus = select.value;
-    window.banco.from("prospeccao").update({ status: novoStatus }).eq("id", id).then(tratarResultado).then(function () {
-      return recarregarESetar("prospeccao", { campo: "criado_em", asc: false }, "prospeccao").then(function () {
-        renderizarProspeccao();
+    window.banco.from("marcas_trabalhadas").update({ status: novoStatus }).eq("id", id).then(tratarResultado).then(function () {
+      return recarregarESetar("marcas_trabalhadas", { campo: "criado_em", asc: false }, "trabalhadas").then(function () {
+        renderizarTrabalhadas();
         mostrarToast("Status atualizado.");
       });
     }).catch(function (erro) { mostrarToast("Não consegui atualizar: " + erro.message); });
   });
 
   /* ---------- importar planilha CSV ---------- */
-  var CAMPOS_PROSPECCAO_OBRIGATORIO = "nome";
-  var SINONIMOS_CAMPOS_PROSPECCAO = {
-    nome: ["nome", "marca", "empresa", "nome da marca", "cliente", "nome da empresa"],
+  var CAMPO_TRABALHADA_OBRIGATORIO = "marca";
+  var SINONIMOS_CAMPOS_TRABALHADA = {
+    marca: ["nome", "marca", "empresa", "nome da marca", "cliente", "nome da empresa"],
     site: ["site", "website", "url", "link", "pagina"],
     instagram: ["instagram", "insta", "perfil", "@"],
     seguidores: ["seguidores", "followers", "seguidoras", "seguidor"],
     email: ["email", "e-mail", "mail"],
-    whatsapp: ["whatsapp", "telefone", "fone", "celular", "zap", "numero"],
+    telefone: ["whatsapp", "telefone", "fone", "celular", "zap", "numero"],
     pessoa_contato: ["pessoa de contato", "contato", "responsavel", "pessoa"],
     nicho: ["nicho", "categoria", "segmento", "area", "nicho de mercado"],
     origem: ["origem", "fonte", "como conheci", "onde encontrei", "como encontrei"],
     status: ["status", "situacao", "etapa"],
-    observacao: ["observacao", "obs", "nota", "notas", "comentario", "comentarios"],
+    obs: ["observacao", "obs", "nota", "notas", "comentario", "comentarios"],
     data: ["data", "data do contato", "data contato", "dia"]
   };
-  var SINONIMOS_STATUS_PROSPECCAO = {
+  var SINONIMOS_STATUS_TRABALHADA = {
     a_enviar: ["a enviar", "enviar", "novo", "pendente", "nao enviado", "aguardando envio", "para enviar"],
     enviado: ["enviado", "envio feito", "mandei", "mandado"],
     respondeu: ["respondeu", "resposta", "retornou", "respondido"],
@@ -2333,9 +2258,9 @@
   function inferirStatusLivre(texto) {
     var norm = normalizarTexto(texto);
     if (!norm) return "a_enviar";
-    var chaves = Object.keys(SINONIMOS_STATUS_PROSPECCAO);
+    var chaves = Object.keys(SINONIMOS_STATUS_TRABALHADA);
     for (var i = 0; i < chaves.length; i++) {
-      var lista = SINONIMOS_STATUS_PROSPECCAO[chaves[i]];
+      var lista = SINONIMOS_STATUS_TRABALHADA[chaves[i]];
       for (var j = 0; j < lista.length; j++) {
         if (norm === lista[j] || norm.indexOf(lista[j]) !== -1) return chaves[i];
       }
@@ -2379,8 +2304,8 @@
   function inferirMapeamento(cabecalhos) {
     var normalizados = cabecalhos.map(normalizarTexto);
     var mapa = {};
-    CAMPOS_PROSPECCAO.forEach(function (campo) {
-      var sinonimos = SINONIMOS_CAMPOS_PROSPECCAO[campo.id] || [campo.id];
+    CAMPOS_TRABALHADA.forEach(function (campo) {
+      var sinonimos = SINONIMOS_CAMPOS_TRABALHADA[campo.id] || [campo.id];
       var indiceAchado = -1;
       for (var i = 0; i < normalizados.length; i++) {
         if (sinonimos.indexOf(normalizados[i]) !== -1) { indiceAchado = i; break; }
@@ -2480,9 +2405,9 @@
       estadoImportar.cabecalhos.map(function (c, i) { return '<option value="' + i + '">' + escaparHtml(c) + '</option>'; })
     ).join("");
 
-    var linhasMapa = CAMPOS_PROSPECCAO.map(function (campo) {
+    var linhasMapa = CAMPOS_TRABALHADA.map(function (campo) {
       return '<tr>' +
-        '<td>' + escaparHtml(campo.label) + (campo.id === CAMPOS_PROSPECCAO_OBRIGATORIO ? " *" : "") + '</td>' +
+        '<td>' + escaparHtml(campo.label) + (campo.id === CAMPO_TRABALHADA_OBRIGATORIO ? " *" : "") + '</td>' +
         '<td><select data-campo-mapa="' + campo.id + '">' + opcoesColunas + '</select></td>' +
       '</tr>';
     }).join("");
@@ -2500,7 +2425,7 @@
         '</div>' +
       '</div>';
 
-    CAMPOS_PROSPECCAO.forEach(function (campo) {
+    CAMPOS_TRABALHADA.forEach(function (campo) {
       var select = corpo.querySelector('[data-campo-mapa="' + campo.id + '"]');
       var indice = estadoImportar.mapeamento[campo.id];
       select.value = (indice === undefined || indice === -1) ? "-1" : String(indice);
@@ -2508,7 +2433,7 @@
 
     function lerLinhaComMapeamento(linhaCsv) {
       var objeto = {};
-      CAMPOS_PROSPECCAO.forEach(function (campo) {
+      CAMPOS_TRABALHADA.forEach(function (campo) {
         var select = corpo.querySelector('[data-campo-mapa="' + campo.id + '"]');
         var indice = select ? parseInt(select.value, 10) : -1;
         objeto[campo.id] = (indice >= 0 && linhaCsv[indice] !== undefined) ? linhaCsv[indice].trim() : "";
@@ -2518,10 +2443,10 @@
 
     function atualizarPreview() {
       var amostra = estadoImportar.linhas.slice(0, 3).map(lerLinhaComMapeamento);
-      var colunasComDado = CAMPOS_PROSPECCAO.filter(function (campo) {
+      var colunasComDado = CAMPOS_TRABALHADA.filter(function (campo) {
         return amostra.some(function (linha) { return linha[campo.id]; });
       });
-      if (!colunasComDado.length) colunasComDado = CAMPOS_PROSPECCAO.slice(0, 3);
+      if (!colunasComDado.length) colunasComDado = CAMPOS_TRABALHADA.slice(0, 3);
       var cabecalho = colunasComDado.map(function (c) { return '<th>' + escaparHtml(c.label) + '</th>'; }).join("");
       var corpoTabela = amostra.map(function (linha) {
         return '<tr>' + colunasComDado.map(function (c) { return '<td>' + escaparHtml(linha[c.id] || "-") + '</td>'; }).join("") + '</tr>';
@@ -2548,19 +2473,19 @@
     var puladas = 0;
     estadoImportar.linhas.forEach(function (linhaCsv) {
       var lida = lerLinhaComMapeamento(linhaCsv);
-      if (!lida.nome) { puladas++; return; }
+      if (!lida.marca) { puladas++; return; }
       validas.push({
-        nome: lida.nome,
+        marca: lida.marca,
         site: lida.site || null,
         instagram: lida.instagram || null,
         seguidores: parseSeguidoresTexto(lida.seguidores),
         email: lida.email || null,
-        whatsapp: lida.whatsapp || null,
+        telefone: lida.telefone || null,
         pessoa_contato: lida.pessoa_contato || null,
         nicho: lida.nicho || null,
         origem: lida.origem || null,
         status: inferirStatusLivre(lida.status),
-        observacao: lida.observacao || null,
+        obs: lida.obs || null,
         data: parseDataLivre(lida.data)
       });
     });
@@ -2571,9 +2496,9 @@
       return;
     }
 
-    window.banco.from("prospeccao").insert(validas).then(tratarResultado).then(function () {
-      return recarregarESetar("prospeccao", { campo: "criado_em", asc: false }, "prospeccao").then(function () {
-        renderizarProspeccao();
+    window.banco.from("marcas_trabalhadas").insert(validas).then(tratarResultado).then(function () {
+      return recarregarESetar("marcas_trabalhadas", { campo: "criado_em", asc: false }, "trabalhadas").then(function () {
+        renderizarTrabalhadas();
         fecharModalImportar();
         mostrarToast(validas.length + " marca(s) importada(s)" + (puladas ? " · " + puladas + " linha(s) pulada(s) sem nome" : "") + ".");
       });
@@ -2583,7 +2508,7 @@
     });
   }
 
-  document.getElementById("botao-importar-prospeccao").addEventListener("click", abrirModalImportar);
+  document.getElementById("botao-importar-trabalhadas").addEventListener("click", abrirModalImportar);
   document.getElementById("modal-importar-fechar").addEventListener("click", fecharModalImportar);
   document.getElementById("modal-importar-fundo").addEventListener("click", fecharModalImportar);
 
@@ -3418,7 +3343,7 @@
     }
     corpo.innerHTML = lista.map(function (c) {
       return '<tr data-id="' + c.id + '"' + (c.favorita ? ' class="linha-favorita"' : "") + '>' +
-        '<td><button class="btn-icone" data-acao="favorita" data-id="' + c.id + '" type="button" onclick="event.stopPropagation()" style="color:' + (c.favorita ? "var(--laranja)" : "var(--texto-suave)") + '" aria-label="Favoritar">' + (c.favorita ? ICONE_ESTRELA_CHEIA : ICONE_ESTRELA_VAZIA) + '</button></td>' +
+        '<td><button class="btn-icone" data-acao="favorita" data-id="' + c.id + '" type="button" style="color:' + (c.favorita ? "var(--laranja)" : "var(--texto-suave)") + '" aria-label="Favoritar">' + (c.favorita ? ICONE_ESTRELA_CHEIA : ICONE_ESTRELA_VAZIA) + '</button></td>' +
         '<td>' + escaparHtml(c.campanha) + '</td>' +
         '<td>' + escaparHtml(c.cliente || "-") + '</td>' +
         '<td><span class="pilula ' + (c.tipo === "Publicidade" ? "pilula-contorno-vermelho" : "pilula-contorno-azul") + '">' + escaparHtml(c.tipo || "-") + '</span></td>' +
@@ -3535,7 +3460,7 @@
         '<td>' + escaparHtml(rotuloNicho(r.nicho)) + '</td>' +
         '<td><span class="pilula ' + (r.status === "pronto" ? "pilula-cheia-laranja" : "pilula-contorno-azul") + '">' + (r.status === "pronto" ? "Pronto" : "Rascunho") + '</span></td>' +
         '<td class="texto-fraco">' + escaparHtml(formatarData(r.atualizado_em || r.criado_em) || "-") + '</td>' +
-        '<td class="celula-acoes"><button class="btn-icone" data-acao="apagar-roteiro" data-id="' + r.id + '" type="button" onclick="event.stopPropagation()" aria-label="Apagar">' + ICONE_LIXO + '</button></td>' +
+        '<td class="celula-acoes"><button class="btn-icone" data-acao="apagar-roteiro" data-id="' + r.id + '" type="button" aria-label="Apagar">' + ICONE_LIXO + '</button></td>' +
       '</tr>';
     }).join("");
   }

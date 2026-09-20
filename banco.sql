@@ -476,6 +476,12 @@ end $$;
 -- o funil de vendas ligado ao formulário de contato do site). Só
 -- você, logada, consegue ler, criar, editar ou apagar aqui, não
 -- existe nenhuma exceção pública nessa tabela.
+--
+-- AVISO: essa tabela ficou de fora do painel a partir do BLOCO 15
+-- abaixo (o conteúdo dela foi copiado para dentro da aba "Marcas
+-- trabalhadas", pra não ter duas abas parecidas). Ela continua
+-- existindo aqui só por segurança, com os dados antigos guardados;
+-- pode pedir para eu apagá-la de vez quando quiser.
 -- =============================================================
 create table if not exists public.prospeccao (
   id uuid primary key default gen_random_uuid(),
@@ -517,6 +523,54 @@ drop policy if exists "dona apaga prospeccao" on public.prospeccao;
 create policy "dona apaga prospeccao" on public.prospeccao
   for delete
   using ((auth.jwt() ->> 'email') = 'myukaoliveira@gmail.com');
+
+
+-- =============================================================
+-- BLOCO 15: JUNTAR A PROSPECÇÃO DENTRO DE "MARCAS TRABALHADAS"
+--
+-- Você pediu para não ter duas abas parecidas ("Base de
+-- prospecção" e "Marcas trabalhadas"). Esse bloco acrescenta na
+-- tabela "marcas_trabalhadas" as colunas que só existiam na
+-- "prospeccao" (com ALTER TABLE, sem apagar nada que já tinha:
+-- marca, telefone, e-mail, data e observação continuam do mesmo
+-- jeito) e depois copia as linhas da "prospeccao" pra dentro dela.
+-- Pode rodar mais de uma vez: a copia só acontece se a marca (pelo
+-- nome + e-mail) ainda não estiver lá, então não duplica.
+-- =============================================================
+alter table public.marcas_trabalhadas add column if not exists site text;
+alter table public.marcas_trabalhadas add column if not exists instagram text;
+alter table public.marcas_trabalhadas add column if not exists seguidores integer;
+alter table public.marcas_trabalhadas add column if not exists pessoa_contato text;
+alter table public.marcas_trabalhadas add column if not exists nicho text;
+alter table public.marcas_trabalhadas add column if not exists origem text;
+alter table public.marcas_trabalhadas add column if not exists favorita boolean not null default false;
+alter table public.marcas_trabalhadas add column if not exists status text;
+
+update public.marcas_trabalhadas set status = 'fechado' where status is null;
+
+alter table public.marcas_trabalhadas alter column status set not null;
+alter table public.marcas_trabalhadas alter column status set default 'fechado';
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint where conname = 'marcas_trabalhadas_status_check'
+  ) then
+    alter table public.marcas_trabalhadas
+      add constraint marcas_trabalhadas_status_check
+      check (status in ('a_enviar', 'enviado', 'respondeu', 'proposta', 'fechado', 'sem_interesse'));
+  end if;
+end $$;
+
+insert into public.marcas_trabalhadas
+  (marca, telefone, email, data, obs, site, instagram, seguidores, pessoa_contato, nicho, origem, status, criado_em)
+select
+  p.nome, p.whatsapp, p.email, p.data, p.observacao, p.site, p.instagram, p.seguidores, p.pessoa_contato, p.nicho, p.origem, p.status, p.criado_em
+from public.prospeccao p
+where not exists (
+  select 1 from public.marcas_trabalhadas mt
+  where mt.marca = p.nome and coalesce(mt.email, '') = coalesce(p.email, '')
+);
 
 
 -- =============================================================
