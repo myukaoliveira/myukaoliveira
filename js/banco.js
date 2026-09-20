@@ -33,4 +33,5 @@
 
   window.banco = window.supabase.createClient(URL_PROJETO, CHAVE_PUBLICA);
   window.BANCO_EMAIL_DONA = EMAIL_DONA;
+  window.BANCO_URL_PROJETO = URL_PROJETO;
 })();

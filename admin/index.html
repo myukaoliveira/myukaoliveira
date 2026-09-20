@@ -19,6 +19,7 @@
     --vermelho: #c8402c;
     --verde: #4f9d69;
     --cinza: #8a8a90;
+    --ambar: #d99a2b;
     --texto-suave: #a9a290;
     --linha: rgba(243,234,214,.13);
     --raio: 14px;
@@ -229,6 +230,10 @@
   .btn-icone:hover{ border-color: var(--laranja); color: var(--laranja); }
 
   .campo-topo{ display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 16px; }
+  .barra-selecao-marcas{ display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: -6px 0 14px; font-size: .82rem; color: var(--texto-suave); }
+  .barra-selecao-marcas strong{ color: var(--rotulo); }
+  input[type="checkbox"]{ width: 16px; height: 16px; accent-color: var(--laranja); cursor: pointer; }
+  input[type="checkbox"]:disabled{ cursor: not-allowed; opacity: .35; }
   .campo-busca{
     background: var(--plastico-2);
     border: 1px solid var(--linha);
@@ -385,6 +390,83 @@
   .lista-origem li{ display: flex; align-items: center; justify-content: space-between; font-size: .82rem; }
   .lista-origem .barra-origem{ flex: 1; height: 6px; background: var(--plastico-3); border-radius: 4px; margin: 0 10px; overflow: hidden; }
   .lista-origem .barra-origem span{ display: block; height: 100%; background: var(--azul); }
+
+  /* ===== capa da aba Prospecção (disparo de e-mail) ===== */
+  .capa-disparo{
+    background: linear-gradient(135deg, var(--laranja), #a34e1f);
+    border-radius: var(--raio-g, 20px);
+    padding: 22px 24px;
+    color: #fff;
+    margin-bottom: 18px;
+  }
+  .capa-disparo-topo{ display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .capa-disparo-icone{
+    width: 52px; height: 52px; border-radius: 14px;
+    background: rgba(255,255,255,.18);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .capa-disparo-texto{ flex: 1; min-width: 200px; }
+  .capa-disparo-texto h2{ font-size: 1.3rem; margin-bottom: 4px; }
+  .capa-disparo-texto p{ font-size: .86rem; opacity: .92; }
+  .capa-disparo-numero{ text-align: right; }
+  .capa-disparo-numero strong{ display: block; font-size: 1.9rem; font-weight: 800; }
+  .capa-disparo-numero span{ font-size: .74rem; opacity: .85; }
+  .capa-disparo-etiquetas{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .etiqueta-capa{
+    background: rgba(255,255,255,.16);
+    border-radius: var(--raio-p);
+    padding: 6px 12px;
+    font-size: .74rem;
+    font-weight: 600;
+  }
+
+  /* ===== layout dividido: formulário + prévia ===== */
+  .disparo-layout{ display: grid; grid-template-columns: 1.15fr 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 960px){ .disparo-layout{ grid-template-columns: 1fr; } }
+  .titulo-bloco-disparo{ font-size: .92rem; margin-bottom: 10px; }
+  .alternador-modo{ display: flex; gap: 8px; }
+  .disparo-palco{
+    background: var(--plastico);
+    border: 1px solid var(--linha);
+    border-radius: var(--raio-g, 20px);
+    padding: 18px;
+    position: sticky;
+    top: 16px;
+  }
+  .disparo-palco-topo{ display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .disparo-janela-email{
+    background: #fff;
+    color: #2a2a2a;
+    border-radius: 14px;
+    box-shadow: 0 14px 34px rgba(0,0,0,.35);
+    overflow: hidden;
+    max-height: 560px;
+    overflow-y: auto;
+  }
+  .disparo-janela-cabecalho{ padding: 16px 18px; border-bottom: 1px solid #eee; }
+  .disparo-janela-avatar{
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--laranja); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: .9rem;
+    margin-bottom: 10px;
+  }
+  .disparo-janela-assunto{ font-size: 1rem; font-weight: 800; color: #1b1b1f; margin-bottom: 4px; }
+  .disparo-janela-remetente{ font-size: .78rem; color: #777; }
+  .disparo-janela-corpo{ padding: 20px 18px; }
+  #modal-preview-cheio .disparo-janela-email{ max-height: 74vh; }
+
+  /* ===== fila de rascunho (modo sem Resend) ===== */
+  .item-fila-rascunho{
+    border: 1px solid var(--linha);
+    border-radius: var(--raio);
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+  .item-fila-rascunho strong{ display: block; font-size: .86rem; margin-bottom: 4px; }
+  .item-fila-rascunho p{ font-size: .8rem; color: var(--texto-suave); margin-bottom: 10px; white-space: pre-wrap; }
+  .item-fila-rascunho .celula-acoes{ gap: 8px; }
 
   /* ===== drag handle ===== */
   .alca-arrastar{ cursor: grab; color: var(--texto-suave); display: inline-flex; }
@@ -548,8 +630,12 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M8 12.5l2.5 2.5L16 9"></path></svg>
           Marcas trabalhadas
         </button>
-        <button class="item-nav" data-aba="prospeccao" type="button">
+        <button class="item-nav" data-aba="base-prospeccao" type="button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.35-4.35"></path></svg>
+          Base de prospecção
+        </button>
+        <button class="item-nav" data-aba="prospeccao" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M4 7l8 6 8-6"></path></svg>
           Prospecção
         </button>
       </nav>
@@ -643,9 +729,15 @@
           <button class="btn btn-contorno btn-pequeno" id="botao-csv-marcas" type="button">Baixar CSV</button>
           <button class="btn btn-laranja" id="botao-add-marca" type="button">+ Adicionar marca</button>
         </div>
+        <div class="barra-selecao-marcas">
+          <strong id="resumo-selecao-marcas">0 marcas selecionadas</strong>
+          <button class="btn btn-contorno btn-pequeno" id="botao-selecionar-filtradas" type="button">Selecionar todas as que aparecem</button>
+          <button class="btn btn-contorno btn-pequeno" id="botao-limpar-selecao" type="button">Limpar seleção</button>
+        </div>
         <div class="tabela-wrap">
           <table>
             <thead><tr>
+              <th style="width:30px;"></th>
               <th>Marca</th><th>Instagram</th><th>E-mail</th><th>Telefone</th><th>Situação</th><th>Último contato</th><th></th>
             </tr></thead>
             <tbody id="corpo-tabela-marcas"></tbody>
@@ -668,8 +760,8 @@
         </div>
       </section>
 
-      <!-- 3b. PROSPECÇÃO -->
-      <section class="painel" id="painel-prospeccao">
+      <!-- 3b. BASE DE PROSPECÇÃO (captação por planilha CSV) -->
+      <section class="painel" id="painel-base-prospeccao">
         <div class="grade-metricas-admin" id="metricas-prospeccao"></div>
         <div class="campo-topo">
           <input class="campo-busca" id="busca-prospeccao" type="text" placeholder="Buscar por nome, @ ou e-mail">
@@ -689,6 +781,150 @@
           </table>
         </div>
       </section>
+
+      <!-- 3c. PROSPECÇÃO (disparo de e-mail em massa) -->
+      <section class="painel" id="painel-prospeccao">
+        <div class="capa-disparo">
+          <div class="capa-disparo-topo">
+            <div class="capa-disparo-icone">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M4 7l8 6 8-6"></path></svg>
+            </div>
+            <div class="capa-disparo-texto">
+              <h2>Prospecção</h2>
+              <p>Mande o seu e-mail de apresentação para várias marcas de uma vez, chamando cada uma pelo nome.</p>
+            </div>
+            <div class="capa-disparo-numero">
+              <strong id="capa-disparo-total-enviados">-</strong>
+              <span>enviados até agora</span>
+            </div>
+          </div>
+          <div class="capa-disparo-etiquetas">
+            <span class="etiqueta-capa">teste antes sempre</span>
+            <span class="etiqueta-capa">a chave vive no Supabase</span>
+            <span class="etiqueta-capa">quem responde SAIR sai da lista</span>
+          </div>
+        </div>
+
+        <div class="grade-metricas-admin" id="metricas-disparo"></div>
+
+        <div id="aviso-disparo"></div>
+
+        <div id="disparo-conteudo">
+          <div class="disparo-layout">
+            <div class="disparo-form">
+
+              <div class="cartao" style="margin-bottom:16px;">
+                <h3 class="titulo-bloco-disparo">Para quem vai</h3>
+                <p class="texto-fraco" style="margin-bottom:10px;">Os e-mails vêm da sua aba Marcas.</p>
+                <div class="campo-form">
+                  <select id="select-destino-disparo"></select>
+                </div>
+                <p class="texto-fraco" id="resumo-destinatarios-disparo" style="margin-bottom:10px;"></p>
+                <label class="campo-checkbox" style="margin-bottom:4px;">
+                  <input type="checkbox" id="checkbox-pular-ja-enviados" checked>
+                  <span>Pular quem já recebeu este mesmo assunto</span>
+                </label>
+              </div>
+
+              <div class="cartao" style="margin-bottom:16px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+                  <h3 class="titulo-bloco-disparo" style="margin-bottom:0;">Escrever o e-mail</h3>
+                  <div class="alternador-modo" id="alternador-modo-composicao">
+                    <button type="button" class="chip ativo" data-modo="texto">Texto fácil</button>
+                    <button type="button" class="chip" data-modo="html">HTML</button>
+                  </div>
+                </div>
+
+                <div class="campo-form">
+                  <label for="campo-assunto-disparo">Assunto</label>
+                  <input type="text" id="campo-assunto-disparo" placeholder="Ex: Parceria com {{marca}} e a Myuka Oliveira">
+                </div>
+
+                <div id="bloco-modo-texto">
+                  <div class="campo-form">
+                    <label for="campo-corpo-texto-disparo">Mensagem</label>
+                    <textarea id="campo-corpo-texto-disparo" style="min-height:220px;" placeholder="Oi {{nome}}, tudo bem?&#10;&#10;Meu nome é Myuka e eu adoraria fazer um conteúdo pra {{marca}}..."></textarea>
+                  </div>
+                  <div class="campo-form" style="display:flex;gap:10px;">
+                    <div style="flex:1;">
+                      <label for="campo-botao-texto-disparo">Texto do botão (opcional)</label>
+                      <input type="text" id="campo-botao-texto-disparo" placeholder="Ver meu portfólio">
+                    </div>
+                    <div style="flex:1;">
+                      <label for="campo-botao-link-disparo">Link do botão</label>
+                      <input type="text" id="campo-botao-link-disparo" placeholder="https://...">
+                    </div>
+                  </div>
+                </div>
+
+                <div id="bloco-modo-html" class="oculto">
+                  <div class="campo-form">
+                    <button type="button" class="btn btn-contorno btn-pequeno" id="botao-comecar-modelo-html" style="margin-bottom:10px;">Começar do modelo</button>
+                    <label for="campo-corpo-html-disparo">HTML do e-mail</label>
+                    <textarea id="campo-corpo-html-disparo" style="min-height:260px;font-family:monospace;font-size:.78rem;" placeholder="&lt;html&gt;...&lt;/html&gt;"></textarea>
+                  </div>
+                  <p class="texto-fraco">O que você colar aqui é exatamente o que sai. Se apagar o rodapé do SAIR, avisamos antes de disparar.</p>
+                </div>
+              </div>
+
+              <div class="cartao">
+                <h3 class="titulo-bloco-disparo">Enviar</h3>
+                <div class="alternador-modo" id="alternador-modo-envio" style="margin-bottom:14px;">
+                  <button type="button" class="chip ativo" data-modo-envio="resend">Automático (Resend)</button>
+                  <button type="button" class="chip" data-modo-envio="rascunho">Rascunho (sem Resend)</button>
+                </div>
+                <div id="bloco-envio-resend">
+                  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+                    <button type="button" class="btn btn-contorno" id="botao-enviar-teste-disparo">Enviar teste pra mim</button>
+                    <button type="button" class="btn btn-laranja" id="botao-disparar">Disparar</button>
+                  </div>
+                  <div id="barra-progresso-disparo" class="oculto">
+                    <div class="barra-progresso" style="width:100%;height:10px;margin-bottom:6px;"><span id="barra-progresso-disparo-interna" style="width:0%;"></span></div>
+                    <p class="texto-fraco" id="texto-progresso-disparo"></p>
+                  </div>
+                  <div id="resumo-final-disparo"></div>
+                </div>
+                <div id="bloco-envio-rascunho" class="oculto">
+                  <p class="texto-fraco" style="margin-bottom:12px;">Sem Resend configurado (ou enquanto seu domínio não está verificado), monte a fila de rascunhos: copie o texto ou abra direto no Gmail, um por vez.</p>
+                  <button type="button" class="btn btn-laranja" id="botao-montar-fila-rascunho" style="margin-bottom:14px;">Montar fila de rascunhos</button>
+                  <div id="fila-rascunho-disparo"></div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="disparo-palco">
+              <div class="disparo-palco-topo">
+                <span class="texto-fraco">Prévia</span>
+                <button type="button" class="btn btn-contorno btn-pequeno" id="botao-preview-tela-cheia">Ver em tela cheia</button>
+              </div>
+              <div class="disparo-janela-email" id="disparo-janela-email"></div>
+              <p class="texto-fraco" style="margin-top:12px;">Lembre de mandar o teste pra você mesma e abrir no celular antes de disparar.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="cartao" style="margin-top:20px;">
+          <div class="campo-topo" style="margin-bottom:12px;">
+            <h3 class="titulo-bloco-disparo" style="margin-bottom:0;">Histórico de envios</h3>
+            <span style="flex:1"></span>
+            <input class="campo-busca" id="busca-historico-disparo" type="text" placeholder="Buscar por e-mail" style="max-width:260px;">
+          </div>
+          <div class="tabela-wrap">
+            <table>
+              <thead><tr><th>E-mail</th><th>Assunto</th><th>Quando</th><th>Status</th></tr></thead>
+              <tbody id="corpo-historico-disparo"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- modal de tela cheia da prévia do e-mail -->
+      <div class="modal-fundo oculto" id="modal-preview-fundo"></div>
+      <div class="modal-caixa oculto" id="modal-preview-cheio" style="max-width:640px;">
+        <button class="modal-fechar-x" id="modal-preview-fechar" type="button" aria-label="Fechar">✕</button>
+        <div id="disparo-janela-email-grande"></div>
+      </div>
 
       <!-- 4. CALENDÁRIO -->
       <section class="painel" id="painel-calendario">
@@ -870,6 +1106,8 @@
     { id: "postar", label: "Postar" }
   ];
   var FUNIL_STATUS = ["Briefing", "Roteiro", "Aprovação Roteiro", "Gravação", "Edição", "Aprovado", "Entregue"];
+  var EMAIL_LOGADO = "";
+  var TAMANHO_LOTE_DISPARO = 100;
   var DIAS_SEMANA = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
   var MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
 
@@ -881,6 +1119,19 @@
     marcas: [],
     trabalhadas: [],
     prospeccao: [],
+    emailEnvios: [],
+    emailOptout: [],
+    disparo: {
+      destino: "selecionadas",
+      modoComposicao: "texto",
+      modoEnvio: "resend",
+      assunto: "",
+      corpoTexto: "",
+      corpoHtml: "",
+      botaoTexto: "",
+      botaoLink: "",
+      filaRascunho: []
+    },
     calendario: [],
     campanhas: [],
     roteiros: [],
@@ -1005,6 +1256,7 @@
       return;
     }
     document.getElementById("rodape-email").textContent = sessao.user.email || "";
+    EMAIL_LOGADO = sessao.user.email || "";
     document.getElementById("tela-carregando").hidden = true;
     document.getElementById("app").hidden = false;
     iniciarPainel();
@@ -1031,6 +1283,7 @@
     portfolio: "Portfólio",
     marcas: "Marcas",
     "marcas-trabalhadas": "Marcas trabalhadas",
+    "base-prospeccao": "Base de prospecção",
     prospeccao: "Prospecção",
     calendario: "Calendário",
     campanhas: "Campanhas",
@@ -1047,6 +1300,7 @@
     });
     document.getElementById("titulo-pagina").textContent = TITULOS_ABA[nome] || "";
     fecharGaveta();
+    if (nome === "prospeccao" && typeof renderizarDisparo === "function") renderizarDisparo();
   }
 
   function abrirGaveta() {
@@ -1240,20 +1494,24 @@
       carregarTabela("campanhas", { campo: "prazo", asc: true }).then(function (dados) { Estado.campanhas = dados; }).catch(function (erro) { avisarTabelaFaltando("campanhas", erro); }),
       carregarTabela("roteiros", { campo: "atualizado_em", asc: false }).then(function (dados) { Estado.roteiros = dados; }).catch(function (erro) { avisarTabelaFaltando("roteiros", erro); }),
       carregarTabela("visitas", { campo: "data", asc: false }).then(function (dados) { Estado.visitas = dados; }).catch(function (erro) { avisarTabelaFaltando("visitas", erro); }),
-      carregarMarcados().then(function (mapa) { Estado.marcados = mapa; }).catch(function (erro) { avisarTabelaFaltando("marcados", erro); })
+      carregarMarcados().then(function (mapa) { Estado.marcados = mapa; }).catch(function (erro) { avisarTabelaFaltando("marcados", erro); }),
+      carregarTabela("email_envios", { campo: "data", asc: false }).then(function (dados) { Estado.emailEnvios = dados; }).catch(function (erro) { avisarTabelaFaltando("email_envios", erro); }),
+      carregarTabela("email_optout", { campo: "data", asc: false }).then(function (dados) { Estado.emailOptout = dados; }).catch(function (erro) { avisarTabelaFaltando("email_optout", erro); })
     ];
     return Promise.allSettled(tarefas);
   }
 
   var tabelasAvisadas = {};
+  var TABELAS_DO_DISPARO_SQL = ["email_envios", "email_optout"];
   function avisarTabelaFaltando(nomeTabela, erro) {
     if (tabelasAvisadas[nomeTabela]) return;
     tabelasAvisadas[nomeTabela] = true;
     console.error("Falha ao carregar " + nomeTabela, erro);
+    var arquivo = TABELAS_DO_DISPARO_SQL.indexOf(nomeTabela) !== -1 ? "disparo.sql" : "banco.sql";
     var aviso = document.getElementById("aviso-geral");
     var div = document.createElement("div");
     div.className = "aviso aviso-erro";
-    div.textContent = "Não consegui carregar os dados de \"" + nomeTabela + "\". Confira se rodou o banco.sql no Supabase. O resto do painel continua funcionando normalmente.";
+    div.textContent = "Não consegui carregar os dados de \"" + nomeTabela + "\". Confira se rodou o " + arquivo + " no Supabase. O resto do painel continua funcionando normalmente.";
     aviso.appendChild(div);
   }
 
@@ -1266,6 +1524,7 @@
       renderizarMarcas();
       renderizarTrabalhadas();
       renderizarProspeccao();
+      renderizarDisparo();
       renderCalendario();
       renderizarCampanhas();
       renderizarRoteiros();
@@ -1655,13 +1914,19 @@
     var corpo = document.getElementById("corpo-tabela-marcas");
     var lista = marcasFiltradas();
     if (!lista.length) {
-      corpo.innerHTML = '<tr><td colspan="7" class="sem-registros">' + (Estado.marcas.length ? "Nenhuma marca encontrada com esse filtro." : 'Nenhuma marca cadastrada ainda. Clique em "Adicionar marca" para começar.') + '</td></tr>';
+      corpo.innerHTML = '<tr><td colspan="8" class="sem-registros">' + (Estado.marcas.length ? "Nenhuma marca encontrada com esse filtro." : 'Nenhuma marca cadastrada ainda. Clique em "Adicionar marca" para começar.') + '</td></tr>';
+      renderResumoSelecaoMarcas();
       return;
     }
     corpo.innerHTML = lista.map(function (m) {
       var botaoWhats = m.telefone ? '<a class="btn-icone" href="https://wa.me/55' + somenteDigitos(m.telefone) + '" target="_blank" rel="noopener" aria-label="WhatsApp" onclick="event.stopPropagation()">' + ICONE_WHATSAPP + '</a>' : "";
       var botaoInsta = m.instagram ? '<a class="btn-icone" href="https://instagram.com/' + escaparHtml(String(m.instagram).replace("@", "")) + '" target="_blank" rel="noopener" aria-label="Instagram" onclick="event.stopPropagation()">' + ICONE_INSTAGRAM + '</a>' : "";
+      var temEmail = !!(m.email && m.email.trim());
+      var checkboxSelecao = '<input type="checkbox" class="checkbox-selecionar-marca" data-id="' + m.id + '" onclick="event.stopPropagation()"' +
+        (temEmail ? "" : " disabled") + (m.selecionada ? " checked" : "") +
+        ' aria-label="' + (temEmail ? "Selecionar para disparo" : "Sem e-mail cadastrado") + '">';
       return '<tr data-id="' + m.id + '">' +
+        '<td>' + checkboxSelecao + '</td>' +
         '<td>' + escaparHtml(m.nome) + '</td>' +
         '<td>' + escaparHtml(m.instagram || "-") + '</td>' +
         '<td>' + escaparHtml(m.email || "-") + '</td>' +
@@ -1671,7 +1936,60 @@
         '<td class="celula-acoes">' + botaoWhats + botaoInsta + '<button class="btn-icone" data-acao="apagar-marca" data-id="' + m.id + '" type="button" aria-label="Apagar" onclick="event.stopPropagation()">' + ICONE_LIXO + '</button></td>' +
       '</tr>';
     }).join("");
+    renderResumoSelecaoMarcas();
   }
+
+  function renderResumoSelecaoMarcas() {
+    var qtd = Estado.marcas.filter(function (m) { return m.selecionada; }).length;
+    document.getElementById("resumo-selecao-marcas").textContent = qtd + (qtd === 1 ? " marca selecionada" : " marcas selecionadas");
+  }
+
+  function marcarSelecaoMarca(id, valor) {
+    var registro = Estado.marcas.filter(function (m) { return String(m.id) === String(id); })[0];
+    if (!registro) return;
+    var valorAnterior = !!registro.selecionada;
+    registro.selecionada = valor;
+    renderResumoSelecaoMarcas();
+    window.banco.from("marcas").update({ selecionada: valor }).eq("id", id).then(tratarResultado).catch(function (erro) {
+      registro.selecionada = valorAnterior;
+      renderTabelaMarcas();
+      mostrarToast("Não consegui salvar a seleção: " + erro.message);
+    });
+  }
+
+  document.getElementById("corpo-tabela-marcas").addEventListener("change", function (evento) {
+    var checkbox = evento.target.closest(".checkbox-selecionar-marca");
+    if (!checkbox) return;
+    marcarSelecaoMarca(checkbox.getAttribute("data-id"), checkbox.checked);
+  });
+
+  document.getElementById("botao-selecionar-filtradas").addEventListener("click", function () {
+    var idsParaMarcar = [];
+    marcasFiltradas().forEach(function (m) {
+      if (m.email && m.email.trim() && !m.selecionada) {
+        m.selecionada = true;
+        idsParaMarcar.push(m.id);
+      }
+    });
+    renderTabelaMarcas();
+    if (!idsParaMarcar.length) return;
+    window.banco.from("marcas").update({ selecionada: true }).in("id", idsParaMarcar).then(tratarResultado).catch(function (erro) {
+      mostrarToast("Não consegui salvar a seleção: " + erro.message);
+    });
+  });
+
+  function limparSelecaoMarcasTudo() {
+    var idsParaLimpar = [];
+    Estado.marcas.forEach(function (m) {
+      if (m.selecionada) { m.selecionada = false; idsParaLimpar.push(m.id); }
+    });
+    renderTabelaMarcas();
+    if (!idsParaLimpar.length) return;
+    window.banco.from("marcas").update({ selecionada: false }).in("id", idsParaLimpar).then(tratarResultado).catch(function (erro) {
+      mostrarToast("Não consegui limpar a seleção: " + erro.message);
+    });
+  }
+  document.getElementById("botao-limpar-selecao").addEventListener("click", limparSelecaoMarcasTudo);
 
   document.getElementById("botao-add-marca").addEventListener("click", function () { abrirModalMarca(null); });
   document.getElementById("busca-marcas").addEventListener("input", function (evento) {
@@ -2268,6 +2586,502 @@
   document.getElementById("botao-importar-prospeccao").addEventListener("click", abrirModalImportar);
   document.getElementById("modal-importar-fechar").addEventListener("click", fecharModalImportar);
   document.getElementById("modal-importar-fundo").addEventListener("click", fecharModalImportar);
+
+  /* =========================================================
+     3c. PROSPECÇÃO (disparo de e-mail em massa)
+  ========================================================= */
+  var FRASES_SITUACAO_DISPARO = {
+    lead: "Só os leads",
+    conversando: "Só quem está conversando",
+    cliente: "Só quem já é cliente",
+    parada: "Só as paradas"
+  };
+  var COR_LINK_EMAIL = "#c1663f";
+  var EMAIL_TEMPLATE_ABERTURA =
+    '<!doctype html><html><body style="margin:0;padding:0;background:#f4f4f4;font-family:Arial,Helvetica,sans-serif;">' +
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:24px 16px;">' +
+    '<table role="presentation" width="560" style="max-width:560px;width:100%;background:#ffffff;border-radius:12px;" cellpadding="0" cellspacing="0"><tr><td style="padding:32px 28px;color:#2a2a2a;font-size:15px;line-height:1.6;">';
+  var EMAIL_TEMPLATE_RODAPE =
+    '<p style="font-size:12px;color:#999999;margin-top:36px;border-top:1px solid #eeeeee;padding-top:16px;">Se não quiser mais receber e-mails, é só responder este e-mail com a palavra <strong>SAIR</strong>.</p>';
+  var EMAIL_TEMPLATE_FECHAMENTO = '</td></tr></table></td></tr></table></body></html>';
+
+  function primeiroNomeDe(texto) {
+    return String(texto || "").trim().split(/\s+/)[0] || texto || "";
+  }
+
+  function substituirPlaceholders(texto, marca) {
+    var primeiroNome = primeiroNomeDe(marca);
+    return String(texto || "")
+      .replace(/\{\{nome\}\}/g, primeiroNome)
+      .replace(/\{\{marca\}\}/g, marca || "");
+  }
+
+  function textoParaHtmlComLinks(texto) {
+    var escapado = escaparHtml(texto || "").replace(/\n/g, "<br>");
+    return escapado.replace(/(https?:\/\/[^\s<]+)/g, function (url) {
+      return '<a href="' + url + '" style="color:' + COR_LINK_EMAIL + ';">' + url + '</a>';
+    });
+  }
+
+  function montarHtmlModoTexto(corpoTexto, botaoTexto, botaoLink) {
+    var corpoHtmlInterno = textoParaHtmlComLinks(corpoTexto);
+    var botaoHtml = "";
+    if (botaoTexto && botaoTexto.trim() && botaoLink && botaoLink.trim()) {
+      botaoHtml = '<div style="margin:28px 0;"><a href="' + escaparHtml(botaoLink.trim()) + '" style="background:' + COR_LINK_EMAIL + ';color:#ffffff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:700;display:inline-block;">' + escaparHtml(botaoTexto.trim()) + '</a></div>';
+    }
+    return EMAIL_TEMPLATE_ABERTURA + corpoHtmlInterno + botaoHtml + EMAIL_TEMPLATE_RODAPE + EMAIL_TEMPLATE_FECHAMENTO;
+  }
+
+  function montarCorpoHtmlAtual() {
+    if (Estado.disparo.modoComposicao === "html") return Estado.disparo.corpoHtml;
+    return montarHtmlModoTexto(Estado.disparo.corpoTexto, Estado.disparo.botaoTexto, Estado.disparo.botaoLink);
+  }
+
+  function corpoAtualPreenchido() {
+    return Estado.disparo.modoComposicao === "html"
+      ? Estado.disparo.corpoHtml.trim() !== ""
+      : Estado.disparo.corpoTexto.trim() !== "";
+  }
+
+  function marcasComEmailDisparo() {
+    return Estado.marcas.filter(function (m) { return m.email && m.email.trim(); });
+  }
+
+  function opcoesDestinoDisparo() {
+    var opcoes = [];
+    opcoes.push({ valor: "selecionadas", label: "Só as marcas selecionadas (" + Estado.marcas.filter(function (m) { return m.selecionada && m.email && m.email.trim(); }).length + ")" });
+    opcoes.push({ valor: "teste", label: "Só pra mim (teste)" });
+    opcoes.push({ valor: "todas_com_email", label: "Todas as marcas com e-mail (" + marcasComEmailDisparo().length + ")" });
+    var situacoesVistas = {};
+    Estado.marcas.forEach(function (m) { if (m.situacao) situacoesVistas[m.situacao] = true; });
+    Object.keys(situacoesVistas).forEach(function (s) {
+      var qtd = Estado.marcas.filter(function (m) { return m.situacao === s && m.email && m.email.trim(); }).length;
+      var frase = FRASES_SITUACAO_DISPARO[s] || ("Só situação: " + rotuloSituacao(s));
+      opcoes.push({ valor: "situacao:" + s, label: frase + " (" + qtd + ")" });
+    });
+    return opcoes;
+  }
+
+  function labelDestinoAtual() {
+    var achado = opcoesDestinoDisparo().filter(function (o) { return o.valor === Estado.disparo.destino; })[0];
+    return achado ? achado.label : Estado.disparo.destino;
+  }
+
+  function renderSelectDestinoDisparo() {
+    var select = document.getElementById("select-destino-disparo");
+    var opcoes = opcoesDestinoDisparo();
+    if (!opcoes.some(function (o) { return o.valor === Estado.disparo.destino; })) Estado.disparo.destino = "selecionadas";
+    select.innerHTML = opcoes.map(function (o) { return '<option value="' + o.valor + '">' + escaparHtml(o.label) + '</option>'; }).join("");
+    select.value = Estado.disparo.destino;
+  }
+
+  function destinatariosSelecionados() {
+    if (Estado.disparo.destino === "teste") {
+      return { lista: [{ id: null, nome: "Você", email: EMAIL_LOGADO }], foraSemEmail: 0 };
+    }
+    var base;
+    if (Estado.disparo.destino === "selecionadas") base = Estado.marcas.filter(function (m) { return m.selecionada; });
+    else if (Estado.disparo.destino === "todas_com_email") base = Estado.marcas.slice();
+    else if (Estado.disparo.destino.indexOf("situacao:") === 0) {
+      var s = Estado.disparo.destino.slice(9);
+      base = Estado.marcas.filter(function (m) { return m.situacao === s; });
+    } else base = [];
+    var comEmail = base.filter(function (m) { return m.email && m.email.trim(); });
+    var foraSemEmail = base.length - comEmail.length;
+    var vistos = {};
+    var final = [];
+    comEmail.forEach(function (m) {
+      var e = m.email.trim().toLowerCase();
+      if (!vistos[e]) { vistos[e] = true; final.push(m); }
+    });
+    return { lista: final, foraSemEmail: foraSemEmail };
+  }
+
+  function renderResumoDestinatarios() {
+    var el = document.getElementById("resumo-destinatarios-disparo");
+    if (Estado.disparo.destino === "teste") {
+      el.textContent = "Vai só para o seu e-mail de login (" + EMAIL_LOGADO + ").";
+      return;
+    }
+    var info = destinatariosSelecionados();
+    var texto = info.lista.length + (info.lista.length === 1 ? " marca nessa seleção" : " marcas nessa seleção");
+    if (info.foraSemEmail > 0) texto += " · " + info.foraSemEmail + (info.foraSemEmail === 1 ? " ficou de fora por não ter e-mail" : " ficaram de fora por não ter e-mail");
+    if (Estado.disparo.destino === "selecionadas" && info.lista.length === 0) texto += ". Vá na aba Marcas e selecione pelo menos uma.";
+    el.textContent = texto;
+  }
+
+  function renderMetricasDisparo() {
+    var container = document.getElementById("metricas-disparo");
+    var comEmail = marcasComEmailDisparo().length;
+    var aEnviar = Estado.marcas.filter(function (m) { return m.email && m.email.trim() && !m.ultimo_email_em; }).length;
+    var jaReceberam = Estado.marcas.filter(function (m) { return !!m.ultimo_email_em; }).length;
+    var falhas = tabelasAvisadas.email_envios ? "-" : Estado.emailEnvios.filter(function (e) { return e.status === "erro"; }).length;
+    var descadastrados = tabelasAvisadas.email_optout ? "-" : Estado.emailOptout.length;
+    var itens = [
+      { valor: comEmail, rotulo: "marcas com e-mail", cor: "var(--laranja)" },
+      { valor: aEnviar, rotulo: "a enviar", cor: "var(--verde)" },
+      { valor: jaReceberam, rotulo: "já receberam", cor: "var(--ambar)" },
+      { valor: falhas, rotulo: "falhas", cor: "var(--azul)" },
+      { valor: descadastrados, rotulo: "descadastrados", cor: "var(--vermelho)" }
+    ];
+    container.innerHTML = itens.map(function (item) {
+      return '<div class="metrica-mini" style="border-left:4px solid ' + item.cor + ';"><strong style="color:' + item.cor + ';">' + item.valor + '</strong><span>' + item.rotulo + '</span></div>';
+    }).join("");
+  }
+
+  function renderPreviewDisparo() {
+    var assuntoExemplo = substituirPlaceholders(Estado.disparo.assunto || "(sem assunto ainda)", "Marca Exemplo");
+    var corpoComExemplo = substituirPlaceholders(montarCorpoHtmlAtual(), "Marca Exemplo");
+    var htmlJanela =
+      '<div class="disparo-janela-cabecalho">' +
+        '<div class="disparo-janela-avatar">' + escaparHtml((EMAIL_LOGADO || "M").charAt(0).toUpperCase()) + '</div>' +
+        '<div class="disparo-janela-assunto">' + escaparHtml(assuntoExemplo) + '</div>' +
+        '<div class="disparo-janela-remetente">Myuka Oliveira · ' + escaparHtml(EMAIL_LOGADO || "") + ' · para você</div>' +
+      '</div>' +
+      '<div class="disparo-janela-corpo"><iframe srcdoc="' + escaparHtml(corpoComExemplo) + '" style="width:100%;border:0;min-height:420px;"></iframe></div>';
+    document.getElementById("disparo-janela-email").innerHTML = htmlJanela;
+  }
+
+  function renderHistoricoDisparo() {
+    var corpo = document.getElementById("corpo-historico-disparo");
+    var termo = (document.getElementById("busca-historico-disparo").value || "").trim().toLowerCase();
+    var lista = Estado.emailEnvios.filter(function (e) { return !termo || String(e.email || "").toLowerCase().indexOf(termo) !== -1; });
+    if (!lista.length) {
+      corpo.innerHTML = '<tr><td colspan="4" class="sem-registros">' + (Estado.emailEnvios.length ? "Nenhum envio encontrado com essa busca." : "Nenhum e-mail enviado ainda.") + '</td></tr>';
+      return;
+    }
+    corpo.innerHTML = lista.map(function (e) {
+      var pilula = e.status === "ok"
+        ? '<span class="pilula pilula-contorno-verde">Ok</span>'
+        : '<span class="pilula pilula-contorno-vermelho">Erro' + (e.erro ? (": " + escaparHtml(String(e.erro).slice(0, 60))) : "") + '</span>';
+      return '<tr><td>' + escaparHtml(e.email) + '</td><td>' + escaparHtml(e.assunto) + '</td><td>' + formatarDataHoraCurta(e.data) + '</td><td>' + pilula + '</td></tr>';
+    }).join("");
+  }
+
+  function renderizarDisparo() {
+    document.getElementById("capa-disparo-total-enviados").textContent =
+      tabelasAvisadas.email_envios ? "-" : String(Estado.emailEnvios.filter(function (e) { return e.status === "ok"; }).length);
+    renderMetricasDisparo();
+
+    var semNenhumEmail = Estado.marcas.length > 0 && marcasComEmailDisparo().length === 0;
+    var elConteudo = document.getElementById("disparo-conteudo");
+    var elAviso = document.getElementById("aviso-disparo");
+    if (semNenhumEmail) {
+      elConteudo.classList.add("oculto");
+      elAviso.innerHTML = '<div class="aviso aviso-info">Sua base ainda está sem nenhuma marca com e-mail cadastrado. Cadastre ou importe as marcas primeiro, na aba Marcas.<br><button class="btn btn-laranja btn-pequeno" id="botao-ir-para-marcas-disparo" style="margin-top:10px;">Ir para a aba Marcas</button></div>';
+      var botaoIr = document.getElementById("botao-ir-para-marcas-disparo");
+      if (botaoIr) botaoIr.addEventListener("click", function () { trocarAba("marcas"); });
+      return;
+    }
+    elConteudo.classList.remove("oculto");
+    elAviso.innerHTML = "";
+    renderSelectDestinoDisparo();
+    renderResumoDestinatarios();
+    renderPreviewDisparo();
+    renderHistoricoDisparo();
+  }
+
+  /* ---------- alternadores de modo ---------- */
+  document.getElementById("alternador-modo-composicao").addEventListener("click", function (evento) {
+    var botao = evento.target.closest(".chip");
+    if (!botao) return;
+    Estado.disparo.modoComposicao = botao.getAttribute("data-modo");
+    document.querySelectorAll("#alternador-modo-composicao .chip").forEach(function (c) { c.classList.toggle("ativo", c === botao); });
+    document.getElementById("bloco-modo-texto").classList.toggle("oculto", Estado.disparo.modoComposicao !== "texto");
+    document.getElementById("bloco-modo-html").classList.toggle("oculto", Estado.disparo.modoComposicao !== "html");
+    renderPreviewDisparo();
+  });
+
+  document.getElementById("alternador-modo-envio").addEventListener("click", function (evento) {
+    var botao = evento.target.closest(".chip");
+    if (!botao) return;
+    Estado.disparo.modoEnvio = botao.getAttribute("data-modo-envio");
+    document.querySelectorAll("#alternador-modo-envio .chip").forEach(function (c) { c.classList.toggle("ativo", c === botao); });
+    document.getElementById("bloco-envio-resend").classList.toggle("oculto", Estado.disparo.modoEnvio !== "resend");
+    document.getElementById("bloco-envio-rascunho").classList.toggle("oculto", Estado.disparo.modoEnvio !== "rascunho");
+  });
+
+  /* ---------- campos do formulário ---------- */
+  document.getElementById("select-destino-disparo").addEventListener("change", function (evento) {
+    Estado.disparo.destino = evento.target.value;
+    renderResumoDestinatarios();
+  });
+  document.getElementById("campo-assunto-disparo").addEventListener("input", function (evento) {
+    Estado.disparo.assunto = evento.target.value;
+    renderPreviewDisparo();
+  });
+  document.getElementById("campo-corpo-texto-disparo").addEventListener("input", function (evento) {
+    Estado.disparo.corpoTexto = evento.target.value;
+    renderPreviewDisparo();
+  });
+  document.getElementById("campo-corpo-html-disparo").addEventListener("input", function (evento) {
+    Estado.disparo.corpoHtml = evento.target.value;
+    renderPreviewDisparo();
+  });
+  document.getElementById("campo-botao-texto-disparo").addEventListener("input", function (evento) {
+    Estado.disparo.botaoTexto = evento.target.value;
+    renderPreviewDisparo();
+  });
+  document.getElementById("campo-botao-link-disparo").addEventListener("input", function (evento) {
+    Estado.disparo.botaoLink = evento.target.value;
+    renderPreviewDisparo();
+  });
+  document.getElementById("busca-historico-disparo").addEventListener("input", renderHistoricoDisparo);
+
+  document.getElementById("botao-comecar-modelo-html").addEventListener("click", function () {
+    var htmlModelo = montarHtmlModoTexto(Estado.disparo.corpoTexto, Estado.disparo.botaoTexto, Estado.disparo.botaoLink);
+    document.getElementById("campo-corpo-html-disparo").value = htmlModelo;
+    Estado.disparo.corpoHtml = htmlModelo;
+    document.querySelector('#alternador-modo-composicao .chip[data-modo="html"]').click();
+  });
+
+  /* ---------- prévia em tela cheia ---------- */
+  document.getElementById("botao-preview-tela-cheia").addEventListener("click", function () {
+    document.getElementById("disparo-janela-email-grande").innerHTML = document.getElementById("disparo-janela-email").innerHTML;
+    document.getElementById("modal-preview-fundo").classList.remove("oculto");
+    document.getElementById("modal-preview-cheio").classList.remove("oculto");
+  });
+  function fecharPreviewTelaCheia() {
+    document.getElementById("modal-preview-fundo").classList.add("oculto");
+    document.getElementById("modal-preview-cheio").classList.add("oculto");
+  }
+  document.getElementById("modal-preview-fechar").addEventListener("click", fecharPreviewTelaCheia);
+  document.getElementById("modal-preview-fundo").addEventListener("click", fecharPreviewTelaCheia);
+
+  /* ---------- chamada da Edge Function ---------- */
+  function chamarFuncaoEnviarEmails(payload) {
+    return window.banco.auth.getSession().then(function (resultado) {
+      var sessao = resultado && resultado.data ? resultado.data.session : null;
+      if (!sessao) return Promise.reject(new Error("Sessão expirada. Atualize a página e faça login de novo."));
+      var url = window.BANCO_URL_PROJETO + "/functions/v1/enviar-emails";
+      return fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: "Bearer " + sessao.access_token },
+        body: JSON.stringify(payload)
+      }).then(function (resposta) {
+        return resposta.json().catch(function () { return {}; }).then(function (corpo) {
+          if (!resposta.ok) throw new Error(corpo && corpo.erro ? corpo.erro : "Falha ao chamar a função (" + resposta.status + ").");
+          return corpo;
+        });
+      });
+    });
+  }
+
+  function destinatariosParaPayload(lista) {
+    return lista.map(function (m) { return { id: m.id, email: m.email, nome: m.nome, marca: m.nome }; });
+  }
+
+  function dividirEmLotes(lista, tamanho) {
+    var lotes = [];
+    for (var i = 0; i < lista.length; i += tamanho) lotes.push(lista.slice(i, i + tamanho));
+    return lotes;
+  }
+
+  function atualizarProgressoDisparo(feitos, total) {
+    var porcento = total > 0 ? Math.round((feitos / total) * 100) : 0;
+    document.getElementById("barra-progresso-disparo-interna").style.width = porcento + "%";
+    document.getElementById("texto-progresso-disparo").textContent = feitos + " de " + total + " processados.";
+  }
+
+  function processarLotesDisparo(lotes, assunto, html, pularJaEnviados, indice, acumulado, totalGeral) {
+    indice = indice || 0;
+    acumulado = acumulado || { enviados: 0, falhas: 0, pulados: 0, cotaExcedida: false, faltando: 0 };
+    if (indice >= lotes.length || acumulado.cotaExcedida) return Promise.resolve(acumulado);
+    var lote = lotes[indice];
+    return chamarFuncaoEnviarEmails({
+      destinatarios: destinatariosParaPayload(lote),
+      assunto: assunto,
+      html: html,
+      pularQuemJaRecebeu: pularJaEnviados
+    }).then(function (resultado) {
+      acumulado.enviados += resultado.enviados || 0;
+      acumulado.falhas += resultado.falhas || 0;
+      acumulado.pulados += resultado.pulados || 0;
+      if (resultado.cotaExcedida) {
+        acumulado.cotaExcedida = true;
+        var faltandoNoLote = resultado.faltando || 0;
+        var restanteOutrosLotes = 0;
+        for (var i = indice + 1; i < lotes.length; i++) restanteOutrosLotes += lotes[i].length;
+        acumulado.faltando = faltandoNoLote + restanteOutrosLotes;
+      }
+      var processados = Math.min((indice + 1) * TAMANHO_LOTE_DISPARO, totalGeral);
+      atualizarProgressoDisparo(processados, totalGeral);
+      return processarLotesDisparo(lotes, assunto, html, pularJaEnviados, indice + 1, acumulado, totalGeral);
+    });
+  }
+
+  function mostrarResumoFinalDisparo(resultado) {
+    var el = document.getElementById("resumo-final-disparo");
+    var html = '<p style="margin-top:12px;"><strong>' + resultado.enviados + '</strong> enviado(s) · <strong>' + resultado.falhas + '</strong> falha(s) · <strong>' + resultado.pulados + '</strong> pulado(s).</p>';
+    if (resultado.cotaExcedida) {
+      html += '<div class="aviso aviso-info">A cota diária do Resend acabou por hoje. Ficaram ' + resultado.faltando + ' marca(s) sem receber. Volte amanhã, cole o mesmo assunto e o mesmo texto, deixe marcada a caixinha "Pular quem já recebeu este mesmo assunto" e dispare de novo: ele manda só para quem ainda não recebeu.</div>';
+    }
+    el.innerHTML = html;
+  }
+
+  document.getElementById("botao-enviar-teste-disparo").addEventListener("click", function () {
+    var assunto = Estado.disparo.assunto.trim();
+    if (!assunto || !corpoAtualPreenchido()) { mostrarToast("Preencha o assunto e o texto do e-mail antes de testar."); return; }
+    if (!EMAIL_LOGADO) { mostrarToast("Não encontrei o seu e-mail de login."); return; }
+    var botao = document.getElementById("botao-enviar-teste-disparo");
+    botao.disabled = true;
+    chamarFuncaoEnviarEmails({
+      destinatarios: [{ id: null, email: EMAIL_LOGADO, nome: "Você", marca: "Teste" }],
+      assunto: assunto,
+      html: montarCorpoHtmlAtual(),
+      pularQuemJaRecebeu: false
+    }).then(function (resultado) {
+      botao.disabled = false;
+      if (resultado.enviados > 0) mostrarToast("Teste enviado para " + EMAIL_LOGADO + ". Confira sua caixa de entrada.");
+      else mostrarToast("Não consegui enviar o teste. Confira a chave do Resend no Supabase.");
+    }).catch(function (erro) {
+      botao.disabled = false;
+      mostrarToast("Não consegui enviar o teste: " + erro.message);
+    });
+  });
+
+  document.getElementById("botao-disparar").addEventListener("click", function () {
+    var assunto = Estado.disparo.assunto.trim();
+    var htmlFinal = montarCorpoHtmlAtual();
+    if (!assunto || !corpoAtualPreenchido()) { mostrarToast("Preencha o assunto e o texto do e-mail antes de disparar."); return; }
+
+    var info = destinatariosSelecionados();
+    if (Estado.disparo.destino === "selecionadas" && info.lista.length === 0) {
+      mostrarToast("Nenhuma marca selecionada. Selecione pelo menos uma na aba Marcas.");
+      trocarAba("marcas");
+      return;
+    }
+    if (info.lista.length === 0) { mostrarToast("Essa seleção está vazia, não há para quem mandar."); return; }
+
+    if (Estado.disparo.modoComposicao === "html" && htmlFinal.toUpperCase().indexOf("SAIR") === -1) {
+      if (!confirm("O rodapé de descadastro (SAIR) não foi encontrado no HTML. Quer disparar mesmo assim?")) return;
+    }
+    if (!confirm('Vai para ' + info.lista.length + ' marca(s), da lista "' + labelDestinoAtual() + '". Não dá para desfazer. Quer continuar?')) return;
+
+    var lotes = dividirEmLotes(info.lista, TAMANHO_LOTE_DISPARO);
+    var totalGeral = info.lista.length;
+    var pularJaEnviados = document.getElementById("checkbox-pular-ja-enviados").checked;
+    var eraSelecionadas = Estado.disparo.destino === "selecionadas";
+
+    document.getElementById("barra-progresso-disparo").classList.remove("oculto");
+    atualizarProgressoDisparo(0, totalGeral);
+    document.getElementById("resumo-final-disparo").innerHTML = "";
+    document.getElementById("botao-disparar").disabled = true;
+
+    processarLotesDisparo(lotes, assunto, htmlFinal, pularJaEnviados, 0, null, totalGeral).then(function (resultadoFinal) {
+      document.getElementById("botao-disparar").disabled = false;
+      mostrarResumoFinalDisparo(resultadoFinal);
+      return recarregarESetar("marcas", { campo: "criado_em", asc: false }, "marcas").then(function () {
+        return carregarTabela("email_envios", { campo: "data", asc: false }).then(function (dados) { Estado.emailEnvios = dados; }).catch(function () {});
+      }).then(function () {
+        renderTabelaMarcas();
+        renderizarDisparo();
+        if (eraSelecionadas && resultadoFinal.enviados > 0) {
+          if (confirm("Quer limpar a seleção de marcas agora?")) limparSelecaoMarcasTudo();
+        }
+      });
+    }).catch(function (erro) {
+      document.getElementById("botao-disparar").disabled = false;
+      mostrarToast("Não consegui disparar: " + erro.message);
+    });
+  });
+
+  /* ---------- modo rascunho (sem Resend) ---------- */
+  function removerTagsHtml(html) {
+    return String(html || "").replace(/<[^>]+>/g, " ").replace(/\s+\n/g, "\n").replace(/[ \t]+/g, " ").trim();
+  }
+
+  function corpoTextoSimplesPara(marca) {
+    var base = Estado.disparo.modoComposicao === "texto" ? Estado.disparo.corpoTexto : removerTagsHtml(Estado.disparo.corpoHtml);
+    var texto = substituirPlaceholders(base, marca.nome);
+    if (Estado.disparo.modoComposicao === "texto" && Estado.disparo.botaoTexto && Estado.disparo.botaoLink) {
+      texto += "\n\n" + Estado.disparo.botaoTexto + ": " + Estado.disparo.botaoLink;
+    }
+    texto += "\n\n---\nSe não quiser mais receber e-mails, é só responder com SAIR.";
+    return texto;
+  }
+
+  function jaRecebeuEsteAssuntoLocal(email, assunto) {
+    var emailBaixo = String(email || "").trim().toLowerCase();
+    return Estado.emailEnvios.some(function (e) { return e.status === "ok" && String(e.assunto) === assunto && String(e.email || "").toLowerCase() === emailBaixo; });
+  }
+
+  function renderFilaRascunho() {
+    var container = document.getElementById("fila-rascunho-disparo");
+    if (!Estado.disparo.filaRascunho.length) {
+      container.innerHTML = '<p class="mensagem-vazia">A fila está vazia. Monte a fila acima para começar a copiar e enviar um por um.</p>';
+      return;
+    }
+    var assunto = Estado.disparo.assunto.trim();
+    container.innerHTML = Estado.disparo.filaRascunho.map(function (marca) {
+      var assuntoSub = substituirPlaceholders(assunto, marca.nome);
+      var corpoSub = corpoTextoSimplesPara(marca);
+      var linkGmail = "https://mail.google.com/mail/?view=cm&fs=1&to=" + encodeURIComponent(marca.email) +
+        "&su=" + encodeURIComponent(assuntoSub) + "&body=" + encodeURIComponent(corpoSub);
+      return '<div class="item-fila-rascunho" data-id="' + marca.id + '">' +
+        '<strong>' + escaparHtml(marca.nome) + ' · ' + escaparHtml(marca.email) + '</strong>' +
+        '<p>' + escaparHtml(corpoSub) + '</p>' +
+        '<div class="celula-acoes" style="flex-wrap:wrap;">' +
+          '<button type="button" class="btn btn-contorno btn-pequeno" data-acao="copiar-rascunho" data-id="' + marca.id + '">Copiar texto</button>' +
+          '<a class="btn btn-contorno btn-pequeno" href="' + linkGmail + '" target="_blank" rel="noopener">Abrir no Gmail</a>' +
+          '<button type="button" class="btn btn-laranja btn-pequeno" data-acao="marcar-enviada-rascunho" data-id="' + marca.id + '">Marcar como enviada</button>' +
+        '</div>' +
+      '</div>';
+    }).join("");
+  }
+
+  document.getElementById("botao-montar-fila-rascunho").addEventListener("click", function () {
+    var assunto = Estado.disparo.assunto.trim();
+    if (!assunto || !corpoAtualPreenchido()) { mostrarToast("Preencha o assunto e o texto do e-mail antes de montar a fila."); return; }
+    var info = destinatariosSelecionados();
+    if (Estado.disparo.destino === "selecionadas" && info.lista.length === 0) {
+      mostrarToast("Nenhuma marca selecionada. Selecione pelo menos uma na aba Marcas.");
+      trocarAba("marcas");
+      return;
+    }
+    var pularJaEnviados = document.getElementById("checkbox-pular-ja-enviados").checked;
+    var lista = info.lista.filter(function (m) { return m.email && (!pularJaEnviados || !jaRecebeuEsteAssuntoLocal(m.email, assunto)); });
+    Estado.disparo.filaRascunho = lista;
+    renderFilaRascunho();
+    mostrarToast(lista.length + " marca(s) na fila.");
+  });
+
+  document.getElementById("fila-rascunho-disparo").addEventListener("click", function (evento) {
+    var id = null;
+    var botaoCopiar = evento.target.closest('[data-acao="copiar-rascunho"]');
+    var botaoMarcar = evento.target.closest('[data-acao="marcar-enviada-rascunho"]');
+    if (botaoCopiar) {
+      id = botaoCopiar.getAttribute("data-id");
+      var marca1 = Estado.disparo.filaRascunho.filter(function (m) { return String(m.id) === String(id); })[0];
+      if (!marca1) return;
+      var texto = corpoTextoSimplesPara(marca1);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(texto).then(function () { mostrarToast("Texto copiado."); }).catch(function () { mostrarToast("Não consegui copiar."); });
+      } else {
+        mostrarToast("Copie manualmente: seu navegador não permite copiar automático aqui.");
+      }
+      return;
+    }
+    if (botaoMarcar) {
+      id = botaoMarcar.getAttribute("data-id");
+      var marca2 = Estado.disparo.filaRascunho.filter(function (m) { return String(m.id) === String(id); })[0];
+      if (!marca2) return;
+      var assunto2 = Estado.disparo.assunto.trim();
+      Estado.disparo.filaRascunho = Estado.disparo.filaRascunho.filter(function (m) { return String(m.id) !== String(id); });
+      renderFilaRascunho();
+      window.banco.from("marcas").update({ ultimo_email_em: new Date().toISOString() }).eq("id", id).then(tratarResultado).then(function () {
+        return window.banco.from("email_envios").insert({ email: marca2.email, assunto: substituirPlaceholders(assunto2, marca2.nome), status: "ok" }).catch(function () {});
+      }).then(function () {
+        return recarregarESetar("marcas", { campo: "criado_em", asc: false }, "marcas");
+      }).then(function () {
+        renderTabelaMarcas();
+        renderMetricasDisparo();
+        mostrarToast("Marcada como enviada.");
+      }).catch(function (erro) {
+        mostrarToast("Não consegui marcar: " + erro.message);
+      });
+    }
+  });
 
   /* =========================================================
      4. CALENDÁRIO
