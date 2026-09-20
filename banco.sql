@@ -470,6 +470,56 @@ end $$;
 
 
 -- =============================================================
+-- BLOCO 14: TABELA "prospeccao"
+-- Sua base de prospecção: marcas que você ainda vai abordar ou já
+-- abordou por conta própria (diferente da tabela "marcas", que é
+-- o funil de vendas ligado ao formulário de contato do site). Só
+-- você, logada, consegue ler, criar, editar ou apagar aqui, não
+-- existe nenhuma exceção pública nessa tabela.
+-- =============================================================
+create table if not exists public.prospeccao (
+  id uuid primary key default gen_random_uuid(),
+  nome text not null,
+  site text,
+  instagram text,
+  seguidores integer,
+  email text,
+  whatsapp text,
+  pessoa_contato text,
+  nicho text,
+  origem text,
+  status text not null default 'a_enviar'
+    check (status in ('a_enviar', 'enviado', 'respondeu', 'proposta', 'fechado', 'sem_interesse')),
+  observacao text,
+  data date,
+  criado_em timestamptz not null default now()
+);
+
+alter table public.prospeccao enable row level security;
+
+drop policy if exists "dona le prospeccao" on public.prospeccao;
+create policy "dona le prospeccao" on public.prospeccao
+  for select
+  using ((auth.jwt() ->> 'email') = 'myukaoliveira@gmail.com');
+
+drop policy if exists "dona insere prospeccao" on public.prospeccao;
+create policy "dona insere prospeccao" on public.prospeccao
+  for insert
+  with check ((auth.jwt() ->> 'email') = 'myukaoliveira@gmail.com');
+
+drop policy if exists "dona edita prospeccao" on public.prospeccao;
+create policy "dona edita prospeccao" on public.prospeccao
+  for update
+  using ((auth.jwt() ->> 'email') = 'myukaoliveira@gmail.com')
+  with check ((auth.jwt() ->> 'email') = 'myukaoliveira@gmail.com');
+
+drop policy if exists "dona apaga prospeccao" on public.prospeccao;
+create policy "dona apaga prospeccao" on public.prospeccao
+  for delete
+  using ((auth.jwt() ->> 'email') = 'myukaoliveira@gmail.com');
+
+
+-- =============================================================
 -- FIM DO SCRIPT
 -- Depois de rodar com sucesso, falta um passo fora daqui: criar
 -- o seu usuário de login (Authentication > Users > Add user, no
