@@ -267,20 +267,8 @@
 
   /* ============ CAPA / HERO ============ */
   .secao-capa{
-    padding-top: var(--topo-altura);
+    padding-top: calc(var(--topo-altura) + 56px);
     padding-bottom: 0;
-  }
-  .capa-foto-banner{
-    width: 100%;
-    background: var(--plastico-2);
-  }
-  .capa-foto-banner img{
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-  .capa-conteudo-abaixo{
-    padding-top: 48px;
   }
   .capa-grade{
     display: grid;
@@ -1201,19 +1189,25 @@
 
   <!-- 1. CAPA -->
   <section id="capa" class="secao-capa" aria-label="Apresentação">
-    <!-- Foto de capa real. Para trocar por outra foto, é só substituir o
-         arquivo imagens/capa-myuka.jpg por uma nova imagem (mesmo nome
-         ou ajuste o src abaixo). -->
-    <div class="capa-foto-banner">
-      <img src="imagens/capa-myuka.jpg" alt="Myuka Oliveira, UGC Creator e Influencer, com o nome dela e a chamada &quot;foco em gerar conexão&quot;">
-    </div>
-    <div class="container capa-conteudo-abaixo">
-      <h1 class="apenas-leitor">Myuka Oliveira</h1>
-      <span class="tagline-etiqueta">UGC Creator · Influencer</span>
-      <p class="capa-frase">Eu crio vídeos e fotos autênticos que fazem a sua marca parar o scroll e vender, sem parecer comercial.</p>
-      <div class="capa-botoes">
-        <a class="btn btn-laranja" href="#contato">Falar comigo</a>
-        <a class="btn btn-contorno" href="#trabalhos">Ver os trabalhos</a>
+    <div class="container">
+      <div class="capa-grade">
+        <div class="capa-texto">
+          <span class="tagline-etiqueta">UGC Creator · Influencer</span>
+          <h1 class="capa-titulo">Myuka Oliveira</h1>
+          <p class="capa-frase">Eu crio vídeos e fotos autênticos que fazem a sua marca parar o scroll e vender, sem parecer comercial.</p>
+          <div class="capa-botoes">
+            <a class="btn btn-laranja" href="#contato">Falar comigo</a>
+            <a class="btn btn-contorno" href="#trabalhos">Ver os trabalhos</a>
+          </div>
+        </div>
+
+        <!-- Espaço da foto de capa: troque o bloco .midia-placeholder abaixo por
+             <img src="imagens/sua-foto.jpg" alt="Myuka Oliveira"> quando a foto chegar -->
+        <div class="foto-capa-moldura">
+          <div class="foto-capa-area midia-placeholder" role="img" aria-label="Foto de Myuka Oliveira, formato retrato 4 por 5">
+            <span class="midia-legenda">foto da creator · 4:5</span>
+          </div>
+        </div>
       </div>
 
       <div class="faixa-marcas" aria-label="Marcas atendidas">
@@ -1438,8 +1432,8 @@
 
   // Áreas de atuação do letreiro logo abaixo da capa
   var areasAtuacao = [
-    "Mentoria", "Clube de Creators", "Clips", "TikTok Shop",
-    "UGC Creator", "Influencer", "Consultoria", "Palestras"
+    "Conteúdo lifestyle", "Conteúdo sem cara de propaganda", "Linguagem humanizada",
+    "Conversa com público-alvo", "Conteúdo para conversão", "Conteúdo para anúncio"
   ];
 
   // Os vídeos de destaque e os vídeos por nicho (seções 3 e 4) agora vêm do
