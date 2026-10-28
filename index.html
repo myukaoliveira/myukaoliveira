@@ -379,9 +379,13 @@
     width: 100%;
   }
   .foto-capa-area{
-    aspect-ratio: 4 / 5;
     border-radius: calc(var(--raio-g) - 8px);
     overflow: hidden;
+  }
+  .foto-capa-area img{
+    width: 100%;
+    height: auto;
+    display: block;
   }
 
   .faixa-marcas{
@@ -1201,11 +1205,12 @@
           </div>
         </div>
 
-        <!-- Espaço da foto de capa: troque o bloco .midia-placeholder abaixo por
-             <img src="imagens/sua-foto.jpg" alt="Myuka Oliveira"> quando a foto chegar -->
+        <!-- Foto real da capa. Para trocar, é só substituir o arquivo
+             imagens/foto-sobre-myuka.jpg por uma nova imagem (mesmo nome
+             ou ajuste o src abaixo). -->
         <div class="foto-capa-moldura">
-          <div class="foto-capa-area midia-placeholder" role="img" aria-label="Foto de Myuka Oliveira, formato retrato 4 por 5">
-            <span class="midia-legenda">foto da creator · 4:5</span>
+          <div class="foto-capa-area">
+            <img src="imagens/foto-sobre-myuka.jpg" alt="Myuka Oliveira sorrindo, de blazer branco e conjunto terracota">
           </div>
         </div>
       </div>
