@@ -118,6 +118,10 @@
     color: var(--rotulo);
     margin-bottom: 14px;
   }
+  .acento-titulo{
+    font-style: italic;
+    color: var(--laranja);
+  }
 
   .subtitulo-secao{
     max-width: 620px;
@@ -314,20 +318,40 @@
     gap: 16px;
     margin-bottom: 48px;
   }
-  .capa-numeros{
+
+  /* Faixa de números em destaque, logo abaixo do letreiro */
+  .secao-estatisticas{
+    padding: 40px 0;
+    border-bottom: 1px solid var(--linha);
+  }
+  .estatisticas-destaque{
     display: flex;
     flex-wrap: wrap;
-    gap: 36px;
+    justify-content: center;
+    gap: 16px;
   }
-  .capa-numeros div strong{
+  .estatisticas-destaque div{
+    flex: 1 1 180px;
+    text-align: center;
+    padding: 0 24px;
+    border-left: 1px solid var(--linha);
+  }
+  .estatisticas-destaque div:first-child{ border-left: none; }
+  .estatisticas-destaque strong{
     display: block;
-    font-size: clamp(1.6rem, 3vw, 2.1rem);
-    color: var(--rotulo);
+    font-family: var(--fonte-titulo);
+    font-size: clamp(1.8rem, 3.4vw, 2.5rem);
     font-weight: 900;
+    color: var(--laranja);
   }
-  .capa-numeros div span{
-    font-size: .88rem;
+  .estatisticas-destaque span{
+    font-size: .78rem;
     color: var(--texto-suave);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  @media (max-width: 640px){
+    .estatisticas-destaque div{ border-left: none; flex-basis: 45%; }
   }
 
   /* Moldura da foto de capa */
@@ -538,31 +562,22 @@
     margin-top: 6px;
   }
 
-  /* Bloco de números reaproveitado dentro do Sobre mim, mesmos dados do array "metricas" */
-  .sobre-numeros{
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-    margin: 8px 0 30px;
+  /* Pílulas-resumo no fim da bio (ex: "+200 marcas atendidas") */
+  .pilulas-resumo{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 4px 0 8px;
   }
-  .sobre-numeros div{
-    text-align: center;
+  .pilula-resumo{
+    display: inline-block;
     background: rgba(30,33,24,.05);
-    border: 1px solid rgba(30,33,24,.12);
-    border-radius: 14px;
-    padding: 16px 8px;
-  }
-  .sobre-numeros strong{
-    display: block;
-    font-size: clamp(1.4rem, 2.6vw, 1.8rem);
-    font-weight: 900;
-    color: var(--vermelho);
-  }
-  .sobre-numeros span{
-    font-size: .76rem;
-    color: #6b6555;
-    text-transform: uppercase;
-    letter-spacing: .03em;
+    border: 1px solid rgba(30,33,24,.14);
+    color: var(--texto);
+    font-weight: 600;
+    font-size: .86rem;
+    padding: 9px 18px;
+    border-radius: 999px;
   }
 
   /* ============ DESTAQUES :: coverflow de 3 vídeos ============ */
@@ -773,12 +788,54 @@
   }
   .linha-nicho{ margin-bottom: 40px; scroll-margin-top: calc(var(--topo-altura) + 20px); }
   .linha-nicho:last-child{ margin-bottom: 0; }
-  .linha-nicho-titulo{
-    font-family: var(--fonte-manuscrita);
-    color: var(--vermelho);
-    font-size: 1.2rem;
-    margin-bottom: 14px;
+  .linha-nicho-cabecalho{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
   }
+  .linha-nicho-titulo{
+    font-family: var(--fonte-titulo);
+    color: var(--texto);
+    font-weight: 800;
+    font-size: 1.3rem;
+    margin-bottom: 4px;
+  }
+  .linha-nicho-contador{
+    font-family: var(--fonte-corpo);
+    font-weight: 600;
+    font-size: .76rem;
+    color: var(--vermelho);
+    vertical-align: super;
+  }
+  .linha-nicho-tagline{
+    font-style: italic;
+    color: #6b6555;
+    font-size: .9rem;
+  }
+  .linha-nicho-setas{
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .seta-linha-nicho{
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid var(--texto);
+    color: var(--texto);
+    font-size: 1.1rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background .18s ease, color .18s ease;
+  }
+  .seta-linha-nicho:hover{ background: var(--laranja); border-color: var(--laranja); color: #fff; }
+  @media (prefers-reduced-motion: reduce){ .seta-linha-nicho{ transition: none; } }
   .linha-nicho-trilho{
     display: flex;
     gap: 18px;
@@ -1109,8 +1166,6 @@
     .servicos-grade, .campanhas-grade, .metricas-grade{
       grid-template-columns: 1fr;
     }
-    .sobre-numeros{ grid-template-columns: repeat(2, 1fr); }
-    .capa-numeros{ gap: 24px; }
     .capa-botoes .btn{ width: 100%; }
     .contato-links{ margin-top: 8px; }
     .destaques-carrossel{ --largura-slide: 150px; --deslocamento: 104px; }
@@ -1160,20 +1215,6 @@
         <a class="btn btn-laranja" href="#contato">Falar comigo</a>
         <a class="btn btn-contorno" href="#trabalhos">Ver os trabalhos</a>
       </div>
-      <div class="capa-numeros">
-        <div>
-          <strong>430</strong>
-          <span>vídeos entregues</span>
-        </div>
-        <div>
-          <strong>200</strong>
-          <span>marcas atendidas</span>
-        </div>
-        <div>
-          <strong>1M+</strong>
-          <span>views somadas</span>
-        </div>
-      </div>
 
       <div class="faixa-marcas" aria-label="Marcas atendidas">
         <div class="faixa-marcas-trilho" id="trilho-marcas"><!-- preenchido via JS a partir do array "marcas" --></div>
@@ -1186,11 +1227,18 @@
     <div class="letreiro-trilho" id="trilho-letreiro"></div>
   </div>
 
+  <!-- NÚMEROS EM RESUMO :: mesmos dados do array "metricas", em destaque logo abaixo do letreiro -->
+  <section class="secao-estatisticas" aria-label="Números em resumo">
+    <div class="container">
+      <div class="estatisticas-destaque" id="sobre-numeros"></div>
+    </div>
+  </section>
+
   <!-- 2. SOBRE MIM -->
   <section id="sobre" class="secao fundo-rotulo">
     <div class="container">
       <span class="rotulo-secao">sobre mim</span>
-      <h2 class="titulo-secao">Sobre mim</h2>
+      <h2 class="titulo-secao">Sobre <span class="acento-titulo">mim</span></h2>
       <div class="sobre-grade">
         <!-- Troque o bloco .midia-placeholder por <img src="minha-foto.jpg" alt="Myuka Oliveira sorrindo"> quando tiver a foto -->
         <div class="sobre-foto revelar">
@@ -1214,8 +1262,10 @@
           <p>Meu foco sempre foi mostrar que é possível criar com verdade, vender com propósito e conectar com quem realmente importa.</p>
           <p>Hoje, como criadora e mentora, sigo em busca dos meus sonhos e me tornei uma incentivadora da mudança de mentalidade.</p>
           <p>Sou especialista em conteúdos humanizados e estratégias que geram conversão e senso de comunidade.</p>
-          <!-- Números reaproveitados do array "metricas", sem valores novos -->
-          <div class="sobre-numeros" id="sobre-numeros"></div>
+          <div class="pilulas-resumo">
+            <span class="pilula-resumo">+200 marcas atendidas</span>
+            <span class="pilula-resumo">Alphaville SP · Brasil</span>
+          </div>
           <ul class="lista-promessas">
             <li>Roteiro aprovado por você antes de eu gravar</li>
             <li>Uma rodada de ajuste inclusa no valor combinado</li>
@@ -1239,7 +1289,7 @@
   <section id="destaques" class="secao">
     <div class="container">
       <span class="rotulo-secao">cases de sucesso</span>
-      <h2 class="titulo-secao">Conteúdos de destaque</h2>
+      <h2 class="titulo-secao">Conteúdos de <span class="acento-titulo">destaque</span></h2>
       <p class="subtitulo-secao">Os vídeos que mais renderam resultado para as marcas que já trabalharam comigo.</p>
       <!--
         O carrossel inteiro é montado pelo JavaScript, com os vídeos que têm o
@@ -1255,7 +1305,7 @@
   <section id="trabalhos" class="secao fundo-rotulo">
     <div class="container">
       <span class="rotulo-secao">portfólio por nicho</span>
-      <h2 class="titulo-secao">Trabalhos por nicho</h2>
+      <h2 class="titulo-secao">Trabalhos por <span class="acento-titulo">nicho</span></h2>
       <p class="subtitulo-secao">Escolha um nicho para ir direto aos exemplos, ou deslize cada linha para ver mais conteúdos daquele segmento.</p>
       <div class="filtros-nicho" id="filtros-nicho" role="group" aria-label="Ir para um nicho"></div>
       <div id="linhas-nichos"></div>
@@ -1266,7 +1316,7 @@
   <section id="servicos" class="secao">
     <div class="container">
       <span class="rotulo-secao">como eu ajudo</span>
-      <h2 class="titulo-secao">Como eu te ajudo</h2>
+      <h2 class="titulo-secao">Como eu te <span class="acento-titulo">ajudo</span></h2>
       <p class="subtitulo-secao">Serviços pensados para encaixar no funil de conteúdo da sua marca, do anúncio ao orgânico.</p>
       <div class="servicos-grade" id="grade-servicos"></div>
     </div>
@@ -1276,7 +1326,7 @@
   <section id="numeros" class="secao fundo-rotulo">
     <div class="container">
       <span class="rotulo-secao">resultados</span>
-      <h2 class="titulo-secao">Números e depoimentos</h2>
+      <h2 class="titulo-secao">Números e <span class="acento-titulo">depoimentos</span></h2>
       <p class="subtitulo-secao">O que os resultados e as marcas parceiras dizem sobre o meu trabalho.</p>
 
       <div class="metricas-grade" id="grade-metricas"></div>
@@ -1293,7 +1343,7 @@
   <section id="contato" class="secao">
     <div class="container">
       <span class="rotulo-secao">contato</span>
-      <h2 class="titulo-secao">Bora criar juntos</h2>
+      <h2 class="titulo-secao">Bora criar <span class="acento-titulo">juntos</span></h2>
       <p class="subtitulo-secao">Me conta um pouco sobre a sua marca e eu respondo com uma proposta rapidinho.</p>
       <div class="contato-grade">
         <div>
@@ -1398,15 +1448,15 @@
 
   // Nichos usados nos filtros e nas linhas de trabalhos (seção 4)
   var nichos = [
-    { id: "beleza", label: "Beleza" },
-    { id: "skincare", label: "Skincare" },
-    { id: "moda", label: "Moda" },
-    { id: "casa", label: "Casa e decoração" },
-    { id: "fitness", label: "Fitness" },
-    { id: "viagem", label: "Viagem" },
-    { id: "tech", label: "Tech" },
-    { id: "hobby", label: "Hobby" },
-    { id: "casal", label: "Casal" }
+    { id: "beleza", label: "Beleza", tagline: "Produtos que viram rotina de cuidado" },
+    { id: "skincare", label: "Skincare", tagline: "Rituais de pele contados com verdade" },
+    { id: "moda", label: "Moda", tagline: "Looks e produtos que chamam atenção no feed" },
+    { id: "casa", label: "Casa e decoração", tagline: "Ambientes e produtos que transformam a rotina" },
+    { id: "fitness", label: "Fitness", tagline: "Energia e resultado em cada treino" },
+    { id: "viagem", label: "Viagem", tagline: "Experiências que dão vontade de viver" },
+    { id: "tech", label: "Tech", tagline: "Produtos que facilitam o dia a dia" },
+    { id: "hobby", label: "Hobby", tagline: "Momentos de prazer e diversão" },
+    { id: "casal", label: "Casal", tagline: "Histórias reais a dois" }
   ];
 
   // Serviços oferecidos (seção 5)
@@ -1700,8 +1750,17 @@
       });
 
       htmlLinhas += '<div class="linha-nicho" id="nicho-' + n.id + '" data-nicho="' + n.id + '">' +
-        '<h3 class="linha-nicho-titulo manuscrita">' + n.label + '</h3>' +
-        '<div class="linha-nicho-trilho">' + htmlCards + '</div>' +
+        '<div class="linha-nicho-cabecalho">' +
+          '<div>' +
+            '<h3 class="linha-nicho-titulo">' + n.label + ' <span class="linha-nicho-contador">' + String(trabalhosDoNicho.length).padStart(2, "0") + '</span></h3>' +
+            '<p class="linha-nicho-tagline">' + escaparHtml(n.tagline || "") + '</p>' +
+          '</div>' +
+          '<div class="linha-nicho-setas">' +
+            '<button type="button" class="seta-linha-nicho" data-direcao="-1" data-nicho="' + n.id + '" aria-label="Ver anteriores de ' + escaparHtml(n.label) + '">‹</button>' +
+            '<button type="button" class="seta-linha-nicho" data-direcao="1" data-nicho="' + n.id + '" aria-label="Ver mais de ' + escaparHtml(n.label) + '">›</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="linha-nicho-trilho" id="trilho-nicho-' + n.id + '">' + htmlCards + '</div>' +
       '</div>';
     });
 
@@ -1710,6 +1769,15 @@
       return;
     }
     container.innerHTML = htmlLinhas;
+
+    container.addEventListener("click", function(evento){
+      var seta = evento.target.closest(".seta-linha-nicho");
+      if(!seta) return;
+      var trilho = document.getElementById("trilho-nicho-" + seta.getAttribute("data-nicho"));
+      if(!trilho) return;
+      var distancia = Math.min(trilho.clientWidth * 0.8, 520) * Number(seta.getAttribute("data-direcao"));
+      trilho.scrollBy({ left: distancia, behavior: "smooth" });
+    });
 
     var botoes = filtros.querySelectorAll(".filtro-btn");
     var secaoTrabalhos = document.getElementById("trabalhos");
