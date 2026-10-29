@@ -469,13 +469,13 @@
   @media (prefers-reduced-motion: reduce){
     .marcas-confianca-trilho{ animation: none; flex-wrap: wrap; justify-content: center; gap: 12px; }
   }
-  /* Chip placeholder de marca (imita as bolinhas de logo do print de referência): troque por <img src="logo-da-marca.svg" alt="Nome da marca" class="marca-logo-real"> quando tiver os logos reais */
+  /* Bolinha de logo das marcas parceiras */
   .marca-chip{
     flex: 0 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 96px;
+    width: 96px;
     height: 96px;
     padding: 0 14px;
     border-radius: 999px;
@@ -488,6 +488,13 @@
     text-transform: uppercase;
     text-align: center;
     white-space: nowrap;
+    overflow: hidden;
+  }
+  .marca-chip img{
+    width: 100%;
+    height: 100%;
+    border-radius: 999px;
+    object-fit: cover;
   }
 
   /* ============ SOBRE ============ */
@@ -1161,7 +1168,7 @@
     .destaques-carrossel{ --largura-slide: 150px; --deslocamento: 104px; }
     .carrossel-seta{ width: 38px; height: 38px; font-size: 1.2rem; }
     .trabalho-card{ width: 180px; }
-    .marca-chip{ min-width: 74px; height: 74px; padding: 0 10px; font-size: .68rem; }
+    .marca-chip{ width: 74px; height: 74px; padding: 0 10px; font-size: .68rem; }
   }
 </style>
 </head>
@@ -1428,10 +1435,20 @@
      sem precisar mexer no HTML.
   ========================================================= */
 
-  // Marcas que aparecem na faixa da capa
+  // Marcas que aparecem na faixa da capa e na seção "marcas que confiaram".
+  // Para trocar ou adicionar uma marca, é só editar esta lista (nome + caminho do logo em imagens/marcas/).
   var marcas = [
-    "Marca 01","Marca 02","Marca 03","Marca 04","Marca 05","Marca 06",
-    "Marca 07","Marca 08","Marca 09","Marca 10","Marca 11","Marca 12"
+    { nome: "Marca parceira", logo: "imagens/marcas/marca-01.jpg" },
+    { nome: "Marca parceira", logo: "imagens/marcas/marca-02.jpg" },
+    { nome: "Raiz Viva", logo: "imagens/marcas/marca-03.jpg" },
+    { nome: "Marca parceira", logo: "imagens/marcas/marca-04.jpg" },
+    { nome: "Marca parceira", logo: "imagens/marcas/marca-05.jpg" },
+    { nome: "WhatsApp", logo: "imagens/marcas/marca-06.jpg" },
+    { nome: "Coca-Cola", logo: "imagens/marcas/marca-07.jpg" },
+    { nome: "Marca parceira", logo: "imagens/marcas/marca-08.jpg" },
+    { nome: "Shopee", logo: "imagens/marcas/marca-09.jpg" },
+    { nome: "Guday", logo: "imagens/marcas/marca-10.jpg" },
+    { nome: "Marca parceira", logo: "imagens/marcas/marca-11.jpg" }
   ];
 
   // Áreas de atuação do letreiro logo abaixo da capa
@@ -1505,8 +1522,7 @@
     var html = "";
     var listaDupla = marcas.concat(marcas);
     listaDupla.forEach(function(marca){
-      // Chip placeholder: troque por <img src="logo-da-marca.svg" alt="..." class="marca-logo-real"> quando tiver o logo real
-      html += '<span class="marca-chip">' + escaparHtml(marca) + '</span>';
+      html += '<span class="marca-chip"><img src="' + escaparHtml(marca.logo) + '" alt="' + escaparHtml(marca.nome) + '" loading="lazy"></span>';
     });
     trilho.innerHTML = html;
   })();
@@ -1528,8 +1544,7 @@
     var html = "";
     var listaDupla = marcas.concat(marcas);
     listaDupla.forEach(function(marca){
-      // Chip placeholder: troque o <span> por <img src="logo-da-marca.svg" alt="..." class="marca-logo-real"> quando tiver o logo real
-      html += '<span class="marca-chip">' + marca + '</span>';
+      html += '<span class="marca-chip"><img src="' + escaparHtml(marca.logo) + '" alt="' + escaparHtml(marca.nome) + '" loading="lazy"></span>';
     });
     trilho.innerHTML = html;
   })();
