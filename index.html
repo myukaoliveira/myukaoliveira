@@ -471,14 +471,14 @@
   }
   /* Bolinha de logo das marcas parceiras */
   .marca-chip{
+    box-sizing: border-box;
     flex: 0 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 96px;
     height: 96px;
-    padding: 0 14px;
-    border-radius: 999px;
+    border-radius: 50%;
     background: var(--plastico-2);
     border: 2px solid var(--laranja);
     color: var(--texto-suave);
@@ -493,8 +493,9 @@
   .marca-chip img{
     width: 100%;
     height: 100%;
-    border-radius: 999px;
+    border-radius: 50%;
     object-fit: cover;
+    display: block;
   }
 
   /* ============ SOBRE ============ */
