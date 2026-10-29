@@ -16,9 +16,9 @@
     --plastico-3: #363b2c;
     --rotulo: #f5efe0;
     --rotulo-2: #ece3cc;
-    --laranja: #c1663f;
-    --azul: #55622f;
-    --vermelho: #cc9a3c;
+    --laranja: #a9663f;
+    --azul: #5c6b45;
+    --vermelho: #8a6238;
     --texto: #23261c;
     --texto-claro: #f5efe0;
     --texto-suave: #cdc6ae;
@@ -167,7 +167,7 @@
   }
   .btn:hover{ transform: translateY(-2px); }
   .btn-laranja{ background: var(--laranja); color: var(--plastico); }
-  .btn-laranja:hover{ box-shadow: 0 10px 26px rgba(193,102,63,.35); }
+  .btn-laranja:hover{ box-shadow: 0 10px 26px rgba(169,102,63,.35); }
   .btn-contorno{ background: transparent; color: var(--rotulo); border-color: var(--rotulo); }
   .btn-contorno:hover{ background: var(--rotulo); color: var(--plastico); }
   .fundo-rotulo .btn-contorno{ color: var(--texto); border-color: var(--texto); }
@@ -280,7 +280,7 @@
     display: inline-block;
     font-family: var(--fonte-manuscrita);
     color: var(--laranja);
-    background: rgba(193,102,63,.12);
+    background: rgba(169,102,63,.12);
     border: 1px dashed var(--laranja);
     padding: 6px 14px;
     border-radius: 999px;
@@ -343,21 +343,17 @@
   }
 
   /* Moldura da foto de capa */
-  .foto-capa-moldura{
-    background: linear-gradient(165deg, var(--plastico-3), var(--plastico-2));
-    border-radius: var(--raio-g);
-    padding: 14px;
-    box-shadow: var(--sombra);
-    border: 1px solid var(--linha);
-    position: relative;
+  /* Foto da capa sem fundo, flutuando direto sobre o fundo da seção */
+  .foto-capa-flutuante{
+    display: flex;
+    justify-content: center;
   }
-  .foto-capa-moldura::before{
-    content: "";
+  .foto-capa-flutuante img{
+    width: 100%;
+    max-width: 420px;
+    height: auto;
     display: block;
-    height: 4px;
-    border-radius: 4px;
-    margin-bottom: 14px;
-    background: var(--laranja);
+    filter: drop-shadow(0 24px 40px rgba(0,0,0,.35));
   }
 
   /* Bloco de foto: troque a classe .midia-placeholder pela tag <img> real quando tiver a foto da creator */
@@ -377,15 +373,6 @@
     font-weight: 600;
     padding: 8px 12px;
     width: 100%;
-  }
-  .foto-capa-area{
-    border-radius: calc(var(--raio-g) - 8px);
-    overflow: hidden;
-  }
-  .foto-capa-area img{
-    width: 100%;
-    height: auto;
-    display: block;
   }
 
   .faixa-marcas{
@@ -512,7 +499,7 @@
     font-weight: 600;
     font-size: 1.15rem;
     color: var(--vermelho);
-    background: rgba(204,154,60,.08);
+    background: rgba(138,98,56,.08);
     border: 1px dashed var(--vermelho);
     padding: 4px 15px;
     border-radius: 999px;
@@ -586,7 +573,7 @@
     text-transform: uppercase;
     letter-spacing: .05em;
     color: var(--azul);
-    background: rgba(85,98,47,.14);
+    background: rgba(92,107,69,.14);
     border: 1px solid var(--azul);
     padding: 5px 12px;
     border-radius: 999px;
@@ -991,7 +978,7 @@
   .form-contato .btn{ align-self: flex-start; border: none; }
   .confirmacao-envio{
     margin-top: 16px;
-    background: rgba(85,98,47,.18);
+    background: rgba(92,107,69,.18);
     border: 1px solid var(--azul);
     color: var(--rotulo);
     padding: 14px 18px;
@@ -1205,13 +1192,11 @@
           </div>
         </div>
 
-        <!-- Foto real da capa. Para trocar, é só substituir o arquivo
-             imagens/foto-sobre-myuka.jpg por uma nova imagem (mesmo nome
-             ou ajuste o src abaixo). -->
-        <div class="foto-capa-moldura">
-          <div class="foto-capa-area">
-            <img src="imagens/foto-sobre-myuka.jpg" alt="Myuka Oliveira sorrindo, de blazer branco e conjunto terracota">
-          </div>
+        <!-- Foto real da capa, sem fundo, integrada direto no fundo da seção.
+             Para trocar, é só substituir o arquivo imagens/foto-capa-sem-fundo.png
+             por outra foto já sem fundo (mesmo nome ou ajuste o src abaixo). -->
+        <div class="foto-capa-flutuante">
+          <img src="imagens/foto-capa-sem-fundo.png" alt="Myuka Oliveira sorrindo, de blazer branco e conjunto terracota">
         </div>
       </div>
 
@@ -2059,9 +2044,9 @@
         '<g transform="rotate(45 12 12)">' +
           '<rect x="10" y="1" width="4" height="9" rx="2" fill="#caa472"/>' +
           '<rect x="9.4" y="9.2" width="5.2" height="2.2" fill="#9a9fa8"/>' +
-          '<path d="M9.6 11.2h4.8l-1.1 5.4a1.3 1.3 0 0 1-2.6 0z" fill="#c1663f"/>' +
+          '<path d="M9.6 11.2h4.8l-1.1 5.4a1.3 1.3 0 0 1-2.6 0z" fill="#a9663f"/>' +
         '</g>' +
-        '<circle cx="6.3" cy="19.2" r="1.5" fill="#55622f"/>' +
+        '<circle cx="6.3" cy="19.2" r="1.5" fill="#5c6b45"/>' +
       '</svg>';
 
     if(!("PointerEvent" in window)) return;
