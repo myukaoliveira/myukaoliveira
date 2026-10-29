@@ -506,6 +506,13 @@
     align-items: center;
   }
   .sobre-foto .midia-placeholder{ aspect-ratio: 4 / 5; }
+  .sobre-foto img{
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: var(--raio-g);
+    box-shadow: var(--sombra);
+  }
   .sobre-texto p{ margin-bottom: 18px; color: #4a4638; font-size: 1.05rem; }
   .fatos-pessoais{
     display: flex;
@@ -1245,11 +1252,8 @@
       <span class="rotulo-secao">sobre mim</span>
       <h2 class="titulo-secao">Sobre <span class="acento-titulo">mim</span></h2>
       <div class="sobre-grade">
-        <!-- Troque o bloco .midia-placeholder por <img src="minha-foto.jpg" alt="Myuka Oliveira sorrindo"> quando tiver a foto -->
         <div class="sobre-foto revelar">
-          <div class="midia-placeholder" role="img" aria-label="Foto de Myuka Oliveira, formato retrato 4 por 5">
-            <span class="midia-legenda">foto da creator · 4:5</span>
-          </div>
+          <img src="imagens/foto-sobre-cacto.jpg" alt="Myuka Oliveira ajoelhada em um jardim de cactos, plantando em um vaso de terracota">
         </div>
         <div class="sobre-texto revelar">
           <div class="fatos-pessoais" aria-label="Um pouco sobre mim">
