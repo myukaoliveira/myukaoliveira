@@ -408,6 +408,9 @@
     border-bottom: 1px solid var(--plastico);
     overflow: hidden;
     padding: 14px 0;
+    margin-top: -28px;
+    position: relative;
+    z-index: 2;
   }
   .letreiro-trilho{
     display: flex;
@@ -1199,17 +1202,20 @@
           <img src="imagens/foto-capa-sem-fundo.png" alt="Myuka Oliveira sorrindo, de blazer branco e conjunto terracota">
         </div>
       </div>
+    </div>
 
+    <!-- LETREIRO :: áreas de atuação em loop contínuo (dados no array "areasAtuacao").
+         Fica propositalmente na altura onde a foto termina, pra disfarçar o corte dela. -->
+    <div class="letreiro-atuacao" aria-label="Áreas de atuação de Myuka Oliveira">
+      <div class="letreiro-trilho" id="trilho-letreiro"></div>
+    </div>
+
+    <div class="container">
       <div class="faixa-marcas" aria-label="Marcas atendidas">
         <div class="faixa-marcas-trilho" id="trilho-marcas"><!-- preenchido via JS a partir do array "marcas" --></div>
       </div>
     </div>
   </section>
-
-  <!-- LETREIRO :: áreas de atuação em loop contínuo. Dados no array "areasAtuacao" -->
-  <div class="letreiro-atuacao" aria-label="Áreas de atuação de Myuka Oliveira">
-    <div class="letreiro-trilho" id="trilho-letreiro"></div>
-  </div>
 
   <!-- NÚMEROS EM RESUMO :: mesmos dados do array "metricas", em destaque logo abaixo do letreiro -->
   <section class="secao-estatisticas" aria-label="Números em resumo">
